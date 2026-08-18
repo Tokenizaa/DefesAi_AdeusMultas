@@ -374,7 +374,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800 text-slate-300">
-              {cases.slice(0, 6).map((c) => {
+              {(cases || []).slice(0, 6).map((c) => {
                 const isPaid = c.isPaid || c.payment?.status === 'paid' || c.payment?.status === 'approved';
                 return (
                   <tr key={c.id} className="hover:bg-slate-850/50 transition-colors">

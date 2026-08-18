@@ -1,6 +1,6 @@
 {
   "name": "Remix Adeus Multa",
-  "description": "Plataforma inteligente de geração e gestão de defesas administrativas de trânsito e recursos de infrações.",
+  "description": "Plataforma PWA pericial de análise, geração de defesas técnicas e gestão de recursos de multas de trânsito.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

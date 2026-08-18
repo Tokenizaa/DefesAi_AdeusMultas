@@ -19,7 +19,7 @@ export const MarketingSettings: React.FC<{ brand: BrandIdentityConfig | null }> 
               <div>
                 <p className="text-[10px] font-bold text-slate-400 uppercase font-mono">Cores primárias</p>
                 <div className="flex gap-2 mt-1">
-                  {brand.primaryColors.map((c) => (
+                  {(brand.primaryColors || []).map((c) => (
                     <span key={c} className="w-6 h-6 rounded-lg border border-slate-200" style={{ backgroundColor: c }} title={c} />
                   ))}
                 </div>
@@ -27,7 +27,7 @@ export const MarketingSettings: React.FC<{ brand: BrandIdentityConfig | null }> 
               <div>
                 <p className="text-[10px] font-bold text-slate-400 uppercase font-mono">Palavras proibidas</p>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {brand.disallowedWords.map((w) => (
+                  {(brand.disallowedWords || []).map((w) => (
                     <span key={w} className="px-1.5 py-0.5 bg-rose-50 border border-rose-200 text-rose-700 rounded text-[9px] font-mono">
                       {w}
                     </span>

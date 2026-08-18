@@ -377,13 +377,13 @@ export const AdminCommercialReferralsView: React.FC = () => {
               {/* Level 1 Direct */}
               <div className="bg-slate-950 p-4 rounded-xl border border-blue-500/30 space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold text-blue-400 pb-2 border-b border-slate-800">
-                  <span>Nível 1 • Diretos ({userTree.level1.length})</span>
+                  <span>Nível 1 • Diretos ({(userTree.level1 || []).length})</span>
                   <span className="font-mono">{config?.level1Percent}%</span>
                 </div>
-                {userTree.level1.length === 0 ? (
+                {(userTree.level1 || []).length === 0 ? (
                   <p className="text-[11px] text-slate-600 py-3 text-center">Nenhum indicado direto</p>
                 ) : (
-                  userTree.level1.map((child) => (
+                  (userTree.level1 || []).map((child) => (
                     <div key={child.childUserId} className="p-2 bg-slate-900/80 rounded border border-slate-800 text-xs">
                       <div className="font-bold text-white">{child.childUserName}</div>
                       <div className="text-[10px] text-slate-500 font-mono">
@@ -397,13 +397,13 @@ export const AdminCommercialReferralsView: React.FC = () => {
               {/* Level 2 Indirect */}
               <div className="bg-slate-950 p-4 rounded-xl border border-indigo-500/30 space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold text-indigo-400 pb-2 border-b border-slate-800">
-                  <span>Nível 2 • Indiretos ({userTree.level2.length})</span>
+                  <span>Nível 2 • Indiretos ({(userTree.level2 || []).length})</span>
                   <span className="font-mono">{config?.level2Percent}%</span>
                 </div>
-                {userTree.level2.length === 0 ? (
+                {(userTree.level2 || []).length === 0 ? (
                   <p className="text-[11px] text-slate-600 py-3 text-center">Nenhum indicado no 2º nível</p>
                 ) : (
-                  userTree.level2.map((child) => (
+                  (userTree.level2 || []).map((child) => (
                     <div key={child.childUserId} className="p-2 bg-slate-900/80 rounded border border-slate-800 text-xs">
                       <div className="font-bold text-white">{child.childUserName}</div>
                       <div className="text-[10px] text-slate-500 font-mono">
@@ -417,13 +417,13 @@ export const AdminCommercialReferralsView: React.FC = () => {
               {/* Level 3 Ancestral */}
               <div className="bg-slate-950 p-4 rounded-xl border border-violet-500/30 space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold text-violet-400 pb-2 border-b border-slate-800">
-                  <span>Nível 3 • Ancestrais ({userTree.level3.length})</span>
+                  <span>Nível 3 • Ancestrais ({(userTree.level3 || []).length})</span>
                   <span className="font-mono">{config?.level3Percent}%</span>
                 </div>
-                {userTree.level3.length === 0 ? (
+                {(userTree.level3 || []).length === 0 ? (
                   <p className="text-[11px] text-slate-600 py-3 text-center">Nenhum indicado no 3º nível</p>
                 ) : (
-                  userTree.level3.map((child) => (
+                  (userTree.level3 || []).map((child) => (
                     <div key={child.childUserId} className="p-2 bg-slate-900/80 rounded border border-slate-800 text-xs">
                       <div className="font-bold text-white">{child.childUserName}</div>
                       <div className="text-[10px] text-slate-500 font-mono">

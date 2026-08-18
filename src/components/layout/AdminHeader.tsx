@@ -2,6 +2,7 @@ import React from 'react';
 import { ShieldAlert, Activity, Cpu, LogOut, Menu, ExternalLink, ChevronRight, Home } from 'lucide-react';
 import { useRouter } from '../../core/router/RouterContext';
 import { useAuth } from '../../core/auth/AuthContext';
+import { NotificationBellDropdown } from '../notifications/NotificationBellDropdown';
 
 interface AdminHeaderProps {
   onToggleMobileMenu?: () => void;
@@ -114,6 +115,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           <span className="text-slate-600">•</span>
           <span className="text-slate-400">NVIDIA / 9Router</span>
         </div>
+
+        {/* Real-time Push & System Notification Center */}
+        <NotificationBellDropdown />
 
         <button
           onClick={() => navigate('/dashboard')}

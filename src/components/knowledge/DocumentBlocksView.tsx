@@ -285,14 +285,14 @@ export const DocumentBlocksView: React.FC = () => {
                 {isExpanded && (
                   <div className="px-4 pb-4 pt-2 border-t border-slate-100 space-y-4">
                     {/* Variables */}
-                    {block.supportedVariables.length > 0 && (
+                    {block.supportedVariables && block.supportedVariables.length > 0 && (
                       <div>
                         <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 flex items-center gap-1 font-mono">
                           <Tag className="w-3 h-3 text-orange-500" />
                           Variáveis Suportadas para Interpolação:
                         </div>
                         <div className="flex flex-wrap gap-1.5">
-                          {block.supportedVariables.map((variable) => (
+                          {(block.supportedVariables || []).map((variable) => (
                             <span
                               key={variable}
                               className="font-mono text-xs text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-md font-semibold"

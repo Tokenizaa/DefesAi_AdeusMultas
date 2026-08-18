@@ -255,12 +255,25 @@ export class ExpertRuleEngine {
     }
 
     // 4. Calculate deterministic success probability score
-    let baseScore = 74;
-    if (detectedInconsistencies.some((i) => i.legalArgumentId === 'ARG-048')) baseScore += 24; // 30-day decadence is fatal
-    if (detectedInconsistencies.some((i) => i.legalArgumentId === 'ARG-051')) baseScore += 18; // Compulsory warning
-    if (detectedInconsistencies.some((i) => i.legalArgumentId === 'ARG-001')) baseScore += 12; // Radar expired
-    if (detectedInconsistencies.some((i) => i.legalArgumentId === 'ARG-025')) baseScore += 14; // Lei Seca lacking term
-    const overallSuccessRate = Math.min(99, Math.max(68, baseScore));
+    let baseScore = 35; // Baseline when no formal or substantive nullities are detected
+
+    if (detectedInconsistencies.some((i) => i.legalArgumentId === 'ARG-048')) {
+      baseScore = 98; // 30-day decadence is fatal per Art. 281, II CTB and STJ Súmula 312
+    } else if (detectedInconsistencies.some((i) => i.legalArgumentId === 'ARG-051')) {
+      baseScore = 94; // Compulsory conversion to warning per Art. 267 CTB (Lei 14.071/2020)
+    } else if (detectedInconsistencies.some((i) => i.legalArgumentId === 'ARG-001')) {
+      baseScore = 92; // Radar calibration expired per Res. 798/2020 CONTRAN
+    } else if (detectedInconsistencies.some((i) => i.legalArgumentId === 'ARG-025')) {
+      baseScore = 88; // Lei Seca lacking mandatory technical terms
+    } else if (detectedInconsistencies.some((i) => i.legalArgumentId === 'ARG-015')) {
+      baseScore = 82; // Manual citation without stop and without required MBFT remarks
+    } else if (detectedInconsistencies.some((i) => i.legalArgumentId === 'ARG-002')) {
+      baseScore = 78; // Lack of R-19 speed regulation signage
+    } else if (detectedInconsistencies.length > 0) {
+      baseScore = Math.min(90, 50 + detectedInconsistencies.length * 15);
+    }
+
+    const overallSuccessRate = Math.min(99, Math.max(25, baseScore));
 
     // 5. Default deadline
     const deadlineDate = new Date();

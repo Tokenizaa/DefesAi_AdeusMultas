@@ -10,11 +10,22 @@ import {
   MapPin,
   Phone,
   CreditCard,
+  Smartphone,
+  Send,
+  AlertCircle,
 } from 'lucide-react';
 import { useAuth } from '../../core/auth/AuthContext';
+import { usePushNotifications } from '../../hooks/usePushNotifications';
 
 export const UserSettingsView: React.FC = () => {
   const { user, updateProfile } = useAuth();
+  const {
+    permission,
+    isSubscribed,
+    loading: pushLoading,
+    requestPermissionAndSubscribe,
+    sendTestNotification,
+  } = usePushNotifications();
   
   // Profile form state
   const [name, setName] = useState(user?.name || '');
@@ -245,6 +256,65 @@ export const UserSettingsView: React.FC = () => {
             </div>
 
             <div className="space-y-3 text-xs">
+              {/* Web & Mobile Push Notification Feature Card */}
+              <div className="p-4 rounded-xl bg-gradient-to-br from-[#071D41] to-[#0C326F] text-white border border-[#155BCB]/40 shadow-sm space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-lg bg-[#155BCB] flex items-center justify-center text-[#FFCD07] shrink-0 border border-[#FFCD07]/30">
+                      <Smartphone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-sm text-white">Notificações Push no Dispositivo</span>
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            permission === 'granted'
+                              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                              : permission === 'denied'
+                              ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                              : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                          }`}
+                        >
+                          {permission === 'granted' ? 'ATIVO' : permission === 'denied' ? 'BLOQUEADO' : 'PENDENTE'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-300 mt-0.5">
+                        Alertas em segundo plano via Service Worker quando o status de qualquer recurso for alterado.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
+                  {permission !== 'granted' ? (
+                    <button
+                      type="button"
+                      onClick={requestPermissionAndSubscribe}
+                      disabled={pushLoading}
+                      className="px-3.5 py-1.5 bg-[#FFCD07] hover:bg-[#F5A623] text-[#071D41] font-bold text-xs rounded-lg transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Bell className="w-3.5 h-3.5" />
+                      {pushLoading ? 'Solicitando...' : 'Habilitar Notificações no Navegador'}
+                    </button>
+                  ) : (
+                    <span className="text-[11px] text-emerald-300 flex items-center gap-1 font-medium">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      Dispositivo conectado para receber alertas de julgamento
+                    </span>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={sendTestNotification}
+                    disabled={pushLoading}
+                    className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-lg transition-colors border border-white/15 flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Send className="w-3 h-3 text-[#FFCD07]" />
+                    Enviar Teste Push
+                  </button>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
                 <div>
                   <p className="font-bold text-slate-800">Alertas de Vencimento de Defesa Prévia e JARI</p>

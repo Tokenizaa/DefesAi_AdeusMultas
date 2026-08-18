@@ -1,7 +1,8 @@
 import React from 'react';
-import { PlusCircle, Sparkles, LogOut, Bell, Shield, Menu } from 'lucide-react';
+import { PlusCircle, Sparkles, LogOut, Shield, Menu } from 'lucide-react';
 import { useRouter } from '../../core/router/RouterContext';
 import { useAuth } from '../../core/auth/AuthContext';
+import { NotificationBellDropdown } from '../notifications/NotificationBellDropdown';
 
 interface UserHeaderProps {
   onToggleMobileMenu?: () => void;
@@ -51,6 +52,9 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
         </button>
 
         <div className="h-5 w-px bg-slate-200 mx-1 hidden sm:block" />
+
+        {/* Real-time Push & In-App Notification Center */}
+        <NotificationBellDropdown />
 
         <div
           onClick={() => navigate('/perfil')}

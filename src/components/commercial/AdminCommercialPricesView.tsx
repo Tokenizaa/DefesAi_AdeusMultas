@@ -350,12 +350,12 @@ export const AdminCommercialPricesView: React.FC = () => {
             </div>
 
             <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
-              {historyPricing.history.length === 0 ? (
+              {(!historyPricing.history || historyPricing.history.length === 0) ? (
                 <div className="text-center py-8 text-slate-500 text-xs">
                   Nenhuma alteração registrada ainda para este serviço.
                 </div>
               ) : (
-                historyPricing.history.map((h) => (
+                (historyPricing.history || []).map((h) => (
                   <div
                     key={h.id}
                     className="p-3 bg-slate-950 rounded-xl border border-slate-800/80 space-y-1.5 text-xs font-mono"

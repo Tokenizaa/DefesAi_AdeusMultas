@@ -27,6 +27,7 @@ import { KnowledgeHub } from './components/knowledge/KnowledgeHub';
 import { MarketingOSView } from './components/marketing/MarketingOSView';
 import { AdminAuditView } from './components/admin/AdminAuditView';
 import { WhatsAppSimulatorModal } from './components/communication/WhatsAppSimulatorModal';
+import { PWAInstallBanner } from './components/pwa/PWAInstallBanner';
 
 // Admin Pages
 import { AdminDashboardView } from './components/admin/AdminDashboardView';
@@ -226,6 +227,9 @@ function AppContent() {
         {currentPath === '/admin/commercial/commissions' && <CommercialHubView initialTab="commissions" />}
         {currentPath === '/admin/commercial/settings' && <CommercialHubView initialTab="settings" />}
         {currentPath === '/admin/commercial/tests' && <CommercialHubView initialTab="tests" />}
+
+        {/* PWA Mobile & Desktop Install Prompt */}
+        <PWAInstallBanner />
       </AdminLayout>
     );
   }
@@ -297,6 +301,9 @@ function AppContent() {
           isOpen={isWhatsAppModalOpen}
           onClose={() => setIsWhatsAppModalOpen(false)}
         />
+
+        {/* PWA Mobile & Desktop Install Prompt */}
+        <PWAInstallBanner />
       </UserLayout>
     );
   }
@@ -327,6 +334,9 @@ function AppContent() {
         isOpen={isWhatsAppModalOpen}
         onClose={() => setIsWhatsAppModalOpen(false)}
       />
+
+      {/* PWA Mobile & Desktop Install Prompt */}
+      <PWAInstallBanner />
     </PublicLayout>
   );
 }

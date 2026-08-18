@@ -94,12 +94,15 @@ export class MetaGraphClient {
       retries = 2,
     } = options;
 
-    // Development & Test Probe Mode: If token is a test/sandbox token, simulate valid Graph API response
+    // Development & Test Probe Mode: If token is a test/sandbox token or mock post, simulate valid Graph API response
     if (
-      accessToken &&
-      (accessToken.startsWith('EAAB_sandbox') ||
-        accessToken.startsWith('EAAB_simulated') ||
-        accessToken.startsWith('mock_'))
+      endpoint.startsWith('mock_') ||
+      endpoint.includes('mock_') ||
+      (accessToken &&
+        (accessToken.startsWith('EAAB_sandbox') ||
+          accessToken.startsWith('EAAB_simulated') ||
+          accessToken.startsWith('mock_') ||
+          accessToken === 'PROTECTED_SERVER_TOKEN'))
     ) {
       if (endpoint.includes('/photos') || endpoint.includes('/feed') || endpoint.includes('/media_publish')) {
         return { id: `fb_post_${Date.now()}`, post_id: `fb_post_${Date.now()}` } as unknown as T;

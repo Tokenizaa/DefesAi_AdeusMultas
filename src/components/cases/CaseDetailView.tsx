@@ -74,7 +74,7 @@ export const CaseDetailView: React.FC<CaseDetailViewProps> = ({
   // Selected argument IDs in Stage 2 (this is user-specific and not in CaseDetailBase)
   const [selectedArgIds, setSelectedArgIds] = React.useState<string[]>(
     caseData?.defenseDraft?.selectedArgumentIds ||
-      caseData?.analysis?.recommendedArguments.map((a) => a.id) || [
+      caseData?.analysis?.recommendedArguments?.map((a) => a.id) || [
         'ARG-001',
         'ARG-003',
         'ARG-007',
@@ -86,7 +86,7 @@ export const CaseDetailView: React.FC<CaseDetailViewProps> = ({
     if (caseData) {
       setSelectedArgIds(
         caseData.defenseDraft?.selectedArgumentIds ||
-          caseData.analysis?.recommendedArguments.map((a) => a.id) || [
+          caseData.analysis?.recommendedArguments?.map((a) => a.id) || [
             'ARG-001',
             'ARG-003',
             'ARG-007',
@@ -713,7 +713,7 @@ export const CaseDetailView: React.FC<CaseDetailViewProps> = ({
           </div>
 
           <div className="relative pl-6 space-y-4 before:absolute before:left-2 before:top-3 before:bottom-3 before:w-0.5 before:bg-slave-200">
-            {caseData.timeline.map((item, idx) => (
+            {(caseData.timeline || []).map((item, idx) => (
               <div key={item.id || idx} className="relative group">
                 <div className="absolute -left-6 top-1 w-3.5 h-3.5 rounded-full bg-orange-500 border-2 border-white ring-2 ring-orange-100" />
                 <div className="p-3 rounded-lg border border-slave-200 bg-slave-50 text-xs">

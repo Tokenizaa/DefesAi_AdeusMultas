@@ -29,6 +29,8 @@ import ocrRoutes from './src/server/routes/ocr';
 import paymentsRoutes from './src/server/routes/payments';
 import knowledgeRoutes from './src/server/routes/knowledge';
 import mediaRoutes from './src/server/routes/media';
+import notificationsRoutes from './src/server/routes/notifications';
+import { notificationService } from './src/server/services/notification-service';
 import { databaseRows } from './src/server/app';
 import { caseRepository } from './src/server/db/case-repository';
 import { metaIntegration } from './src/server/integrations/meta';
@@ -231,6 +233,8 @@ async function startServer() {
   app.use('/api/knowledge', knowledgeRoutes);
   app.use('/api/media', mediaRoutes);
   app.use('/api', mediaRoutes);
+  app.use('/api/notifications', notificationsRoutes);
+  app.use('/api', notificationsRoutes);
 
   // Meta Status Direct Fallback Route for UI Compatibility
   app.get(['/api/meta/status', '/api/marketing/meta/status'], (req, res) => {
@@ -563,6 +567,19 @@ async function startServer() {
 
     const row = CanonicalMapper.toRow(domainCase);
     casesStore.set(domainCase.id, row);
+
+    // Broadcast push & in-app notification for status updates
+    try {
+      notificationService.broadcastCaseStatusChange({
+        caseId: domainCase.id,
+        newStatus: domainCase.status,
+        autoInfracao: domainCase.dadosInfracao?.autoInfracao,
+        userId: domainCase.userId,
+        userEmail: domainCase.userEmail,
+      });
+    } catch (notifErr) {
+      console.warn('[Push Notification] Error broadcasting status change:', notifErr);
+    }
 
     // Audit log
     auditLogsStore.unshift({
@@ -1055,6 +1072,18 @@ Instruções:
     });
 
     casesStore.set(caseId, CanonicalMapper.toRow(domainCase));
+
+    try {
+      notificationService.broadcastCaseStatusChange({
+        caseId: domainCase.id,
+        newStatus: 'defesa_pronta',
+        autoInfracao: domainCase.dadosInfracao?.autoInfracao,
+        userId: domainCase.userId,
+        userEmail: domainCase.userEmail,
+      });
+    } catch (notifErr) {
+      console.warn('[Push Notification] Error on payment confirmed broadcast:', notifErr);
+    }
 
     auditLogsStore.unshift({
       id: 'aud_' + Math.random().toString(36).substring(2, 9),

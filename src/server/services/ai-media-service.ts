@@ -438,6 +438,11 @@ Muitos motoristas pagam multas indevidas por desconhecerem que falhas formais do
     const height = aspectRatio === '16:9' ? 720 : aspectRatio === '9:16' ? 1280 : aspectRatio === '4:3' ? 768 : 1080;
 
     const cleanTitle = prompt.length > 70 ? prompt.substring(0, 67) + '...' : prompt;
+    const escapedTitle = cleanTitle
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
 
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
       <defs>
@@ -469,7 +474,7 @@ Muitos motoristas pagam multas indevidas por desconhecerem que falhas formais do
 
       <!-- Main Copy -->
       <text x="48" y="${height * 0.42}" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="${width > 800 ? 38 : 28}" font-weight="800" letter-spacing="-0.5">
-        ${cleanTitle}
+        ${escapedTitle}
       </text>
 
       <rect x="48" y="${height * 0.48}" width="160" height="6" rx="3" fill="url(#gold)" />

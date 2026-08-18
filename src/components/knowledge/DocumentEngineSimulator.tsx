@@ -848,14 +848,14 @@ export const DocumentEngineSimulator: React.FC = () => {
                 </div>
               </div>
 
-              {assemblyResult.validation.unresolvedPlaceholders.length > 0 && (
+              {assemblyResult.validation?.unresolvedPlaceholders && assemblyResult.validation.unresolvedPlaceholders.length > 0 && (
                 <div className="bg-rose-50 border border-rose-200 rounded-xl p-4">
                   <div className="text-xs font-bold text-rose-800 mb-1 flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4 text-rose-600" />
                     Placeholders não resolvidos no rascunho:
                   </div>
                   <div className="flex flex-wrap gap-1 mt-2">
-                    {assemblyResult.validation.unresolvedPlaceholders.map((ph) => (
+                    {(assemblyResult.validation.unresolvedPlaceholders || []).map((ph) => (
                       <span
                         key={ph}
                         className="text-xs font-mono bg-rose-200/60 text-rose-900 px-2 py-0.5 rounded font-bold"

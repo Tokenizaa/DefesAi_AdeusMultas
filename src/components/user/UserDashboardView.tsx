@@ -113,7 +113,7 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({ cases, onS
         </div>
 
         <div className="divide-y divide-[#E6E6E6]">
-          {cases.length === 0 ? (
+          {(!cases || cases.length === 0) ? (
             <div className="p-8 text-center space-y-3">
               <FileText className="w-10 h-10 text-slate-400 mx-auto" />
               <p className="text-xs text-slate-600 font-medium">Nenhum recurso cadastrado até o momento.</p>
@@ -125,7 +125,7 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({ cases, onS
               </button>
             </div>
           ) : (
-            cases.slice(0, 5).map((c) => (
+            (cases || []).slice(0, 5).map((c) => (
               <div
                 key={c.id}
                 onClick={() => onSelectCase(c)}

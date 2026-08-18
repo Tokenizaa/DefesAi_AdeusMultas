@@ -348,7 +348,7 @@ const handleTestIntegration = async (serviceId: string) => {
 
             {res.checks && (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 pt-1">
-                {res.checks.map((chk: any, idx: number) => (
+                {(res.checks || []).map((chk: any, idx: number) => (
                   <div key={idx} className="p-2 rounded-lg bg-slate-950/60 border border-slate-900 text-[11px] font-mono">
                     <div className="flex items-center gap-1.5">
                       <span className={`w-1.5 h-1.5 rounded-full ${chk.passed ? 'bg-emerald-400' : 'bg-amber-400'}`} />
