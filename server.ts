@@ -28,6 +28,7 @@ import whatsappRoutes from './src/server/routes/whatsapp';
 import ocrRoutes from './src/server/routes/ocr';
 import paymentsRoutes from './src/server/routes/payments';
 import knowledgeRoutes from './src/server/routes/knowledge';
+import mediaRoutes from './src/server/routes/media';
 import { databaseRows } from './src/server/app';
 import { caseRepository } from './src/server/db/case-repository';
 import { metaIntegration } from './src/server/integrations/meta';
@@ -228,6 +229,8 @@ async function startServer() {
   app.use('/api', ocrRoutes);
   app.use('/api/payments', paymentsRoutes);
   app.use('/api/knowledge', knowledgeRoutes);
+  app.use('/api/media', mediaRoutes);
+  app.use('/api', mediaRoutes);
 
   // Meta Status Direct Fallback Route for UI Compatibility
   app.get(['/api/meta/status', '/api/marketing/meta/status'], (req, res) => {

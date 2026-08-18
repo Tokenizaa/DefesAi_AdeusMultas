@@ -14,6 +14,8 @@ export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
 export type LogService =
   | 'ai'
+  | 'ai_media'
+  | 'media'
   | 'supabase'
   | 'payments'
   | 'meta'

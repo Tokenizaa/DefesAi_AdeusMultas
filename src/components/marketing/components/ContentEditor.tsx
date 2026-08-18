@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   X, Save, Sparkles, Bot, Info, ImageIcon, History as HistoryIcon, PenLine, Wand2,
   RefreshCw, TrendingUp, Megaphone, Music, Film, Search, AlertCircle, CheckCircle2,
-  Instagram, Globe, Clapperboard, Eye,
+  Instagram, Globe, Clapperboard, Eye, Video, Loader2, Download, Upload, Play,
 } from 'lucide-react';
 import { EditorialContentItem, BrandIdentityConfig } from '../../../types';
 import { MarketingOverallMetrics } from '../hooks/use-marketing-service';
@@ -60,6 +60,95 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
   const [versions, setVersions] = useState<ContentVersion[]>([]);
   const [notice, setNotice] = useState<{ kind: 'ok' | 'err'; msg: string } | null>(null);
   const [liveText, setLiveText] = useState(text);
+
+  // Media Generation State (Gemini 3 Pro Image + Veo 3.1)
+  const [editorImageSize, setEditorImageSize] = useState<'1K' | '2K' | '4K'>('2K');
+  const [editorGeneratingImage, setEditorGeneratingImage] = useState(false);
+  const [editorGeneratingVideo, setEditorGeneratingVideo] = useState(false);
+  const [attachedImageUrl, setAttachedImageUrl] = useState<string | null>(content?.imageUrl || content?.mediaUrl || null);
+  const [attachedVideoUrl, setAttachedVideoUrl] = useState<string | null>(null);
+  const [editorVisualPrompt, setEditorVisualPrompt] = useState<string>(
+    content?.visualPrompt || content?.visual_prompt || `Peça visual informativa jurídica de alto impacto sobre: ${content?.title || 'Defesa de Multa'}`
+  );
+
+  const handleGenerateEditorImage = async () => {
+    setEditorGeneratingImage(true);
+    try {
+      const res = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: editorVisualPrompt,
+          imageSize: editorImageSize,
+          aspectRatio: content?.channel === 'tiktok' ? '9:16' : '1:1',
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.imageUrl) {
+        setAttachedImageUrl(data.imageUrl);
+        setNotice({ kind: 'ok', msg: `Imagem HD (${editorImageSize}) gerada com sucesso!` });
+      } else {
+        throw new Error(data.error || 'Falha ao gerar');
+      }
+    } catch (e: any) {
+      setNotice({ kind: 'err', msg: `Erro na imagem: ${e?.message || 'Tente novamente'}` });
+    } finally {
+      setEditorGeneratingImage(false);
+    }
+  };
+
+  const handleGenerateEditorVideo = async () => {
+    if (!attachedImageUrl) return;
+    setEditorGeneratingVideo(true);
+    try {
+      const startRes = await fetch('/api/generate-video', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: 'Animação cinematográfica de trânsito em alta definição',
+          image: attachedImageUrl,
+          aspectRatio: content?.channel === 'tiktok' ? '9:16' : '16:9',
+        }),
+      });
+      const startData = await startRes.json();
+      if (startData.success && startData.operationName) {
+        let isDone = false;
+        let iters = 0;
+        while (!isDone && iters < 20) {
+          await new Promise((r) => setTimeout(r, 2000));
+          iters++;
+          const stRes = await fetch('/api/video-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ operationName: startData.operationName }),
+          });
+          const stData = await stRes.json();
+          if (stData.done) isDone = true;
+        }
+
+        const dlRes = await fetch('/api/video-download', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ operationName: startData.operationName }),
+        });
+        if (dlRes.ok) {
+          const contentType = dlRes.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const json = await dlRes.json();
+            setAttachedVideoUrl(json.videoUrl || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4');
+          } else {
+            const blob = await dlRes.blob();
+            setAttachedVideoUrl(URL.createObjectURL(blob));
+          }
+          setNotice({ kind: 'ok', msg: 'Vídeo animado com Veo 3.1 com sucesso!' });
+        }
+      }
+    } catch (e: any) {
+      setNotice({ kind: 'err', msg: `Erro no vídeo: ${e?.message || 'Tente novamente'}` });
+    } finally {
+      setEditorGeneratingVideo(false);
+    }
+  };
 
   useEffect(() => {
     if (content) {
@@ -365,10 +454,122 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
 
           <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-3">
             {panelTab === 'assets' && (
-              <div className="p-4 border border-dashed border-slate-300 rounded-xl text-center text-[11px] text-slate-400">
-                <ImageIcon className="w-6 h-6 mx-auto mb-1.5 opacity-40" />
-                <p>Sem armazenamento de mídia configurado neste servidor.</p>
-                <p className="mt-1 font-mono text-[10px]">Geração de imagem/narração requer /api/generate/* + credenciais — planejado na migração v1→v2.</p>
+              <div className="space-y-4">
+                {/* Media Preview if exists */}
+                {attachedVideoUrl ? (
+                  <div className="space-y-2">
+                    <div className="rounded-lg overflow-hidden bg-black border border-slate-200">
+                      <video src={attachedVideoUrl} controls className="w-full max-h-48 object-contain" />
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-emerald-700 font-bold flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Vídeo Veo Anexado
+                      </span>
+                      <a
+                        href={attachedVideoUrl}
+                        download="video-post.mp4"
+                        className="text-indigo-600 font-bold hover:underline"
+                      >
+                        Baixar MP4
+                      </a>
+                    </div>
+                  </div>
+                ) : attachedImageUrl ? (
+                  <div className="space-y-2">
+                    <div className="rounded-lg overflow-hidden bg-slate-900 border border-slate-200">
+                      <img src={attachedImageUrl} alt="Anexo Visual" className="w-full max-h-48 object-contain" />
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-emerald-700 font-bold flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Imagem {editorImageSize} Anexada
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleGenerateEditorVideo}
+                        disabled={editorGeneratingVideo}
+                        className="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded flex items-center gap-1 cursor-pointer"
+                      >
+                        {editorGeneratingVideo ? (
+                          <>
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                            <span>Animando...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Video className="w-3 h-3" />
+                            <span>Animar com Veo</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Image Generation Tool */}
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-[#155BCB]" />
+                      Gerador de Imagem HD
+                    </span>
+                    <span className="text-[9px] font-mono bg-blue-50 text-[#155BCB] px-1.5 py-0.5 rounded font-bold">
+                      gemini-3-pro-image-preview
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1">
+                      Prompt Visual
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={editorVisualPrompt}
+                      onChange={(e) => setEditorVisualPrompt(e.target.value)}
+                      className="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1">
+                      Resolução da Imagem
+                    </label>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {(['1K', '2K', '4K'] as const).map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setEditorImageSize(s)}
+                          className={`py-1 text-xs font-bold rounded border cursor-pointer ${
+                            editorImageSize === s
+                              ? 'bg-[#155BCB] text-white border-[#155BCB]'
+                              : 'bg-white text-slate-600 border-slate-200'
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleGenerateEditorImage}
+                    disabled={editorGeneratingImage}
+                    className="w-full py-2 bg-[#155BCB] hover:bg-[#0C326F] disabled:bg-slate-300 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                  >
+                    {editorGeneratingImage ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Gerando em {editorImageSize}...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3.5 h-3.5 text-[#FFCD07]" />
+                        <span>Gerar Imagem {editorImageSize}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             )}
 

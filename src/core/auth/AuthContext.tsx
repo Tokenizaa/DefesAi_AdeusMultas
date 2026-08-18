@@ -12,7 +12,7 @@ import {
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signUp: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signUp: (name: string, email: string, password: string, phone?: string) => Promise<{ success: boolean; error?: string }>;
   loginAsDemoUser: () => Promise<void>;
   loginAsDemoAdmin: () => Promise<void>;
   logout: () => Promise<void>;
@@ -163,10 +163,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true };
   };
 
-  const signUp = async (name: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const signUp = async (name: string, email: string, password: string, phone?: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = name.trim();
+    const cleanPhone = phone ? phone.trim() : undefined;
 
     if (!cleanName) {
       setIsLoading(false);
@@ -193,6 +194,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             data: {
               name: cleanName,
               role: 'citizen',
+              phone: cleanPhone,
             },
           },
         });
@@ -208,6 +210,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             name: cleanName,
             email: cleanEmail,
             role: 'citizen',
+            phone: cleanPhone,
             createdAt: new Date().toISOString(),
           };
           setUser(authUser);
@@ -234,6 +237,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name: cleanName,
       email: cleanEmail,
       role: 'citizen',
+      phone: cleanPhone,
       createdAt: new Date().toISOString(),
     };
 

@@ -167,7 +167,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ activeCaseCount = 0 })
             <div className="min-w-0">
               <p className="text-xs font-bold text-[#071D41] truncate">{user?.name || 'Condutor'}</p>
               <p className="text-[10px] font-mono text-[#168821] font-semibold block truncate">
-                Conta gov.br Verificada
+                Conta Verificada
               </p>
             </div>
           </div>

@@ -59,7 +59,7 @@ export const LandingPageView: React.FC = () => {
             onClick={() => navigate('/login')}
             className="w-full sm:w-auto px-6 py-3.5 bg-white hover:bg-slate-100 text-[#071D41] border border-[#CCCCCC] rounded-lg text-sm font-bold transition-colors cursor-pointer"
           >
-            Acessar com gov.br
+            Acessar Minha Conta
           </button>
         </div>
 

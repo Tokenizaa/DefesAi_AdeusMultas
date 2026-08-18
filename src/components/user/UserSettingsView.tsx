@@ -136,7 +136,7 @@ export const UserSettingsView: React.FC = () => {
                 <h3 className="text-sm font-bold text-slate-900">{name || 'Condutor'}</h3>
                 <p className="text-xs text-slate-500 font-mono">{user?.email}</p>
                 <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-orange-700 border border-orange-200">
-                  Conta gov.br Verificada
+                  Conta Verificada
                 </span>
               </div>
             </div>

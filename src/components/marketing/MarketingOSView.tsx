@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Bot, LayoutDashboard, Target, FileText, CalendarClock, Radio,
-  Zap, BarChart3, Settings,
+  Zap, BarChart3, Settings, Sparkles,
 } from 'lucide-react';
 import { useMarketingService } from './hooks/use-marketing-service';
 import { MarketingDashboard } from './components/MarketingDashboard';
@@ -14,11 +14,13 @@ import { MetaConnectionModal } from './meta/MetaConnectionModal';
 import { AutomationsView } from './components/AutomationsView';
 import { ResultsView } from './components/ResultsView';
 import { MarketingSettings } from './components/MarketingSettings';
+import { MediaStudioView } from './components/MediaStudioView';
 
 type ViewKey =
   | 'dashboard'
   | 'planning'
   | 'contents'
+  | 'studio'
   | 'schedule'
   | 'channels'
   | 'automations'
@@ -63,6 +65,7 @@ export const MarketingOSView: React.FC = () => {
     { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { key: 'planning', label: 'Planejamento', icon: Target },
     { key: 'contents', label: 'Conteúdos', icon: FileText },
+    { key: 'studio', label: 'Estúdio IA (Imagens & Veo)', icon: Sparkles },
     { key: 'schedule', label: 'Agendamento', icon: CalendarClock },
     { key: 'automations', label: 'Automações', icon: Zap },
     { key: 'channels', label: 'Canais', icon: Radio },
@@ -141,12 +144,16 @@ export const MarketingOSView: React.FC = () => {
             scheduledPosts={scheduledPosts}
             metaConnected={metaConnected}
             onVerifyChannel={() => setShowMetaConnectModal(true)}
+            onOpenStudio={() => setActiveView('studio')}
           />
         )}
         {activeView === 'planning' && (
           <ContentKanban contents={contents} onMove={(id, status) => updateContentStatus(id, status)} />
         )}
         {activeView === 'contents' && renderContents()}
+        {activeView === 'studio' && (
+          <MediaStudioView onContentCreated={() => refreshMarketingData()} />
+        )}
         {activeView === 'schedule' && (
           <ScheduleView
             contents={contents}

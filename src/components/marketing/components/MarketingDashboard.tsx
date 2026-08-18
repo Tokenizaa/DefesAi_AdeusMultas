@@ -13,12 +13,37 @@ export const MarketingDashboard: React.FC<{
   scheduledPosts: number;
   metaConnected: boolean;
   onVerifyChannel: () => void;
-}> = ({ agents, metrics, cycleCount, lastCycleAt, publisherQueue, scheduledPosts, metaConnected, onVerifyChannel }) => {
+  onOpenStudio?: () => void;
+}> = ({ agents, metrics, cycleCount, lastCycleAt, publisherQueue, scheduledPosts, metaConnected, onVerifyChannel, onOpenStudio }) => {
   const activeAgents = agents.filter((a) => a.status === 'running').length;
   const inAlert = agents.filter((a) => a.status === 'alert').length;
 
   return (
     <div className="space-y-4">
+      {/* AI Studio & 7-Day Campaign Quick Launcher */}
+      {onOpenStudio && (
+        <div className="p-4 bg-gradient-to-r from-[#071D41] via-[#0C326F] to-[#155BCB] rounded-xl text-white shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-blue-800">
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-900/60 text-[#FFCD07] text-[10px] font-bold uppercase tracking-wider">
+              <span>Novas Ferramentas de IA Generativa</span>
+            </div>
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              Gerador de Imagens HD (1K, 2K, 4K) &amp; Animação de Vídeos Veo 3.1
+            </h3>
+            <p className="text-xs text-blue-100 max-w-xl">
+              Crie peças visuais em alta resolução para seus recursos e gere campanhas completas de 7 dias de postagens automaticamente.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onOpenStudio}
+            className="px-4 py-2.5 bg-[#FFCD07] hover:bg-[#F5A623] text-[#071D41] font-bold rounded-lg text-xs transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer shrink-0"
+          >
+            <span>Abrir Estúdio IA &amp; Gerar Posts</span>
+          </button>
+        </div>
+      )}
       {/* Supervisão: estado real do organismo */}
       <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono">
         <span className="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-1.5">

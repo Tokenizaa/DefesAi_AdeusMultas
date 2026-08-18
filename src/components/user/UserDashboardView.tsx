@@ -41,7 +41,7 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({ cases, onS
         <div className="space-y-2 max-w-xl">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-900/60 text-[#FFCD07] border border-blue-800 text-[10px] font-mono uppercase tracking-wider font-bold">
             <Sparkles className="w-3 h-3 text-[#FFCD07]" />
-            <span>Área do Condutor • gov.br</span>
+            <span>Área do Condutor • DefesAi</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
             Olá, {user?.name || 'Condutor'}!
