@@ -7,6 +7,13 @@ const router = Router();
 
 // OCR & Intelligent Ticket Parser Endpoint
 router.post('/ocr/analyze', async (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(501).json({
+      error: 'Serviço de OCR não configurado',
+      message: 'Configure um provedor de OCR (Google Vision, Tesseract, etc.) para produção.'
+    });
+  }
+
   try {
     const { rawText, presetId, serviceType } = req.body;
 

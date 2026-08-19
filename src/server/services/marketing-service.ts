@@ -24,6 +24,10 @@ export class MarketingService {
   private async initializeState() {
     // If Supabase is not available, use default values from data files
     if (!this.supabase) {
+      // In production, log warning — no Supabase means limited functionality
+      if (process.env.NODE_ENV === 'production') {
+        logger.error('marketing', 'service', 'initializeState', 'Supabase not configured in production — marketing data will be empty');
+      }
       this.marketingAgents = [...INITIAL_MARKETING_AGENTS];
       this.editorialContents = [...INITIAL_EDITORIAL_CONTENTS];
       this.contentVersions = {};
@@ -59,6 +63,9 @@ export class MarketingService {
       });
     } catch (error) {
       logger.error('marketing', 'service', 'initializeState', 'Error initializing state from Supabase, falling back to defaults', { error });
+      if (process.env.NODE_ENV === 'production') {
+        logger.error('marketing', 'service', 'initializeState', 'Production fallback: using INITIAL_MARKETING_AGENTS due to Supabase error');
+      }
       this.marketingAgents = [...INITIAL_MARKETING_AGENTS];
       this.editorialContents = [...INITIAL_EDITORIAL_CONTENTS];
       this.contentVersions = {};

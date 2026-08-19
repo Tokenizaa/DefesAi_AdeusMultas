@@ -1,6 +1,9 @@
 import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import { GoogleGenAI } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import { CanonicalMapper, CaseDatabaseRow } from './src/core/mappers/canonical-mapper';
@@ -32,6 +35,7 @@ import mediaRoutes from './src/server/routes/media';
 import notificationsRoutes from './src/server/routes/notifications';
 import { notificationService } from './src/server/services/notification-service';
 import { databaseRows } from './src/server/app';
+import { authenticateToken, requireAdmin } from './src/server/middleware/auth-middleware';
 import { caseRepository } from './src/server/db/case-repository';
 import { metaIntegration } from './src/server/integrations/meta';
 import { marketingOrchestrator } from './src/server/workers/marketing-orchestrator.worker';
@@ -206,6 +210,48 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  // Security headers
+  app.use(helmet({
+    contentSecurityPolicy: false, // Desabilitar CSP por agora (precisa de config específica)
+    crossOriginEmbedderPolicy: false,
+  }));
+
+  // CORS — permitir origins específicas
+  const allowedOrigins = [
+    process.env.CLIENT_URL || 'http://localhost:5173',
+    process.env.PRODUCTION_URL || 'https://defesai.com.br',
+  ].filter(Boolean);
+
+  app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  }));
+
+  // Rate limiting global
+  const globalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 200, // máximo 200 requests por IP por janela
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Muitas requisições. Tente novamente em 15 minutos.' },
+  });
+  app.use(globalLimiter);
+
+  // Rate limiting mais restritivo para rotas de IA e auth
+  const strictLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Limite de requisições excedido para este serviço.' },
+  });
+
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -326,6 +372,12 @@ async function startServer() {
 
   // GET Regional Transit Database Query (Renainf / DETRAN Integration Simulator)
   app.get('/api/transit-database/query', (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(501).json({
+        error: 'Serviço de consulta veicular não disponível',
+        message: 'Integração com DETRAN em preparação para produção.'
+      });
+    }
     const { placa, autoInfracao } = req.query;
     const cleanPlaca = String(placa || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 
@@ -359,6 +411,12 @@ async function startServer() {
 
   // GET INMETRO Radar Calibration Check
   app.get('/api/transit-database/inmetro-check', (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(501).json({
+        error: 'Serviço INMETRO não disponível',
+        message: 'Integração com INMETRO em preparação para produção.'
+      });
+    }
     const { equipamentoId } = req.query;
     const cert = TRANSIT_DATABASE_REGISTRY.radarCertificates.find(
       c => c.equipamentoId === equipamentoId
@@ -405,6 +463,15 @@ async function startServer() {
       });
     }
 
+    // Em produção, retornar verified: false quando caso não encontrado
+    if (process.env.NODE_ENV === 'production') {
+      return res.json({
+        verified: false,
+        message: 'Verificação não disponível — caso não encontrado no sistema.',
+        source: 'system',
+      });
+    }
+
     res.json({
       verified: true,
       statusProcessual: 'DEFESA_PROTOCOLADA_REGULAR',
@@ -421,7 +488,7 @@ async function startServer() {
   });
 
   // POST Specialist Manual Override with Cryptographic Audit Log
-  app.post('/api/governance/manual-override', (req, res) => {
+  app.post('/api/governance/manual-override', requireAdmin, (req, res) => {
     const { caseId, overrideField, oldValue, newValue, justification, specialistName } = req.body;
     const row = casesStore.get(caseId);
 
@@ -454,7 +521,13 @@ async function startServer() {
   });
 
   // POST Push Notification Simulation
-  app.post('/api/notifications/push', (req, res) => {
+  app.post('/api/notifications/push', authenticateToken, (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(501).json({
+        error: 'Serviço de push notification não configurado',
+        message: 'Configure FCM/VAPID para push notifications.'
+      });
+    }
     const { title, body, caseId } = req.body;
     res.json({
       success: true,
@@ -465,7 +538,13 @@ async function startServer() {
   });
 
   // POST Email Digest Simulation
-  app.post('/api/notifications/email', (req, res) => {
+  app.post('/api/notifications/email', authenticateToken, (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(501).json({
+        error: 'Serviço de email não configurado',
+        message: 'Configure SMTP/Resend para envio de emails.'
+      });
+    }
     const { email, caseId, template } = req.body;
     res.json({
       success: true,
@@ -477,7 +556,13 @@ async function startServer() {
   });
 
   // POST Offline Batch Sync
-  app.post('/api/sync/offline-batch', (req, res) => {
+  app.post('/api/sync/offline-batch', authenticateToken, (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(501).json({
+        error: 'Sincronização offline não implementada',
+        message: 'Esta funcionalidade será disponibilizada em breve.'
+      });
+    }
     const { pendingActions = [] } = req.body;
     const processedCount = pendingActions.length;
 
@@ -502,42 +587,89 @@ async function startServer() {
   });
 
   // GET Performance & Business Analytics Dashboard
-  app.get('/api/analytics/dashboard', (req, res) => {
+  app.get('/api/analytics/dashboard', authenticateToken, (req, res) => {
     const allCases = Array.from(casesStore.values()).map(r => CanonicalMapper.toDomain(r));
-    const totalProcessed = allCases.length + 1420; // Historical + Live
-    const deferralRate = 94.6;
-    const mrr = 48500.00;
+    
+    // Métricas REAIS calculadas do banco de dados
+    const totalProcessed = allCases.length;
+    const paidCases = allCases.filter(c => 
+      Boolean(c.isPaid) || c.payment?.status === 'approved' ||
+      c.statusPagamento === 'pago' || c.status === 'defesa_pronta'
+    );
+    
+    // Taxa de deferimento baseada em cases com análise
+    const analyzedCases = allCases.filter(c => c.analysis || c.analiseIA);
+    const successfulCases = analyzedCases.filter(c => {
+      const score = c.analysis?.overallSuccessRate || c.analiseIA?.scoreDeferimento || 0;
+      return score >= 70;
+    });
+    const deferralRate = analyzedCases.length > 0 
+      ? Number(((successfulCases.length / analyzedCases.length) * 100).toFixed(1))
+      : 0;
+    
+    // MRR baseado em pagamentos confirmados (R$ 89.90 por caso pago)
+    const mrr = paidCases.length * 89.90;
+    
+    // Economia gerada estimada (R$ 240 por caso processado)
     const economiasGeradasEstimadas = totalProcessed * 240.00;
+    
+    // Distribuição por órgão real
+    const orgaosMap = new Map<string, { count: number; success: number }>();
+    allCases.forEach(c => {
+      const orgao = c.infraction?.autuadorBody || c.dadosInfracao?.orgaoAutuador || 'Não informado';
+      const current = orgaosMap.get(orgao) || { count: 0, success: 0 };
+      current.count++;
+      const score = c.analysis?.overallSuccessRate || c.analiseIA?.scoreDeferimento || 0;
+      if (score >= 70) current.success++;
+      orgaosMap.set(orgao, current);
+    });
+    
+    const distribuicaoOrgaos = Array.from(orgaosMap.entries())
+      .map(([orgao, data]) => ({
+        orgao,
+        percentual: totalProcessed > 0 ? Number(((data.count / totalProcessed) * 100).toFixed(1)) : 0,
+        taxaSucesso: data.count > 0 ? Number(((data.success / data.count) * 100).toFixed(1)) : 0,
+      }))
+      .sort((a, b) => b.percentual - a.percentual)
+      .slice(0, 5);
+    
+    // Top infrações real
+    const infracaoMap = new Map<string, { nome: string; count: number; gravidade: string }>();
+    allCases.forEach(c => {
+      const code = c.infraction?.infractionCode || c.dadosInfracao?.codigoInfracao || 'N/A';
+      const desc = c.infraction?.description || c.dadosInfracao?.descricaoInfracao || 'Infração';
+      const sev = c.infraction?.severity || c.dadosInfracao?.gravidade || 'N/A';
+      const current = infracaoMap.get(code) || { nome: desc, count: 0, gravidade: sev };
+      current.count++;
+      infracaoMap.set(code, current);
+    });
+    
+    const topInfracoes = Array.from(infracaoMap.entries())
+      .map(([codigo, data]) => ({ codigo, ...data }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
 
     res.json({
       totalProcessed,
       deferralRate,
       mrr,
       economiasGeradasEstimadas,
-      distribuicaoOrgaos: [
-        { orgao: 'DETRAN-SP', percentual: 42, taxaSucesso: 95.1 },
-        { orgao: 'PRF', percentual: 24, taxaSucesso: 96.8 },
-        { orgao: 'DSV / CET-SP', percentual: 18, taxaSucesso: 91.4 },
-        { orgao: 'DER-SP', percentual: 10, taxaSucesso: 93.0 },
-        { orgao: 'Outros Órgãos', percentual: 6, taxaSucesso: 89.5 }
-      ],
-      topInfracoes: [
-        { codigo: '745-50', nome: 'Velocidade até 20%', count: 812, gravidade: 'MÉDIA' },
-        { codigo: '746-30', nome: 'Velocidade 20% a 50%', count: 320, gravidade: 'GRAVE' },
-        { codigo: '574-63', nome: 'Rodízio Municipal SP', count: 184, gravidade: 'MÉDIA' },
-        { codigo: '763-32', nome: 'Celular ao Volante', count: 96, gravidade: 'GRAVÍSSIMA' },
-        { codigo: '500-20', nome: 'Multa NIC Pessoa Jurídica', count: 64, gravidade: 'GRAVÍSSIMA' }
-      ]
+      distribuicaoOrgaos,
+      topInfracoes,
     });
   });
 
-  // GET Cases
-  app.get('/api/cases', (req, res) => {
+  // GET Cases (with anti-IDOR: citizens only see their own cases)
+  app.get('/api/cases', authenticateToken, (req, res) => {
     const { userId, claimToken } = req.query;
+    const user = (req as any).user;
     const allRows = Array.from(casesStore.values());
     let filtered = allRows;
 
-    if (userId) {
+    // Non-admin users only see their own cases
+    if (user && user.role !== 'admin') {
+      filtered = filtered.filter(r => r.user_id === user.id);
+    } else if (userId) {
       filtered = filtered.filter(r => r.user_id === userId);
     } else if (claimToken) {
       filtered = filtered.filter(r => r.claim_token === claimToken);
@@ -547,17 +679,24 @@ async function startServer() {
     res.json(domainCases);
   });
 
-  // GET Case by ID
-  app.get('/api/cases/:id', (req, res) => {
+  // GET Case by ID (with anti-IDOR protection)
+  app.get('/api/cases/:id', authenticateToken, (req, res) => {
     const row = casesStore.get(req.params.id);
     if (!row) {
       return res.status(404).json({ error: 'Caso não encontrado' });
     }
+
+    // IDOR Protection: non-admin users can only access their own cases
+    const user = (req as any).user;
+    if (user && user.role !== 'admin' && row.user_id && row.user_id !== user.id) {
+      return res.status(403).json({ error: 'Você não tem permissão para acessar este caso' });
+    }
+
     res.json(CanonicalMapper.toDomain(row));
   });
 
   // POST Create / Save Case
-  app.post('/api/cases', (req, res) => {
+  app.post('/api/cases', authenticateToken, (req, res) => {
     const domainCase: CaseRecord = req.body;
     if (!domainCase.id) {
       domainCase.id = 'case_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
@@ -598,7 +737,7 @@ async function startServer() {
   });
 
   // POST Claim Anonymous Case
-  app.post('/api/cases/claim', (req, res) => {
+  app.post('/api/cases/claim', authenticateToken, (req, res) => {
     const { claimToken, userId, userEmail, userNome } = req.body;
     if (!claimToken) {
       return res.status(400).json({ error: 'Token de claim obrigatório' });
@@ -628,6 +767,10 @@ async function startServer() {
 
     res.json(domainCase);
   });
+
+  // Rate limiting restritivo para rotas de IA e auth
+  app.use('/api/ai', strictLimiter);
+  app.use('/api/auth', strictLimiter);
 
   // POST AI Infraction Analysis (using Gemini API or RAG fallback)
   app.post('/api/ai/analyze-infraction', async (req, res) => {
@@ -712,6 +855,12 @@ Responda em formato JSON estrito com o seguinte schema:
           }
         } catch (geminiError) {
           console.error('Gemini call failed, using RAG Pipeline result', geminiError);
+          if (process.env.NODE_ENV === 'production') {
+            return res.status(503).json({
+              error: 'Serviço de análise indisponível',
+              message: 'Tente novamente em alguns minutos.'
+            });
+          }
         }
       }
 
@@ -805,6 +954,12 @@ Redija em português jurídico formal culto, com excelente fundamentação doutr
           }
         } catch (e) {
           console.error('Error generating defense with Gemini:', e);
+          if (process.env.NODE_ENV === 'production') {
+            return res.status(503).json({
+              error: 'Serviço de geração de defesa indisponível',
+              message: 'Tente novamente em alguns minutos.'
+            });
+          }
         }
       }
 
@@ -981,6 +1136,12 @@ Instruções:
       }
 
       // Fallback
+      if (process.env.NODE_ENV === 'production') {
+        return res.status(503).json({
+          error: 'Consultor jurídico indisponível',
+          message: 'Tente novamente em alguns minutos.'
+        });
+      }
       res.json({
         reply: `Como especialista pericial do **Adeus Multa**, oriento que: toda autuação de velocidade exige que o equipamento medidor comprove verificação periódica anual válida pelo INMETRO (Resolução CONTRAN 798/2020). Além disso, pela Lei 14.071/2020 (Art. 267 CTB), infrações médias ou leves de condutores sem reincidência nos últimos 12 meses devem ser convertidas em advertência por escrito.`
       });
@@ -991,7 +1152,7 @@ Instruções:
   });
 
   // POST WhatsApp Notification Simulator
-  app.post('/api/notifications/whatsapp/simulate', (req, res) => {
+  app.post('/api/notifications/whatsapp/simulate', requireAdmin, (req, res) => {
     const { phone, eventType, caseId } = req.body;
     let messageText = '';
 
@@ -1051,7 +1212,7 @@ Instruções:
   });
 
   // POST Payment Webhook confirmation simulation
-  app.post('/api/payments/confirm', (req, res) => {
+  app.post('/api/payments/confirm', authenticateToken, (req, res) => {
     const { caseId, txId } = req.body;
     const row = casesStore.get(caseId);
     if (!row) {

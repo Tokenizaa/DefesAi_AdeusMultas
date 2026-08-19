@@ -170,9 +170,15 @@ export class AprendizadoAgent {
 
         let metrics;
         if (isDemoMode) {
-          // Generate realistic simulated data for development
-          metrics = this.generateDemoMetrics(content);
-          logger.debug('marketing', 'agents', 'aprendizado', `Using demo metrics for content ${content.id}`);
+          // In production, do not generate simulated demo metrics
+          if (process.env.NODE_ENV === 'production') {
+            metrics = { impressions: 0, reach: 0, engagements: 0, engagementRate: 0, likes: 0, comments: 0, shares: 0, saved: 0, videoViews: 0, timestamp: new Date().toISOString() };
+            logger.warn('marketing', 'agents', 'aprendizado', `Production mode — returning zeroed metrics for content ${content.id} (no real Meta API configured)`);
+          } else {
+            // Generate realistic simulated data for development
+            metrics = this.generateDemoMetrics(content);
+            logger.debug('marketing', 'agents', 'aprendizado', `Using demo metrics for content ${content.id}`);
+          }
         } else {
           // Fetch real metrics from Meta Graph API
           metrics = await this.fetchRealMetaMetrics(content.meta_post_id);

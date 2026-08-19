@@ -5,6 +5,13 @@ const router = Router();
 
 // Communication & WhatsApp (Evolution API Simulator)
 router.post('/communication/whatsapp/send', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(501).json({
+      error: 'Serviço de WhatsApp não configurado',
+      message: 'Integração com WhatsApp em preparação.'
+    });
+  }
+
   const { phone, message, caseId, notificationType } = req.body;
   
   eventBus.publish(EventTopics.WHATSAPP_MESSAGE_SENT, {

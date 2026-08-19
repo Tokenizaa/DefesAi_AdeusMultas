@@ -150,7 +150,13 @@ export class EstrategicoAgent {
       
       // For now, we'll return structured data representing what real analysis would produce
       logger.debug('marketing', 'agents', 'estrategico', 'Analyzing search trends (placeholder for real API integration)');
-      
+
+      // In production, return empty array — no hardcoded fake trends
+      if (process.env.NODE_ENV === 'production') {
+        logger.warn('marketing', 'agents', 'estrategico', 'Production mode — returning empty trends (no real search API configured)');
+        return [];
+      }
+
       return [
         {
           topic: 'Radares Portáteis',
@@ -372,9 +378,9 @@ return null;
         
         const updates = {
           checkedAt: currentTimestamp,
-          updatesAvailable: Math.random() > 0.7, // 30% chance of updates for demo purposes
-          updateTypes: [],
-          details: []
+          updatesAvailable: process.env.NODE_ENV === 'production' ? false : Math.random() > 0.7, // 30% chance in dev only
+          updateTypes: [] as string[],
+          details: [] as string[]
         };
         
         if (updates.updatesAvailable) {

@@ -106,6 +106,7 @@ export class InteligenciaAgent {
             metaPostId: content.meta_post_id,
             contentType: content.format,
             channel: content.channel,
+            isSimulated: false,
             metrics: {
               impressions: 0, // Would be populated from real API
               reach: 0,       // Would be populated from real API
