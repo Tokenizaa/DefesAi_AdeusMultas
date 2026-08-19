@@ -73,7 +73,7 @@ export const InfractionIdentificationStep: React.FC<InfractionIdentificationStep
 
   const handleFileUpload = async (file: File) => {
     setIsReadingFile(true);
-    setOcrStatusMessage(`Lendo arquivo "${file.name}" com Inteligência Artificial...`);
+    setOcrStatusMessage(`Enviando "${file.name}" para análise interna...`);
 
     try {
       const res = await fetch('/api/ocr/analyze', {
@@ -85,31 +85,15 @@ export const InfractionIdentificationStep: React.FC<InfractionIdentificationStep
         }),
       });
       const data = await res.json();
-      if (data.success && data.extractedData) {
-        const extInf = data.extractedData.infraction || {};
-        const extVeh = data.extractedData.vehicle || {};
-
-        onUpdateInfraction({
-          ...infractionData,
-          aitNumber: extInf.aitNumber || infractionData.aitNumber || '1B892014',
-          autuadorBody: extInf.autuadorBody || infractionData.autuadorBody || 'DETRAN-SP',
-          infractionCode: extInf.infractionCode || infractionData.infractionCode,
-          ctbArticle: extInf.ctbArticle || infractionData.ctbArticle,
-          dateTime: extInf.dateTime || infractionData.dateTime,
-          location: extInf.location || infractionData.location,
-        });
-
-        if (extVeh.plate) {
-          onUpdateVehicle({
-            ...vehicleData,
-            plate: extVeh.plate.toUpperCase(),
-            brandModel: extVeh.brandModel || vehicleData.brandModel,
-          });
-        }
-        setOcrStatusMessage('Campos preenchidos automaticamente com base no seu documento!');
+      if (data.success) {
+        // OCR data is used internally by the backend (RAG pipeline, analysis).
+        // The form fields remain as the user filled them — source of truth.
+        setOcrStatusMessage('Documento recebido! Análise interna concluída.');
+      } else {
+        setOcrStatusMessage('Documento enviado. Preencha os campos manualmente abaixo.');
       }
     } catch (err) {
-      setOcrStatusMessage('Leitura finalizada. Você pode conferir ou ajustar os campos abaixo.');
+      setOcrStatusMessage('Não foi possível ler o documento. Preencha os campos manualmente.');
     } finally {
       setIsReadingFile(false);
     }
@@ -197,10 +181,10 @@ export const InfractionIdentificationStep: React.FC<InfractionIdentificationStep
           </div>
           <div className="text-left">
             <p className="text-xs font-bold text-slate-800">
-              Quer preencher automaticamente? Anexe uma foto ou PDF da notificação (Opcional)
+              Anexe uma foto ou PDF da notificação para melhorar a análise (Opcional)
             </p>
             <p className="text-[11px] text-slate-500">
-              Formatos aceitos: PDF, JPG ou PNG. Ou se preferir, preencha os 3 campos abaixo.
+              Formatos aceitos: PDF, JPG ou PNG. Os dados abaixo devem ser preenchidos manualmente.
             </p>
           </div>
           <span className="text-[11px] font-bold text-[#155BCB] bg-white border border-blue-200 px-3 py-1 rounded-lg group-hover:bg-[#155BCB] group-hover:text-white transition-colors shrink-0">
