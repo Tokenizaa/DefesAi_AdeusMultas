@@ -1,8 +1,12 @@
 import { Router } from 'express';
 import { commercialService } from '../commercial/commercial-service';
 import { runCommercialTestSuite } from '../commercial/commercial-test-suite';
+import { requireAdmin } from '../middleware/auth-middleware';
 
 const router = Router();
+
+// All commercial routes require admin authentication
+router.use(requireAdmin);
 
 // =========================================================================
 // PRICING ENDPOINTS

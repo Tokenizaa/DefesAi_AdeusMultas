@@ -2,8 +2,12 @@ import { Router } from 'express';
 import { eventBus, EventTopics } from '../../core/events/topics';
 import { runPipeline } from '../../agents/pipeline/runner';
 import { INITIAL_MARKETING_AGENTS, INITIAL_EDITORIAL_CONTENTS, BRAND_IDENTITY } from '../../data/marketing-agents-data';
+import { requireAdmin } from '../middleware/auth-middleware';
 
 const router = Router();
+
+// All agent routes require admin authentication
+router.use(requireAdmin);
 
 // Autonomous Agents Ecosystem & Pipeline
 router.get('/agents/registry', (req, res) => {

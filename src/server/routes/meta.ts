@@ -10,13 +10,14 @@ import { metaWebhookService } from '../../integrations/meta/webhooks/meta-webhoo
 import { runMetaIntegrationTests } from '../../integrations/meta/tests/meta-integration-suite';
 import { eventBus, EventTopics } from '../../core/events/topics';
 import { logger } from '../observability/logger';
+import { authenticateToken, requireAdmin } from '../middleware/auth-middleware';
 
 const router = Router();
 
 // ==========================================
 // 1. Connection Status & Safe DTO
 // ==========================================
-router.get(['/integrations/meta/status', '/marketing/meta/status', '/meta/status', '/meta-status'], (req, res) => {
+router.get(['/integrations/meta/status', '/marketing/meta/status', '/meta/status', '/meta-status'], authenticateToken, (req, res) => {
   const status = metaAdapter.getSafeStatus();
   res.json(status);
 });
@@ -67,7 +68,7 @@ router.post(['/integrations/meta/callback', '/meta/callback'], async (req, res) 
   }
 });
 
-router.post(['/integrations/meta/connect', '/meta/connect'], async (req, res) => {
+router.post(['/integrations/meta/connect', '/meta/connect'], requireAdmin, async (req, res) => {
   try {
     const { accessToken, pageId, instagramAccountId } = req.body;
     if (!accessToken) {
@@ -90,7 +91,7 @@ router.post(['/integrations/meta/select-targets', '/meta/select-targets'], (req,
   }
 });
 
-router.post(['/integrations/meta/disconnect', '/meta/disconnect'], async (req, res) => {
+router.post(['/integrations/meta/disconnect', '/meta/disconnect'], requireAdmin, async (req, res) => {
   try {
     await metaAdapter.disconnect();
     res.json({ success: true, message: 'Conta Meta desconectada e permissões revogadas' });
@@ -102,7 +103,7 @@ router.post(['/integrations/meta/disconnect', '/meta/disconnect'], async (req, r
 // ==========================================
 // 3. Publishing Engine
 // ==========================================
-router.post(['/integrations/meta/publish', '/meta/publish'], async (req, res) => {
+router.post(['/integrations/meta/publish', '/meta/publish'], requireAdmin, async (req, res) => {
   try {
     const { destination, message, mediaUrl, linkUrl, pageId, instagramAccountId, contentId } = req.body;
 

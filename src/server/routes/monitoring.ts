@@ -3,8 +3,12 @@ import { metricsService } from '../observability/metrics-service';
 import { healthService } from '../observability/health-service';
 import { aiProviderManager } from '../observability/ai-provider-manager';
 import { alertsService } from '../observability/alerts-service';
+import { requireAdmin } from '../middleware/auth-middleware';
 
 const router = Router();
+
+// All monitoring routes require admin authentication
+router.use(requireAdmin);
 
 // Platform Observability, Health & Monitoring Endpoints
 router.get('/monitoring/health', async (req, res) => {

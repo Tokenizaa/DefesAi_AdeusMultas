@@ -4,8 +4,12 @@ import { marketingService } from '../services/marketing-service';
 import { logger } from '../observability/logger';
 import { eventBus, EventTopics } from '../../core/events/topics';
 import { GenerateVideosOperation, GoogleGenAI } from '@google/genai';
+import { requireAdmin } from '../middleware/auth-middleware';
 
 const router = Router();
+
+// All media routes require admin authentication
+router.use(requireAdmin);
 
 /**
  * POST /api/generate-image & /api/marketing/generate-image

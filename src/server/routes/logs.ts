@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import { logger } from '../observability/logger';
+import { requireAdmin } from '../middleware/auth-middleware';
 
 const router = Router();
+
+// All log routes require admin authentication
+router.use(requireAdmin);
 
 // Central Structured Log Explorer Endpoints
 router.get('/logs', (req, res) => {

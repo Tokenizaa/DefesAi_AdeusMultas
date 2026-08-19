@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { notificationService } from '../services/notification-service';
+import { authenticateToken } from '../middleware/auth-middleware';
 
 const router = Router();
 
@@ -41,10 +42,23 @@ router.post('/unsubscribe', (req, res) => {
 });
 
 // GET /api/notifications/history - Get notifications for active user
-router.get('/history', (req, res) => {
+router.get('/history', authenticateToken, (req, res) => {
   try {
     const userEmail = (req.query.email as string) || (req.query.userEmail as string);
-    const notifications = notificationService.getHistory(userEmail);
+    const user = req.user;
+
+    // Only allow users to see their own notifications (or admin can see any)
+    if (user && user.role !== 'admin' && userEmail && userEmail !== user.email) {
+      return res.status(403).json({ error: 'Você não tem permissão para acessar notificações de outro usuário' });
+    }
+
+    // If no email provided, use the authenticated user's email
+    const effectiveEmail = userEmail || user?.email;
+    if (!effectiveEmail) {
+      return res.status(400).json({ error: 'Email do usuário é obrigatório' });
+    }
+
+    const notifications = notificationService.getHistory(effectiveEmail);
     res.json({ notifications, total: notifications.length });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
