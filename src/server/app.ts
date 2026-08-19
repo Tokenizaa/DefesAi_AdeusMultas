@@ -1,27 +1,123 @@
 import express from 'express';
+import helmet from 'helmet';
+import path from 'path';
 import { caseRepository } from './db/case-repository';
 import type { AuditLogEntry } from '../types';
+import { corsMiddleware } from './config/cors';
+import { globalLimiter, strictLimiter } from './middleware/rate-limit';
 
-// Create Express app
-const app = express();
+// Route modules
+import adminRoutes from './routes/admin';
+import metaRoutes from './routes/meta';
+import commercialRoutes from './routes/commercial';
+import monitoringRoutes from './routes/monitoring';
+import settingsRoutes from './routes/settings';
+import logsRoutes from './routes/logs';
+import marketingRoutes from './routes/marketing';
+import agentsRoutes from './routes/agents';
+import whatsappRoutes from './routes/whatsapp';
+import ocrRoutes from './routes/ocr';
+import paymentsRoutes from './routes/payments';
+import knowledgeRoutes from './routes/knowledge';
+import mediaRoutes from './routes/media';
+import notificationsRoutes from './routes/notifications';
+import healthRoutes from './routes/health';
+import casesRoutes from './routes/cases';
+import auditRoutes from './routes/audit';
+import onboardingRoutes from './routes/onboarding';
+import transitRoutes from './routes/transit';
+import governanceRoutes from './routes/governance';
+import analyticsRoutes from './routes/analytics';
+import aiRoutes from './routes/ai';
+import syncRoutes from './routes/sync';
+import { metaIntegration } from './integrations/meta';
 
-// Add middleware
-app.use(express.json());
-
-// Export the shared instances
-export { app };
+// ---------------------------------------------------------------------------
+// Shared instances (imported by route modules via '../app')
+// ---------------------------------------------------------------------------
 export const databaseRows = caseRepository;
-
-// Shared audit log array
 export const auditLogs: AuditLogEntry[] = [];
 
-// Start server function
-const startServer = (callback: () => void) => {
-  const port = process.env.PORT || 8080;
-  return app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-    callback();
-  });
-};
+// ---------------------------------------------------------------------------
+// createApp() — factory that wires middleware + all routes
+// ---------------------------------------------------------------------------
+export function createApp() {
+  const app = express();
 
-export { startServer };
+  // Security headers
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+    })
+  );
+
+  // CORS
+  app.use(corsMiddleware);
+
+  // Rate limiting
+  app.use(globalLimiter);
+
+  // Body parsing
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+  // ----- Modular API Routes -----
+
+  // ─── Routers with global requireAdmin — mount ONLY at specific prefix ───
+  // (Dual-mount at /api was blocking ALL subsequent routes via requireAdmin)
+  app.use('/api/admin', adminRoutes);
+  app.use('/api/admin/commercial', commercialRoutes);
+  app.use('/api/commercial', commercialRoutes);
+  app.use('/api/agents', agentsRoutes);
+  app.use('/api/monitoring', monitoringRoutes);
+  app.use('/api/settings', settingsRoutes);
+  app.use('/api/logs', logsRoutes);
+  app.use('/api/media', mediaRoutes);
+
+  // ─── Routers with per-route auth (safe to mount at /api) ─────────────────
+  app.use('/api/integrations', metaRoutes);
+  app.use('/api', metaRoutes);
+  app.use('/api/marketing', marketingRoutes);
+  app.use('/api/communication', whatsappRoutes);
+  app.use('/api/ocr', ocrRoutes);
+  app.use('/api/payments', paymentsRoutes);
+  app.use('/api/knowledge', knowledgeRoutes);
+  app.use('/api/notifications', notificationsRoutes);
+
+  // Health check
+  app.use('/api', healthRoutes);
+
+  // Cases CRUD
+  app.use('/api', casesRoutes);
+
+  // Audit logs
+  app.use('/api', auditRoutes);
+
+  // Onboarding rules
+  app.use('/api', onboardingRoutes);
+
+  // Transit database queries
+  app.use('/api', transitRoutes);
+
+  // Governance (law-enforcement, manual-override)
+  app.use('/api', governanceRoutes);
+
+  // Analytics dashboard
+  app.use('/api', analyticsRoutes);
+
+  // AI endpoints (rate-limited via strictLimiter)
+  app.use('/api/ai', strictLimiter);
+  app.use('/api/auth', strictLimiter);
+  app.use('/api', aiRoutes);
+
+  // Sync
+  app.use('/api', syncRoutes);
+
+  // Meta Status Direct Fallback Route for UI Compatibility
+  app.get(['/api/meta/status', '/api/marketing/meta/status'], (_req, res) => {
+    res.json(metaIntegration.getStatus());
+  });
+
+  return app;
+}

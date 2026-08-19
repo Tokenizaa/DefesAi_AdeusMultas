@@ -6,29 +6,51 @@ import { LEGAL_ARGUMENTS, AUTUADOR_BODIES, PROCEDURE_TITLES } from '../../data/k
 import { eventBus, EventTopics } from '../../core/events/topics';
 import { CaseDomain } from '../../types';
 import { enrichDefenseWithGemini } from '../gemini';
+import { authenticateToken } from '../middleware/auth-middleware';
 
 const router = Router();
 
 // Cases CRUD & Lifecycle Endpoints
-router.get('/cases', (req, res) => {
-  const domains: CaseDomain[] = [];
-  for (const row of databaseRows.values()) {
-    domains.push(CanonicalMapper.rowToDomain(row));
+
+// GET /api/cases — with anti-IDOR: citizens only see their own cases
+router.get('/cases', authenticateToken, (req, res) => {
+  const { userId, claimToken } = req.query;
+  const user = req.user;
+
+  let allRows = Array.from(databaseRows.values());
+
+  // Non-admin users only see their own cases
+  if (user && user.role !== 'admin') {
+    allRows = allRows.filter((r) => r.user_id === user.id);
+  } else if (userId) {
+    allRows = allRows.filter((r) => r.user_id === userId);
+  } else if (claimToken) {
+    allRows = allRows.filter((r) => r.claim_token === claimToken);
   }
+
+  const domains: CaseDomain[] = allRows.map((r) => CanonicalMapper.rowToDomain(r));
   // Sort newest first
   domains.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   res.json(domains);
 });
 
-router.get('/cases/:id', (req, res) => {
+// GET /api/cases/:id — with anti-IDOR protection
+router.get('/cases/:id', authenticateToken, (req, res) => {
   const row = databaseRows.get(req.params.id);
   if (!row) {
     return res.status(404).json({ error: 'Caso não encontrado' });
   }
+
+  // IDOR Protection: non-admin users can only access their own cases
+  const user = req.user;
+  if (user && user.role !== 'admin' && row.user_id && row.user_id !== user.id) {
+    return res.status(403).json({ error: 'Você não tem permissão para acessar este caso' });
+  }
+
   res.json(CanonicalMapper.rowToDomain(row));
 });
 
-router.post('/cases', (req, res) => {
+router.post('/cases', authenticateToken, (req, res) => {
   try {
     const domainData: CaseDomain = req.body;
     if (!domainData.id) {
@@ -105,7 +127,7 @@ router.put('/cases/:id', (req, res) => {
 });
 
 // Claim Anonymous Case (Modal Cadastro -> Link account)
-router.post('/cases/:id/claim', (req, res) => {
+router.post('/cases/:id/claim', authenticateToken, (req, res) => {
   const row = databaseRows.get(req.params.id);
   if (!row) {
     return res.status(404).json({ error: 'Caso anônimo não encontrado' });
