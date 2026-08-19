@@ -13,10 +13,21 @@ import {
   ShieldCheck,
   Search,
   User,
-  Phone
+  Phone,
+  Hash,
 } from 'lucide-react';
 import { InfractionData, VehicleData } from '../../../types';
-import { AUTUADOR_BODIES } from '../../../data/knowledge-base';
+import { INFRACTION_CATALOG } from '../../../data/knowledge-base';
+
+import { TestFillButton } from '../../ui/TestFillButton';
+import {
+  generateRandomName,
+  generateRandomPhone,
+  generateRandomVehicleData,
+  generateRandomInfractionData,
+  generateRandomAIT,
+  generateRandomPlate,
+} from '../../../utils/test-data-generator';
 
 interface InfractionIdentificationStepProps {
   infractionData: InfractionData;
@@ -28,6 +39,7 @@ interface InfractionIdentificationStepProps {
   onUpdateLead?: (name: string, phone: string) => void;
   onNext: () => void;
   onBack: () => void;
+  isAdmin?: boolean;
 }
 
 export const InfractionIdentificationStep: React.FC<InfractionIdentificationStepProps> = ({
@@ -40,6 +52,7 @@ export const InfractionIdentificationStep: React.FC<InfractionIdentificationStep
   onUpdateLead,
   onNext,
   onBack,
+  isAdmin = false,
 }) => {
   const [isReadingFile, setIsReadingFile] = useState(false);
   const [ocrStatusMessage, setOcrStatusMessage] = useState<string | null>(null);
@@ -60,16 +73,9 @@ export const InfractionIdentificationStep: React.FC<InfractionIdentificationStep
   const isFormValid =
     (currentLeadName.trim().length >= 3) &&
     (currentLeadPhone.trim().length >= 8) &&
-    (infractionData.aitNumber?.trim().length || 0) >= 4 &&
     (vehicleData.plate?.trim().length || 0) >= 7 &&
-    (infractionData.autuadorBody?.trim().length || 0) >= 3;
-
-  const handleSelectAutuador = (name: string) => {
-    onUpdateInfraction({
-      ...infractionData,
-      autuadorBody: name,
-    });
-  };
+    (infractionData.autuadorBody?.trim().length || 0) >= 3 &&
+    (infractionData.infractionCode?.trim().length || 0) >= 3;
 
   const handleFileUpload = async (file: File) => {
     setIsReadingFile(true);
@@ -116,6 +122,27 @@ export const InfractionIdentificationStep: React.FC<InfractionIdentificationStep
       </div>
 
       {/* Lead Contact Box (Nome + WhatsApp) */}
+      <div className="flex items-center gap-2">
+        <TestFillButton
+          isAdmin={isAdmin}
+          onClick={() => {
+            const name = generateRandomName();
+            const phone = generateRandomPhone();
+            const vehicle = generateRandomVehicleData({
+              plate: generateRandomPlate(),
+            });
+            const infraction = generateRandomInfractionData({
+              aitNumber: generateRandomAIT(),
+            });
+            if (onUpdateLead) onUpdateLead(name, phone);
+            setCurrentLeadName(name);
+            setCurrentLeadPhone(phone);
+            onUpdateInfraction({ ...infractionData, ...infraction });
+            onUpdateVehicle({ ...vehicleData, ...vehicle });
+          }}
+        />
+      </div>
+
       <div className="p-4 bg-blue-50/50 border border-blue-200 rounded-xl space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -214,7 +241,7 @@ export const InfractionIdentificationStep: React.FC<InfractionIdentificationStep
           <div>
             <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1.5 flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5 text-[#155BCB]" />
-              Número do Auto de Infração (AIT) *
+              Número do Auto de Infração (AIT)
             </label>
             <input
               id="input-ait-number"
@@ -250,57 +277,173 @@ export const InfractionIdentificationStep: React.FC<InfractionIdentificationStep
           </div>
         </div>
 
-        {/* Órgão Autuador */}
+        {/* Código da Infração — FONTE DE VERDADE */}
         <div>
           <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1.5 flex items-center gap-1.5">
-            <Building className="w-3.5 h-3.5 text-[#155BCB]" />
-            Órgão Autuador / Julgador *
+            <Hash className="w-3.5 h-3.5 text-[#155BCB]" />
+            Código da Infração *
           </label>
-          <input
-            id="input-autuador-body"
-            type="text"
-            value={infractionData.autuadorBody || ''}
-            onChange={(e) => onUpdateInfraction({ ...infractionData, autuadorBody: e.target.value })}
-            placeholder="Ex: DETRAN-SP, PRF, DNIT, CET-SP, DER"
+          <select
+            id="input-infraction-code"
+            value={infractionData.infractionCode || ''}
+            onChange={(e) => {
+              const item = INFRACTION_CATALOG.find((x) => x.code === e.target.value);
+              if (item) {
+                onUpdateInfraction({
+                  ...infractionData,
+                  infractionCode: item.code,
+                  ctbArticle: item.article,
+                  fineAmount: item.fineAmount,
+                  points: item.points,
+                  severity: item.severity,
+                  description: item.description,
+                });
+              } else {
+                onUpdateInfraction({ ...infractionData, infractionCode: e.target.value });
+              }
+            }}
             className="w-full text-sm font-medium bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none transition-all"
-          />
-
-          {/* Chips Rápidos de Órgãos mais comuns */}
-          <div className="flex flex-wrap items-center gap-1.5 mt-2">
-            <span className="text-[10px] font-mono text-slate-400">Atalhos:</span>
-            {['DETRAN-SP', 'DETRAN-RJ', 'DETRAN-MG', 'PRF', 'DNIT', 'CET-SP', 'DER-SP'].map((body) => (
-              <button
-                key={body}
-                type="button"
-                onClick={() => handleSelectAutuador(body)}
-                className={`text-[10px] font-mono px-2 py-0.5 rounded-lg border transition-colors cursor-pointer ${
-                  infractionData.autuadorBody?.includes(body)
-                    ? 'bg-blue-100 text-[#155BCB] border-blue-300 font-bold'
-                    : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
-                }`}
-              >
-                {body}
-              </button>
+          >
+            <option value="">Selecione o código da infração...</option>
+            {INFRACTION_CATALOG.map((item) => (
+              <option key={item.code} value={item.code}>
+                {item.code} — {item.description.slice(0, 70)}...
+              </option>
             ))}
-          </div>
+          </select>
+          {/* Resumo auto-preenchido */}
+          {infractionData.infractionCode && infractionData.ctbArticle && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-[#155BCB] border border-blue-200 font-mono">
+                {infractionData.ctbArticle}
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 font-mono">
+                {infractionData.points} pontos
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 font-mono">
+                R$ {infractionData.fineAmount.toFixed(2)}
+              </span>
+              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border font-mono ${
+                infractionData.severity === 'gravissima' ? 'bg-rose-50 text-rose-700 border-rose-200' :
+                infractionData.severity === 'grave' ? 'bg-orange-50 text-orange-700 border-orange-200' :
+                infractionData.severity === 'media' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
+                'bg-green-50 text-green-700 border-green-200'
+              }`}>
+                {infractionData.severity}
+              </span>
+            </div>
+          )}
         </div>
 
-        {/* Data da Infração (Opcional ou quando constar) */}
-        <div>
-          <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1.5 flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5 text-slate-500" />
-            Data da Ocorrência (Opcional)
-          </label>
-          <input
-            id="input-datetime"
-            type="date"
-            value={infractionData.dateTime?.split(' ')[0] || ''}
-            onChange={(e) => onUpdateInfraction({ ...infractionData, dateTime: e.target.value })}
-            className="w-full sm:w-1/2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none transition-all"
-          />
-          <span className="text-[10px] text-slate-400 mt-1 block">
-            Usada para calcular a decadência de expedição da notificação em 30 dias (Art. 281-A CTB).
-          </span>
+        {/* Órgão Autuador + Data lado a lado */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Órgão Autuador */}
+          <div className="sm:col-span-2">
+            <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1.5 flex items-center gap-1.5">
+              <Building className="w-3.5 h-3.5 text-[#155BCB]" />
+              Órgão Autuador / Julgador *
+            </label>
+            <select
+              id="input-autuador-body"
+              value={infractionData.autuadorBody || ''}
+              onChange={(e) => onUpdateInfraction({ ...infractionData, autuadorBody: e.target.value })}
+              className="w-full text-sm font-medium bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none transition-all"
+            >
+              <option value="">Selecione o órgão autuador...</option>
+              <optgroup label="Órgãos Federais">
+                <option value="PRF">PRF — Polícia Rodoviária Federal</option>
+                <option value="DNIT">DNIT — Depto. Nac. de Infraestrutura de Transportes</option>
+                <option value="ANTT">ANTT — Agência Nac. de Transportes Terrestres</option>
+                <option value="IBAMA">IBAMA — Instituto Brasileiro do Meio Ambiente</option>
+              </optgroup>
+              <optgroup label="DETRAN por Estado">
+                <option value="DETRAN-AC">DETRAN-AC — Acre</option>
+                <option value="DETRAN-AL">DETRAN-AL — Alagoas</option>
+                <option value="DETRAN-AP">DETRAN-AP — Amapá</option>
+                <option value="DETRAN-AM">DETRAN-AM — Amazonas</option>
+                <option value="DETRAN-BA">DETRAN-BA — Bahia</option>
+                <option value="DETRAN-CE">DETRAN-CE — Ceará</option>
+                <option value="DETRAN-DF">DETRAN-DF — Distrito Federal</option>
+                <option value="DETRAN-ES">DETRAN-ES — Espírito Santo</option>
+                <option value="DETRAN-GO">DETRAN-GO — Goiás</option>
+                <option value="DETRAN-MA">DETRAN-MA — Maranhão</option>
+                <option value="DETRAN-MT">DETRAN-MT — Mato Grosso</option>
+                <option value="DETRAN-MS">DETRAN-MS — Mato Grosso do Sul</option>
+                <option value="DETRAN-MG">DETRAN-MG — Minas Gerais</option>
+                <option value="DETRAN-PA">DETRAN-PA — Pará</option>
+                <option value="DETRAN-PB">DETRAN-PB — Paraíba</option>
+                <option value="DETRAN-PR">DETRAN-PR — Paraná</option>
+                <option value="DETRAN-PE">DETRAN-PE — Pernambuco</option>
+                <option value="DETRAN-PI">DETRAN-PI — Piauí</option>
+                <option value="DETRAN-RJ">DETRAN-RJ — Rio de Janeiro</option>
+                <option value="DETRAN-RN">DETRAN-RN — Rio Grande do Norte</option>
+                <option value="DETRAN-RS">DETRAN-RS — Rio Grande do Sul</option>
+                <option value="DETRAN-RO">DETRAN-RO — Rondônia</option>
+                <option value="DETRAN-RR">DETRAN-RR — Roraima</option>
+                <option value="DETRAN-SC">DETRAN-SC — Santa Catarina</option>
+                <option value="DETRAN-SP">DETRAN-SP — São Paulo</option>
+                <option value="DETRAN-SE">DETRAN-SE — Sergipe</option>
+                <option value="DETRAN-TO">DETRAN-TO — Tocantins</option>
+              </optgroup>
+              <optgroup label="DER / Infraestrutura Estadual">
+                <option value="DER-SP">DER-SP — Depto. Estadual de Estradas de Rodagem (SP)</option>
+                <option value="DER-RJ">DER-RJ — Depto. Estadual de Estradas de Rodagem (RJ)</option>
+                <option value="DER-MG">DER-MG — Depto. Estadual de Estradas de Rodagem (MG)</option>
+                <option value="DER-PR">DER-PR — Depto. Estadual de Estradas de Rodagem (PR)</option>
+                <option value="DER-RS">DER-RS — Depto. Estadual de Estradas de Rodagem (RS)</option>
+                <option value="DER-SC">DER-SC — Depto. Estadual de Estradas de Rodagem (SC)</option>
+                <option value="DER-BA">DER-BA — Depto. Estadual de Estradas de Rodagem (BA)</option>
+                <option value="DER-GO">DER-GO — Depto. Estadual de Estradas de Rodagem (GO)</option>
+              </optgroup>
+              <optgroup label="CET / Trânsito Municipal">
+                <option value="CET-SP">CET-SP — Comp. de Trânsito de São Paulo</option>
+                <option value="CET-RJ">CET-RJ — Comp. de Trânsito do Rio de Janeiro</option>
+                <option value="CET-BH">CET-BH — Comp. de Trânsito de Belo Horizonte</option>
+                <option value="CET-CUR">CET-CUR — Comp. de Trânsito de Curitiba</option>
+                <option value="CET-GOI">CET-GOI — Comp. de Trânsito de Goiânia</option>
+                <option value="CET-BSB">CET-BSB — Comp. de Trânsito de Brasília</option>
+                <option value="TRANSALVADOR">TRANSALVADOR — Empresa de Trans. de Salvador</option>
+                <option value="TRANSPE">TRANSPE — Dept. de Trânsito de Recife</option>
+                <option value="TRANSFOR">TRANSFOR — Trans. Fortaleza</option>
+                <option value="PMT-SP">PMT-SP — Prefeitura de São Paulo (Mobilidade)</option>
+              </optgroup>
+              <optgroup label="Outros Órgãos">
+                <option value="POLICIA_MILITAR">Polícia Militar (Multa Eletrônica)</option>
+                <option value="POLICIA_RODOVIARIA">Polícia Rodoviária Estadual</option>
+                <option value="ARU-SP">ARU-SP — Admin. Regional de Urbanismo (SP)</option>
+                <option value="INFRAERO">INFRAERO — Aeroportos</option>
+                <option value="OUTRO">Outro órgão (digitar manualmente)</option>
+              </optgroup>
+            </select>
+            {infractionData.autuadorBody === 'OUTRO' && (
+              <input
+                id="input-autuador-body-custom"
+                type="text"
+                value=""
+                onChange={(e) => onUpdateInfraction({ ...infractionData, autuadorBody: e.target.value.toUpperCase() })}
+                placeholder="Digite o nome do órgão..."
+                className="w-full text-sm font-medium bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 mt-2 focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none transition-all"
+              />
+            )}
+          </div>
+
+          {/* Data da Infração */}
+          <div>
+            <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1.5 flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-slate-500" />
+              Data da Ocorrência
+            </label>
+            <input
+              id="input-datetime"
+              type="date"
+              value={infractionData.dateTime?.split(' ')[0] || ''}
+              onChange={(e) => onUpdateInfraction({ ...infractionData, dateTime: e.target.value })}
+              className="w-full text-xs font-mono bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none transition-all"
+            />
+            <span className="text-[10px] text-slate-400 mt-1 block">
+              Art. 281-A CTB
+            </span>
+          </div>
         </div>
       </div>
 

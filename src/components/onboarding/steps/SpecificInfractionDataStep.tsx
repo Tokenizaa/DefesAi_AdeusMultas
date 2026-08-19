@@ -17,6 +17,11 @@ import {
 import { InfractionData } from '../../../types';
 import { InfractionCategory, calculateConsideredSpeed } from '../../../core/onboarding/rules-matrix';
 import { INFRACTION_CATALOG } from '../../../data/knowledge-base';
+import { TestFillButton } from '../../ui/TestFillButton';
+import {
+  generateRandomInfractionData,
+  generateRandomAIT,
+} from '../../../utils/test-data-generator';
 
 interface SpecificInfractionDataStepProps {
   category: InfractionCategory;
@@ -25,6 +30,7 @@ interface SpecificInfractionDataStepProps {
   onUpdateInfraction: (data: InfractionData) => void;
   onNext: () => void;
   onBack: () => void;
+  isAdmin?: boolean;
 }
 
 export const SpecificInfractionDataStep: React.FC<SpecificInfractionDataStepProps> = ({
@@ -34,6 +40,7 @@ export const SpecificInfractionDataStep: React.FC<SpecificInfractionDataStepProp
   onUpdateInfraction,
   onNext,
   onBack,
+  isAdmin = false,
 }) => {
   // Update consideredSpeed automatically when measuredSpeed is provided
   useEffect(() => {
@@ -94,6 +101,90 @@ export const SpecificInfractionDataStep: React.FC<SpecificInfractionDataStepProp
             </button>
           );
         })}
+      </div>
+
+      {/* Test Fill Button for current category */}
+      <div className="flex justify-center">
+        <TestFillButton
+          isAdmin={isAdmin}
+          onClick={() => {
+            const base = generateRandomInfractionData({ aitNumber: generateRandomAIT() });
+            let notesExtra: Record<string, string> = {};
+
+            if (category === 'excesso_velocidade') {
+              const speedLimit = [40, 50, 60, 70, 80, 100, 120][Math.floor(Math.random() * 7)];
+              const measuredSpeed = speedLimit + Math.floor(Math.random() * 30) + 5;
+              const consideredSpeed = measuredSpeed - 7;
+              onUpdateInfraction({
+                ...infractionData,
+                ...base,
+                speedLimit,
+                measuredSpeed,
+                consideredSpeed,
+                ctbArticle: 'Art. 218, I',
+                infractionCode: '745-50',
+              });
+              return;
+            }
+
+            if (category === 'lei_seca') {
+              const isRecusa = Math.random() > 0.5;
+              notesExtra = isRecusa
+                ? { notes: 'recusa_bafometro | termo_sem_sinais | reteste_nao_oferecido' }
+                : { notes: 'teste_positivo | termo_entregue | reteste_oferecido' };
+              onUpdateInfraction({
+                ...infractionData,
+                ...base,
+                ctbArticle: isRecusa ? 'Art. 165-A do CTB' : 'Art. 165 do CTB',
+                infractionCode: isRecusa ? '516-91' : '516-92',
+                ...notesExtra,
+              });
+              return;
+            }
+
+            if (category === 'celular') {
+              const circunstancias = ['suporte_gps', 'veiculo_parado_semaforo', 'sem_abordagem', 'viva_voz'];
+              const circ = circunstancias[Math.floor(Math.random() * circunstancias.length)];
+              onUpdateInfraction({
+                ...infractionData,
+                ...base,
+                ctbArticle: 'Art. 252, Parágrafo Único do CTB',
+                infractionCode: '736-62',
+                notes: `celular_${circ}`,
+              });
+              return;
+            }
+
+            if (category === 'vermelho') {
+              const motivos = ['amarelo_rapido', 'emergencia', 'noturno_seguranca', 'cruzamento_travado'];
+              const motivo = motivos[Math.floor(Math.random() * motivos.length)];
+              onUpdateInfraction({
+                ...infractionData,
+                ...base,
+                ctbArticle: 'Art. 208 do CTB',
+                infractionCode: '605-01',
+                notes: `vermelho_${motivo}`,
+              });
+              return;
+            }
+
+            if (category === 'estacionamento') {
+              const tipos = ['embarque_rapido', 'sinalizacao_apagada', 'pane_mecanica', 'zona_azul_app'];
+              const tipo = tipos[Math.floor(Math.random() * tipos.length)];
+              onUpdateInfraction({
+                ...infractionData,
+                ...base,
+                ctbArticle: 'Art. 181 do CTB',
+                infractionCode: '545-21',
+                notes: `estacionamento_${tipo}`,
+              });
+              return;
+            }
+
+            // conversao_advertencia / outro — just fill base
+            onUpdateInfraction({ ...infractionData, ...base });
+          }}
+        />
       </div>
 
       {/* Dynamic Form Content by Category */}

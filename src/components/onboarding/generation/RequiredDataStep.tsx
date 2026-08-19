@@ -13,6 +13,8 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { CaseDocumentData, InfractionData, VehicleData } from '../../../types';
+import { TestFillButton } from '../../ui/TestFillButton';
+import { generateRandomDocumentData } from '../../../utils/test-data-generator';
 
 interface RequiredDataStepProps {
   documentData: CaseDocumentData;
@@ -21,6 +23,7 @@ interface RequiredDataStepProps {
   onUpdateDocumentData: (data: CaseDocumentData) => void;
   onNext: () => void;
   onBack: () => void;
+  isAdmin?: boolean;
 }
 
 export const RequiredDataStep: React.FC<RequiredDataStepProps> = ({
@@ -30,6 +33,7 @@ export const RequiredDataStep: React.FC<RequiredDataStepProps> = ({
   onUpdateDocumentData,
   onNext,
   onBack,
+  isAdmin = false,
 }) => {
   const isFormValid =
     (documentData.applicantName?.trim().length || 0) > 3 &&
@@ -52,6 +56,17 @@ export const RequiredDataStep: React.FC<RequiredDataStepProps> = ({
         </p>
       </div>
 
+      {/* Test Fill Button */}
+      <div className="flex justify-center">
+        <TestFillButton
+          isAdmin={isAdmin}
+          onClick={() => {
+            const data = generateRandomDocumentData();
+            onUpdateDocumentData({ ...documentData, ...data });
+          }}
+        />
+      </div>
+
       {/* Summary of preserved Phase 1 data */}
       <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-2">
@@ -61,8 +76,8 @@ export const RequiredDataStep: React.FC<RequiredDataStepProps> = ({
           </span>
         </div>
         <div className="font-mono text-slate-900 font-bold flex flex-wrap gap-3 text-[11px]">
-          <span className="bg-white px-2 py-0.5 rounded border border-slate-200">Placa: {vehicleData.plate || 'BRA2E19'}</span>
-          <span className="bg-white px-2 py-0.5 rounded border border-slate-200">AIT: {infractionData.aitNumber || '1B892014'}</span>
+          <span className="bg-white px-2 py-0.5 rounded border border-slate-200">Placa: {vehicleData.plate || 'N/A'}</span>
+          <span className="bg-white px-2 py-0.5 rounded border border-slate-200">AIT: {infractionData.aitNumber || 'N/A'}</span>
           <span className="bg-white px-2 py-0.5 rounded border border-slate-200">Órgão: {infractionData.autuadorBody?.split('—')[0] || 'DETRAN'}</span>
         </div>
       </div>

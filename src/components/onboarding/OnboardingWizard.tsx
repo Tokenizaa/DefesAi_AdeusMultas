@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Sparkles,
   ShieldCheck,
@@ -28,6 +28,54 @@ import {
   RULES_MATRIX
 } from '../../core/onboarding/rules-matrix';
 
+// ============================================================================
+// Wizard State Persistence (localStorage)
+// ============================================================================
+
+const WIZARD_STORAGE_KEY = 'defesai_wizard_state';
+
+interface WizardPersistedState {
+  step: number;
+  leadName: string;
+  leadPhone: string;
+  situation: UserSituation;
+  processStage: UserProcessStage;
+  infractionCategory: InfractionCategory;
+  vehicleData: VehicleData;
+  infractionData: InfractionData;
+  caseAnalysis: CaseAnalysis;
+  documentData: CaseDocumentData;
+  savedCaseId?: string;
+  savedAt: number; // timestamp
+}
+
+function loadWizardState(): WizardPersistedState | null {
+  try {
+    const raw = localStorage.getItem(WIZARD_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as WizardPersistedState;
+    // Expire after 24 hours
+    if (Date.now() - parsed.savedAt > 24 * 60 * 60 * 1000) {
+      localStorage.removeItem(WIZARD_STORAGE_KEY);
+      return null;
+    }
+    return parsed;
+  } catch {
+    localStorage.removeItem(WIZARD_STORAGE_KEY);
+    return null;
+  }
+}
+
+function saveWizardState(state: Omit<WizardPersistedState, 'savedAt'>) {
+  try {
+    localStorage.setItem(WIZARD_STORAGE_KEY, JSON.stringify({ ...state, savedAt: Date.now() }));
+  } catch { /* quota exceeded, ignore */ }
+}
+
+function clearWizardState() {
+  try { localStorage.removeItem(WIZARD_STORAGE_KEY); } catch { /* ignore */ }
+}
+
 import { ServiceStep } from './steps/ServiceStep';
 import { DefenseStageStep } from './steps/DefenseStageStep';
 import { InfractionIdentificationStep } from './steps/InfractionIdentificationStep';
@@ -49,117 +97,104 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   onOpenKnowledge,
 }) => {
   const { navigate } = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isAdmin } = useAuth();
+
+  // Load persisted wizard state if available (e.g., after email confirmation)
+  const savedState = loadWizardState();
 
   // Wizard Step (1 to 6: Phase 1 Free Analysis, 7 to 9: Phase 2 Paid Document Generation)
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(savedState?.step ?? 1);
 
   // Lead Data (Collected in Step 3 for Visitor conversion)
-  const [leadName, setLeadName] = useState<string>(user?.name || 'Carlos Eduardo Silveira');
-  const [leadPhone, setLeadPhone] = useState<string>(user?.phone || '(11) 98765-4321');
+  const [leadName, setLeadName] = useState<string>(savedState?.leadName || user?.name || '');
+  const [leadPhone, setLeadPhone] = useState<string>(savedState?.leadPhone || user?.phone || '');
   const [isAuthGateOpen, setIsAuthGateOpen] = useState<boolean>(false);
   const [authGateRedirectAction, setAuthGateRedirectAction] = useState<'generation' | 'dashboard'>('generation');
 
   // =========================================================================
   // FASE 1: DADOS DA ANÁLISE JURÍDICA (100% GRATUITA)
   // =========================================================================
-  const [situation, setSituation] = useState<UserSituation>('multa_transito');
-  const [processStage, setProcessStage] = useState<UserProcessStage>('primeira_notificacao');
-  const [infractionCategory, setInfractionCategory] = useState<InfractionCategory>('excesso_velocidade');
+  const [situation, setSituation] = useState<UserSituation>(savedState?.situation ?? 'multa_transito');
+  const [processStage, setProcessStage] = useState<UserProcessStage>(savedState?.processStage ?? 'primeira_notificacao');
+  const [infractionCategory, setInfractionCategory] = useState<InfractionCategory>(savedState?.infractionCategory ?? 'excesso_velocidade');
 
-  const [vehicleData, setVehicleData] = useState<VehicleData>({
-    plate: 'BRA2E19',
-    brandModel: 'Toyota Corolla Cross XRE',
-    renavam: '00123984712',
-    year: '2024',
-    color: 'Preto',
+  const [vehicleData, setVehicleData] = useState<VehicleData>(savedState?.vehicleData ?? {
+    plate: '',
+    brandModel: '',
+    renavam: '',
+    year: '',
+    color: '',
   });
 
-  const [infractionData, setInfractionData] = useState<InfractionData>({
-    aitNumber: '1B892014',
-    infractionCode: '745-50',
-    description: 'Transitar em velocidade superior à máxima permitida em até 20%',
-    ctbArticle: 'Art. 218, I do CTB',
+  const [infractionData, setInfractionData] = useState<InfractionData>(savedState?.infractionData ?? {
+    aitNumber: '',
+    infractionCode: '',
+    description: '',
+    ctbArticle: '',
     severity: 'media',
-    points: 4,
-    fineAmount: 130.16,
-    autuadorBody: 'DETRAN-SP — Departamento Estadual de Trânsito de São Paulo',
-    dateTime: new Date(Date.now() - 12 * 24 * 3600 * 1000).toISOString().replace('T', ' ').substring(0, 16),
-    location: 'Av. das Nações Unidas, alt. 14.401 — São Paulo/SP',
-    speedLimit: 60,
-    measuredSpeed: 71,
-    consideredSpeed: 64,
-    radarEquipmentId: 'RAD-INMETRO-7819',
-    inmetroAferitionDate: '2025-04-12',
-    notificationExpeditionDate: new Date(Date.now() - 2 * 24 * 3600 * 1000).toISOString().split('T')[0],
-    defenseDeadline: new Date(Date.now() + 28 * 24 * 3600 * 1000).toISOString().split('T')[0],
-    formalFlawsDetected: [
-      'Aferição metrológica do radar expirada há mais de 12 meses (Res. 798 CONTRAN)',
-      'Ausência de placa de velocidade R-19 regulamentar no trecho fiscalizado',
-      'Elegível para conversão em advertência por escrito (Art. 267 CTB)',
-    ],
+    points: 0,
+    fineAmount: 0,
+    autuadorBody: '',
+    dateTime: '',
+    location: '',
+    formalFlawsDetected: [],
   });
 
-  const [caseAnalysis, setCaseAnalysis] = useState<CaseAnalysis>({
+  const [caseAnalysis, setCaseAnalysis] = useState<CaseAnalysis>(savedState?.caseAnalysis ?? {
     id: `an_${Date.now()}`,
     caseId: `temp_${Date.now()}`,
     createdAt: new Date().toISOString(),
-    overallSuccessRate: 94,
-    riskLevel: 'baixo',
-    recommendedArguments: [
-      {
-        id: 'arg_1',
-        title: 'Decadência da Notificação de Autuação (Art. 281-A CTB)',
-        category: 'decadencia_notificacao',
-        ctbArticle: 'Art. 281-A do CTB (Lei 14.071/2020)',
-        successProbability: 96,
-        description: 'Expedição da Notificação de Autuação superior ao prazo legal de 30 dias contados da data do fato.',
-        legalFoundation: 'Art. 281-A do CTB (incluído pela Lei 14.071/2020) e Súmula 312 do STJ.',
-      },
-      {
-        id: 'arg_2',
-        title: 'Nulidade Metrológica do Radar (Resolução 798/2020 CONTRAN)',
-        category: 'vicio_formal_ait',
-        ctbArticle: 'Art. 218 do CTB c/c Res. 798 CONTRAN',
-        successProbability: 92,
-        description: 'Medidor de velocidade com aferição periódica anual vencida pelo INMETRO no momento do registro.',
-        legalFoundation: 'Art. 4º da Resolução CONTRAN nº 798/2020 e Portaria INMETRO nº 544/2014.',
-      },
-      {
-        id: 'arg_3',
-        title: 'Direito à Conversão em Advertência por Escrito (Art. 267 CTB)',
-        category: 'conversao_advertencia',
-        ctbArticle: 'Art. 267 do CTB (Lei 14.071/20)',
-        successProbability: 98,
-        description: 'Infração de gravidade média cometida sem reincidência de mesma natureza nos últimos 12 meses.',
-        legalFoundation: 'Art. 267 do CTB com redação conferida pela Lei Federal nº 14.071/2020.',
-      },
-    ],
-    summary: 'Foram detectadas 3 teses prioritárias de anulação com 94% de probabilidade de acolhimento perante o órgão autuador.',
-    rulesTriggeredCount: 3,
+    overallSuccessRate: 0,
+    detectedInconsistencies: [],
+    recommendedArguments: [],
+    recommendedProcedure: 'defesa_previa',
+    competentBody: '',
+    summaryReasoning: '',
   });
 
   // =========================================================================
   // FASE 2: DADOS DE QUALIFICAÇÃO DO CONDUTOR (GERAÇÃO DA PEÇA FORMAL)
   // =========================================================================
-  const [documentData, setDocumentData] = useState<CaseDocumentData>({
-    applicantName: user?.name || leadName || 'Carlos Eduardo Silveira',
-    applicantCpf: user?.cpf || '123.456.789-00',
-    applicantRg: '12.345.678-9 SSP/SP',
-    applicantCnh: '05492817492',
-    cnhCategory: 'AB',
-    applicantPhone: user?.phone || leadPhone || '(11) 98765-4321',
-    applicantEmail: user?.email || 'carlos.silveira@email.com',
-    addressStreet: 'Rua das Flores',
-    addressNumber: '450',
-    addressComplement: 'Apto 82',
-    addressNeighborhood: 'Vila Madalena',
-    addressZipCode: '05445-010',
-    addressCityState: 'São Paulo/SP',
-    vehicleRenavam: '00123984712',
+  const [documentData, setDocumentData] = useState<CaseDocumentData>(savedState?.documentData ?? {
+    applicantName: user?.name || '',
+    applicantCpf: user?.cpf || '',
+    applicantRg: '',
+    applicantCnh: '',
+    cnhCategory: '',
+    applicantPhone: user?.phone || '',
+    applicantEmail: user?.email || '',
+    addressStreet: '',
+    addressNumber: '',
+    addressComplement: '',
+    addressNeighborhood: '',
+    addressZipCode: '',
+    addressCityState: '',
+    vehicleRenavam: '',
   });
 
-  const [savedCaseId, setSavedCaseId] = useState<string | undefined>(undefined);
+  const [savedCaseId, setSavedCaseId] = useState<string | undefined>(savedState?.savedCaseId);
+
+  // Clear persisted state once loaded (fresh start for next visit)
+  useEffect(() => {
+    if (savedState) {
+      clearWizardState();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-advance: if user was at step 6 (auth gate) and is now authenticated,
+  // advance to step 7 automatically (e.g., after email confirmation)
+  useEffect(() => {
+    if (savedState && savedState.step === 6 && isAuthenticated && user) {
+      setDocumentData((prev) => ({
+        ...prev,
+        applicantName: user.name || prev.applicantName,
+        applicantEmail: user.email || prev.applicantEmail,
+        applicantPhone: user.phone || leadPhone || prev.applicantPhone,
+        applicantCpf: user.cpf || prev.applicantCpf,
+      }));
+      setStep(7);
+    }
+  }, [isAuthenticated, user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Deriva o tipo de procedimento canônico
   const mappedProcedure: ProcedureType =
@@ -217,14 +252,17 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     setStep(5); // Processando análise
   };
 
+  const handleAnalysisComplete = (analysis: CaseAnalysis) => {
+    setCaseAnalysis(analysis);
+  };
+
   const handleAnalysisCompleted = async () => {
     try {
-      // Backend deterministic analysis execution
       const res = await fetch('/api/cases', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: `Diagnóstico Auto ${infractionData.aitNumber || '1B892014'}`,
+          title: `Diagnóstico Auto ${infractionData.aitNumber || 'sem AIT'}`,
           serviceType: mappedProcedure,
           infraction: infractionData,
           vehicle: vehicleData,
@@ -233,17 +271,19 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           userEmail: user?.email,
           status: 'analisado',
           currentStage: 2,
+          analysis: caseAnalysis,
         }),
       });
       const data = await res.json();
       if (data.id) {
         setSavedCaseId(data.id);
       }
-      if (data.analysis) {
+      // Se o backend retornou análise com successRate > 0, usar a do backend
+      if (data.analysis && data.analysis.overallSuccessRate > 0) {
         setCaseAnalysis(data.analysis);
       }
     } catch (err) {
-      console.error('Error triggering case analysis:', err);
+      console.error('Error saving case:', err);
     }
     setStep(6); // Exibir resultado do diagnóstico gratuito
   };
@@ -260,7 +300,21 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       }));
       setStep(7); // Início da Fase 2 (Qualificação)
     } else {
-      // Show smart authentication / account gateway
+      // Persist wizard state before opening auth gate
+      // (user might leave page for email confirmation)
+      saveWizardState({
+        step: 6,
+        leadName,
+        leadPhone,
+        situation,
+        processStage,
+        infractionCategory,
+        vehicleData,
+        infractionData,
+        caseAnalysis,
+        documentData,
+        savedCaseId,
+      });
       setAuthGateRedirectAction('generation');
       setIsAuthGateOpen(true);
     }
@@ -270,6 +324,20 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     if (isAuthenticated && user) {
       navigate('/dashboard');
     } else {
+      // Persist wizard state before opening auth gate
+      saveWizardState({
+        step: 6,
+        leadName,
+        leadPhone,
+        situation,
+        processStage,
+        infractionCategory,
+        vehicleData,
+        infractionData,
+        caseAnalysis,
+        documentData,
+        savedCaseId,
+      });
       setAuthGateRedirectAction('dashboard');
       setIsAuthGateOpen(true);
     }
@@ -277,6 +345,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
   const handleAuthSuccess = async (authUser: any) => {
     setIsAuthGateOpen(false);
+    clearWizardState(); // Auth succeeded, no need to restore anymore
 
     // Update document data with verified user data
     setDocumentData((prev) => ({
@@ -415,6 +484,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
               setStep(2);
             }
           }}
+          isAdmin={isAdmin}
         />
       )}
 
@@ -426,11 +496,16 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           onUpdateInfraction={setInfractionData}
           onNext={handleRunAnalysis}
           onBack={() => setStep(3)}
+          isAdmin={isAdmin}
         />
       )}
 
       {step === 5 && (
-        <AnalysisProcessingStep onComplete={handleAnalysisCompleted} />
+        <AnalysisProcessingStep 
+          infractionData={infractionData}
+          onComplete={handleAnalysisCompleted} 
+          onAnalysisComplete={handleAnalysisComplete}
+        />
       )}
 
       {step === 6 && (
@@ -454,6 +529,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           onUpdateDocumentData={setDocumentData}
           onNext={() => setStep(8)}
           onBack={() => setStep(6)}
+          isAdmin={isAdmin}
         />
       )}
 
