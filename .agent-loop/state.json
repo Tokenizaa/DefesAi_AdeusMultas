@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "task": {
+    "id": "TASK-ONBOARDING-ADMIN-TESTS",
+    "description": "Adicionar botões de teste no onboarding visíveis apenas para admin",
+    "objective": "Onboarding mostra botões de teste quando isAdmin=true, esconde quando isAdmin=false (user comum/primeira vez)",
+    "desired_state": "Admin logado vê botões de teste em todas as etapas do onboarding (dev e prod). User comum/primeira vez não vê botões de teste.",
+    "current_state": "OnboardingWizard não tem distinção por role; isAdmin disponível no AuthContext mas não passado para o wizard",
+    "gap": "1. Passar isAdmin do AuthContext para OnboardingWizard. 2. Adicionar botões de teste condicionais nas etapas. 3. Testar com admin e user comum."
+  },
+  "status": "DISCOVERY",
+  "phase": "DISCOVERY",
+  "current_agent": "@agent-loop",
+  "attempt": 0,
+  "max_attempts": 3,
+  "changes": [],
+  "evidence": [],
+  "test_results": {
+    "unit": "SKIP",
+    "integration": "SKIP",
+    "e2e": "SKIP",
+    "last_run": null
+  },
+  "blockers": [],
+  "warnings": [],
+  "decisions": [],
+  "scope": {
+    "allowed_paths": [
+      "src/components/onboarding/**",
+      "src/core/auth/**",
+      "src/types/**"
+    ],
+    "forbidden_paths": [
+      "src/auth/**",
+      "src/billing/**",
+      "src/components/admin/**"
+    ]
+  },
+  "progress_history": [],
+  "next_action": "planning",
+  "created_at": "2024-08-19T00:00:00Z",
+  "updated_at": "2024-08-19T00:00:00Z"
+}
