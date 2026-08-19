@@ -9,6 +9,7 @@ import QRCode from 'qrcode';
 import { eventBus, EventTopics } from '../../core/events/topics';
 import { paymentRepository } from '../db/payment-repository';
 import { logger, LogOperationStatus } from '../observability/logger';
+import { PRICING } from '../config/pricing';
 
 export interface PagBankCustomer {
   name: string;
@@ -113,7 +114,11 @@ class PagBankIntegrationService {
     */
   private verifyWebhookSignature(rawBody: string, signatureHeader: string): boolean {
     if (!this.webhookSecret) {
-      logger.warn('payments', 'pagbank', 'verify_webhook', 'PAGBANK_WEBHOOK_SECRET not configured, skipping signature verification');
+      if (process.env.NODE_ENV === 'production') {
+        logger.error('payments', 'pagbank', 'verify_webhook', 'CRITICAL: PAGBANK_WEBHOOK_SECRET não configurado em produção');
+        return false; // BLOQUEAR em produção
+      }
+      logger.warn('payments', 'pagbank', 'verify_webhook', 'PAGBANK_WEBHOOK_SECRET not configured — permitting in development');
       return true; // Permitir em desenvolvimento sem segredo
     }
 
@@ -499,7 +504,7 @@ if (data.id) {
         referenceId: `ref_${orderOrCaseId}`,
         caseId: orderOrCaseId.replace('case_', ''),
         status: 'PAID',
-        amount: 89.90,
+        amount: PRICING.DEFAULT_PRICE,
         expiresAt: new Date(Date.now() + 3600000).toISOString(),
         createdAt: new Date().toISOString(),
         paymentMethod: 'pix',
