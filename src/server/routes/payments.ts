@@ -6,7 +6,10 @@ import { databaseRows, auditLogs } from '../app';
 import { CanonicalMapper } from '../../core/mappers/canonical-mapper';
 import { eventBus, EventTopics } from '../../core/events/topics';
 import { logger } from '../observability/logger';
+import { RagPipeline } from '../../core/rag/rag-pipeline';
 import { CaseDomain } from '../../types';
+import { authenticateToken, requireAdmin } from '../middleware/auth-middleware';
+import { PRICING } from '../config/pricing';
 
 const router = Router();
 
@@ -33,9 +36,9 @@ router.use('/webhooks/ggpix', (req: Request, res: Response, next) => {
 });
 
 // Official PagBank Integration (Orders, PIX & Webhooks)
-router.post('/pagbank/orders', async (req, res) => {
+router.post('/pagbank/orders', authenticateToken, async (req, res) => {
   try {
-    const { caseId, customerName, customerEmail, customerCpf, amount = 89.90 } = req.body;
+    const { caseId, customerName, customerEmail, customerCpf, amount = PRICING.DEFAULT_PRICE } = req.body;
     
     const orderResult = await pagBankIntegration.createPixOrder({
       caseId: caseId || `case_${Date.now()}`,
@@ -78,9 +81,9 @@ router.post('/pagbank/orders', async (req, res) => {
 });
 
 // Alias for existing frontend compatibility — now gateway-agnostic
-router.post('/pix/create', async (req, res) => {
+router.post('/pix/create', authenticateToken, async (req, res) => {
   try {
-    const { caseId, amount = 89.90, customerCpf, customerName, customerEmail } = req.body;
+    const { caseId, amount = PRICING.DEFAULT_PRICE, customerCpf, customerName, customerEmail } = req.body;
 
     // Usar o gateway ativo (PagBank ou GGPIXAPI)
     const gateway = gatewayManager.getActiveGateway();
@@ -123,14 +126,14 @@ router.post('/pix/create', async (req, res) => {
 });
 
 // Credit Card Order Creation Endpoint — gateway-agnostic
-router.post('/credit-card/create', async (req, res) => {
+router.post('/credit-card/create', authenticateToken, async (req, res) => {
   try {
     const {
       caseId,
       customerName,
       customerEmail,
       customerCpf,
-      amount = 89.90,
+      amount = PRICING.DEFAULT_PRICE,
       installments = 1,
       cardToken,
       authenticationMethod = 'CHALLENGE',
@@ -248,7 +251,7 @@ router.post('/webhooks/pagbank', (req: Request, res: Response) => {
         
         domain.payment = {
           status: 'approved',
-          amount: payload.charges?.[0]?.amount?.value / 100 || 89.90,
+          amount: payload.charges?.[0]?.amount?.value / 100 || PRICING.DEFAULT_PRICE,
           paidAt: new Date().toISOString(),
           transactionId: webhookResult.orderId,
           paymentMethod,
@@ -270,9 +273,9 @@ router.post('/webhooks/pagbank', (req: Request, res: Response) => {
           caseId: domain.id,
           buyerUserId: domain.clientEmail || `usr_${domain.id.substring(0, 8)}`,
           buyerUserName: domain.clientName || 'Condutor DefesAi',
-          grossAmount: domain.payment?.amount || 89.90,
+          grossAmount: domain.payment?.amount || PRICING.DEFAULT_PRICE,
           discountAmount: 0,
-          effectivelyPaid: domain.payment?.amount || 89.90,
+          effectivelyPaid: domain.payment?.amount || PRICING.DEFAULT_PRICE,
         });
 
         auditLogs.unshift({
@@ -283,7 +286,7 @@ router.post('/webhooks/pagbank', (req: Request, res: Response) => {
           action: 'PAYMENT_CONFIRMED',
           targetResource: domain.id,
           ipHash: '3a88c42b109e',
-          details: `Pagamento de R$ ${domain.payment?.amount || 89.90} via ${paymentMethod.toUpperCase()} PagBank confirmado.`,
+          details: `Pagamento de R$ ${domain.payment?.amount || PRICING.DEFAULT_PRICE} via ${paymentMethod.toUpperCase()} PagBank confirmado.`,
           gdprCompliant: true,
         });
       }
@@ -297,86 +300,123 @@ router.post('/webhooks/pagbank', (req: Request, res: Response) => {
 });
 
 // Simulate confirm for local testing / instant preview — gateway-agnostic
-router.post('/pix/simulate-confirm', (req, res) => {
-  const { caseId } = req.body;
-  const row = databaseRows.get(caseId);
-  if (!row) {
-    return res.status(404).json({ error: 'Caso não encontrado' });
+router.post('/pix/simulate-confirm', authenticateToken, requireAdmin, (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).json({ 
+      error: 'Rota de simulação indisponível em produção',
+      message: 'Use o fluxo de pagamento real via PagBank.'
+    });
   }
 
-  const gateway = gatewayManager.getActiveGateway();
-
-  // Se o gateway suportar simulação (PagBank tem confirmPayment),
-  // usar o fluxo existente; caso contrário, simular diretamente
-  let orderId = `sim_${Date.now()}`;
-  if (gateway.id === 'pagbank') {
-    try {
-      const confirmResult = pagBankIntegration.confirmPayment(caseId);
-      orderId = confirmResult.order.orderId;
-    } catch {
-      // Se PagBank não estiver configurado, simula direto
+const { caseId } = req.body;
+    const row = databaseRows.get(caseId);
+    if (!row) {
+      return res.status(404).json({ error: 'Caso não encontrado' });
     }
-  } else {
-    // Para GGPIXAPI (ou outros), simula confirmação direta
-    const simResult = gateway.simulateConfirmation(caseId, 8990);
-    orderId = simResult.gatewayTransactionId;
-  }
 
-  const domain = CanonicalMapper.rowToDomain(row);
-  domain.isPaid = true;
-  domain.paidAt = new Date().toISOString();
-  domain.status = 'defesa_pronta';
-  domain.currentStage = 3;
-  domain.payment = {
-    status: 'approved',
-    amount: 89.90,
-    paidAt: new Date().toISOString(),
-    transactionId: orderId,
-    paymentMethod: 'pix',
-  };
-  domain.updatedAt = new Date().toISOString();
+    const gateway = gatewayManager.getActiveGateway();
 
-  domain.timeline.push({
-    id: `tl_pay_${Date.now()}`,
-    title: `Pagamento PIX Compensado (${gateway.displayName})`,
-    description: 'Acesso liberado à minuta jurídica formal para impressão e orientações de protocolo.',
-    timestamp: new Date().toISOString(),
-    type: 'payment',
-  });
+    // Se o gateway suportar simulação (PagBank tem confirmPayment),
+    // usar o fluxo existente; caso contrário, simular diretamente
+    let orderId = `sim_${Date.now()}`;
+    if (gateway.id === 'pagbank') {
+      try {
+        const confirmResult = pagBankIntegration.confirmPayment(caseId);
+        orderId = confirmResult.order.orderId;
+      } catch {
+        // Se PagBank não estiver configurado, simula direto
+      }
+    } else {
+      // Para GGPIXAPI (ou outros), simula confirmação direta
+      const simResult = gateway.simulateConfirmation(caseId, 8990);
+      orderId = simResult.gatewayTransactionId;
+    }
 
-  const updatedRow = CanonicalMapper.domainToRow(domain);
-  databaseRows.set(domain.id, updatedRow);
+    const domain = CanonicalMapper.rowToDomain(row);
+    domain.isPaid = true;
+    domain.paidAt = new Date().toISOString();
+    domain.status = 'defesa_pronta';
+    domain.currentStage = 3;
+    
+    // Generate defense draft in test mode (since simulation is only available in non-production)
+    if (process.env.NODE_ENV !== 'production') {
+      try {
+        // Generate defense draft using the same logic as the generate-defense endpoint
+        const defenseDraft = RagPipeline.generateDefenseDraft(
+          domain.id,
+          domain.infraction,
+          domain.vehicle?.plate || 'SEM PLACA',
+          domain.vehicle?.brandModel || 'Veículo',
+          {
+            name: domain.clientName || 'Requerente',
+            cpf: domain.clientCpf || '000.000.000-00',
+            cnh: '05492817492',
+            address: 'Rua das Flores, 450, Apto 82',
+            cityState: 'São Paulo/SP',
+          },
+          domain.analysis?.recommendedArguments || [],
+          domain.serviceType || 'defesa_previa'
+        );
+        domain.defenseDraft = defenseDraft;
+      } catch (defenseError) {
+        // If defense generation fails, log it but don't block the payment simulation
+        logger.error('payments', 'gateway', 'simulate_confirm_defense', 'Failed to generate defense draft during payment simulation', { 
+          error: defenseError.message,
+          caseId
+        });
+      }
+    }
+    
+    domain.payment = {
+      status: 'approved',
+      amount: PRICING.DEFAULT_PRICE,
+      paidAt: new Date().toISOString(),
+      transactionId: orderId,
+      paymentMethod: 'pix',
+    };
+    domain.updatedAt = new Date().toISOString();
 
-  // Dispatch Commercial Payment Event (Calculates 3-level commissions & ledgers)
-  commercialService.processPaymentConfirmationEvent({
-    paymentId: orderId || `ord_${domain.id}`,
-    caseId: domain.id,
-    buyerUserId: domain.clientEmail || `usr_${domain.id.substring(0, 8)}`,
-    buyerUserName: domain.clientName || 'Condutor DefesAi',
-    grossAmount: domain.payment?.amount || 89.90,
-    discountAmount: 0,
-    effectivelyPaid: domain.payment?.amount || 89.90,
-  });
+    domain.timeline.push({
+      id: `tl_pay_${Date.now()}`,
+      title: `Pagamento PIX Compensado (${gateway.displayName})`,
+      description: 'Acesso liberado à minuta jurídica formal para impressão e orientações de protocolo.',
+      timestamp: new Date().toISOString(),
+      type: 'payment',
+    });
 
-  auditLogs.unshift({
-    id: `audit_pay_${Date.now()}`,
-    timestamp: new Date().toISOString(),
-    actor: domain.clientName || 'Cliente',
-    role: 'citizen',
-    action: 'PAYMENT_CONFIRMED',
-    targetResource: domain.id,
-    ipHash: '3a88c42b109e',
-    details: `Pagamento de R$ 89,90 via PIX ${gateway.displayName} confirmado.`,
-    gdprCompliant: true,
-  });
+    const updatedRow = CanonicalMapper.domainToRow(domain);
+    databaseRows.set(domain.id, updatedRow);
 
-  res.json({
-    success: true,
-    message: 'Pagamento confirmado com sucesso!',
-    case: domain,
-    gateway: gateway.id,
-    order: { orderId },
-  });
+    // Dispatch Commercial Payment Event (Calculates 3-level commissions & ledgers)
+    commercialService.processPaymentConfirmationEvent({
+      paymentId: orderId || `ord_${domain.id}`,
+      caseId: domain.id,
+      buyerUserId: domain.clientEmail || `usr_${domain.id.substring(0, 8)}`,
+      buyerUserName: domain.clientName || 'Condutor DefesAi',
+      grossAmount: domain.payment?.amount || PRICING.DEFAULT_PRICE,
+      discountAmount: 0,
+      effectivelyPaid: domain.payment?.amount || PRICING.DEFAULT_PRICE,
+    });
+
+    auditLogs.unshift({
+      id: `audit_pay_${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      actor: domain.clientName || 'Cliente',
+      role: 'citizen',
+      action: 'PAYMENT_CONFIRMED',
+      targetResource: domain.id,
+      ipHash: '3a88c42b109e',
+      details: `Pagamento de R$ ${(domain.payment?.amount || PRICING.DEFAULT_PRICE).toFixed(2).replace('.', ',')} via PIX ${gateway.displayName} confirmado.`,
+      gdprCompliant: true,
+    });
+
+    res.json({
+      success: true,
+      message: 'Pagamento confirmado com sucesso!',
+      case: domain,
+      gateway: gateway.id,
+      order: { orderId },
+    });
 });
 
 // ============================================================================
@@ -433,9 +473,9 @@ router.post('/webhooks/ggpix', (req: Request, res: Response) => {
           caseId: domain.id,
           buyerUserId: domain.clientEmail || `usr_${domain.id.substring(0, 8)}`,
           buyerUserName: domain.clientName || 'Condutor DefesAi',
-          grossAmount: domain.payment?.amount || 89.90,
+          grossAmount: domain.payment?.amount || PRICING.DEFAULT_PRICE,
           discountAmount: 0,
-          effectivelyPaid: domain.payment?.amount || 89.90,
+          effectivelyPaid: domain.payment?.amount || PRICING.DEFAULT_PRICE,
         });
 
         auditLogs.unshift({
@@ -446,7 +486,7 @@ router.post('/webhooks/ggpix', (req: Request, res: Response) => {
           action: 'PAYMENT_CONFIRMED',
           targetResource: domain.id,
           ipHash: '3a88c42b109e',
-          details: `Pagamento de R$ ${(domain.payment?.amount || 89.90).toFixed(2)} via PIX GGPIXAPI confirmado.`,
+          details: `Pagamento de R$ ${(domain.payment?.amount || PRICING.DEFAULT_PRICE).toFixed(2)} via PIX GGPIXAPI confirmado.`,
           gdprCompliant: true,
         });
       }
@@ -474,7 +514,7 @@ router.get('/gateway/status', (req, res) => {
 // ============================================================================
 // Gateway Switch — Admin UI pode alternar gateway em runtime
 // ============================================================================
-router.post('/gateway/switch', (req, res) => {
+router.post('/gateway/switch', requireAdmin, (req, res) => {
   const { gatewayId } = req.body;
   if (!gatewayId) {
     return res.status(400).json({ error: 'gatewayId é obrigatório' });

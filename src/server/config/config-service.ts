@@ -6,7 +6,8 @@
  * 1. Strict separation of public Configuration vs. protected Secrets.
  * 2. In-memory and environment-backed configuration with typed validation.
  * 3. Masked serialization for frontend (secrets never leaked in plain text).
-*/
+ */
+import { PRICING } from './pricing';
 export type SettingCategory =
   | 'ai'
   | 'commercial'
@@ -294,22 +295,22 @@ class ConfigService {
       // =========================================================================
       // 3. PAGAMENTOS (PagBank / GGPIXAPI / Gateway Abstraction)
       // =========================================================================
-      {
-        key: 'PAYMENT_ACTIVE_GATEWAY',
-        name: 'Gateway de Pagamento Ativo',
-        category: 'payments',
-        type: 'select',
-        description: 'Gateway utilizado para novas cobranças PIX. Pagamentos existentes NÃO são afetados pela troca.',
-        defaultValue: 'pagbank',
-        isSecret: false,
-        isRequired: true,
-        isEditable: true,
-        options: [
-          { label: 'PagBank / PagSeguro (Recomendado — PIX + Cartão)', value: 'pagbank' },
-          { label: 'GGPIXAPI (Apenas PIX In)', value: 'ggpixapi' },
-        ],
-        envSource: 'PAYMENT_ACTIVE_GATEWAY',
-      },
+{
+  key: 'PAYMENT_ACTIVE_GATEWAY',
+  name: 'Gateway de Pagamento Ativo',
+  category: 'payments',
+  type: 'select',
+  description: 'Gateway utilizado para novas cobranças PIX. Pagamentos existentes NÃO são afetados pela troca.',
+  defaultValue: 'ggpixapi',
+  isSecret: false,
+  isRequired: true,
+  isEditable: true,
+  options: [
+    { label: 'PagBank / PagSeguro (Recomendado — PIX + Cartão)', value: 'pagbank' },
+    { label: 'GGPIXAPI (Apenas PIX In)', value: 'ggpixapi' },
+  ],
+  envSource: 'PAYMENT_ACTIVE_GATEWAY',
+},
       {
         key: 'PAGBANK_ENV',
         name: 'Ambiente PagBank',
@@ -362,25 +363,25 @@ class ConfigService {
         isEditable: true,
         envSource: 'GGPIX_API_KEY',
       },
-      {
-        key: 'GGPIX_ENABLED',
-        name: 'GGPIXAPI Habilitado',
-        category: 'payments',
-        type: 'boolean',
-        description: 'Ativa o gateway GGPIXAPI para processar cobranças PIX In',
-        defaultValue: false,
-        isSecret: false,
-        isRequired: false,
-        isEditable: true,
-        envSource: 'GGPIX_ENABLED',
-      },
+{
+  key: 'GGPIX_ENABLED',
+  name: 'GGPIXAPI Habilitado',
+  category: 'payments',
+  type: 'boolean',
+  description: 'Ativa o gateway GGPIXAPI para processar cobranças PIX In',
+  defaultValue: true,
+  isSecret: false,
+  isRequired: false,
+  isEditable: true,
+  envSource: 'GGPIX_ENABLED',
+},
       {
         key: 'PAYMENT_DEFAULT_AMOUNT',
         name: 'Valor Padrão da Defesa (R$)',
         category: 'payments',
         type: 'number',
         description: 'Preço base para emissão da minuta jurídica personalizada com garantia',
-        defaultValue: 89.90,
+        defaultValue: PRICING.DEFAULT_PRICE,
         isSecret: false,
         isRequired: true,
         isEditable: true,
