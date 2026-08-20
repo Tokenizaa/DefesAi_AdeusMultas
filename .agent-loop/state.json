@@ -1,12 +1,12 @@
 {
   "version": "1.0",
   "task": {
-    "id": "TASK-AUDIT-FIX-001",
-    "description": "Executar correções P0+P1+P2 da auditoria DefesAi",
-    "objective": "Corrigir itens de auditoria por prioridade, validar com testes, commitar",
-    "desired_state": "Backend compila (src/ zero erros TS), 12 E2E passando, 15 fix commits, docs atualizadas",
-    "current_state": "TODOS os itens de execução concluídos. Backend src/ compila limpo. 12/13 E2E pass (1 skip PagBank live).",
-    "gap": "Resolvido. Restam: agents/** legacy (31 erros TS, ADR-005 documenta), topology unify (recomendação), supabase types regen (sem CLI link)"
+    "id": "TASK-AUDIT-FIX-FINAL",
+    "description": "Execução completa correções auditoria + bônus descobertos",
+    "objective": "Backend compila, E2E verde, docs verdadeiras, topology unificada, types atuais, bug auth crítico corrigido",
+    "desired_state": "Estado final saudável documentado + evidenciado",
+    "current_state": "Lint 0 ✓, E2E 12 pass ✓, bug auth user_id corrigido ✓, types regenerados ✓, ADR-008 ✓",
+    "gap": "Resolvido. Pendência operacional: redeploy do backend Node (VPS) p/ auth fix rodar em produção (wrangler não cobre backend Express)"
   },
   "status": "DONE",
   "phase": "DECISION",
@@ -14,52 +14,44 @@
   "attempt": 1,
   "max_attempts": 3,
   "changes": [
-    "2024-08-19T23:12:00Z: health-service.ts fix syntax (missing braces)",
-    "2024-08-19T23:18:00Z: tests/onboarding.spec.ts criado - 13 testes, clock API",
-    "2024-08-19T23:22:00Z: removido POST /api/agents/pipeline/run + stub runner",
-    "2024-08-19T23:25:00Z: dev bypass role admin→citizen",
-    "2024-08-19T23:26:00Z: persistAsync publica AUDIT_LOG_RECORDED em falha",
-    "2024-08-19T23:27:00Z: onboarding route unificada com rules-matrix",
-    "2024-08-19T23:30:00Z: mock TRANSIT_DATABASE_REGISTRY → src/data/test-fixtures.ts",
-    "2024-08-19T23:31:00Z: marketing-orchestrator paralelo (Promise.allSettled)",
-    "2024-08-19T23:33:00Z: admin.ts fix recommendedArguments (arg.id)",
-    "2024-08-19T23:35:00Z: docs audit atualizadas (PRODUCTION_READINESS, DEAD_CODE, TESTING_SUMMARY)"
+    "P0: health-service syntax, tests E2E, pipeline endpoint removido",
+    "P1: rules unify, dev bypass citizen, persistAsync metric",
+    "P2: orchestrator parallel, mock split, docs truthful",
+    "BONUS: AuthContext .eq('id')→.eq('user_id') - BUG role admin nunca carregava",
+    "BONUS: supabase types regenerados (45k stale → ~1.5k atual)",
+    "BONUS: ADR-008 topology unified + AGENTS.md legacy section"
   ],
   "evidence": [
-    "tsc --noEmit --skipLibCheck: src/ zero erros (31 restantes só em agents/** legacy)",
-    "npx playwright test: 12 passed, 1 skipped (PagBank live), 1.8m",
-    "grep runPipeline src/: zero",
-    "commit 50960e5: 15 files, 1988 insertions"
+    "2024-08-19T23:50:00Z: npm run lint EXIT 0 (typecheck verde total)",
+    "2024-08-19T23:45:00Z: npx playwright test = 12 passed, 1 skipped (2.3m)",
+    "2024-08-19T23:40:00Z: supabase_generate_typescript_types (llmxnpgjpxcvyrqjkfwb) - user_profiles.id ≠ user_id confirmado",
+    "2024-08-19T23:55:00Z: git log: 7 commits (61fe9ed→2e400af)"
   ],
   "test_results": {
     "unit": "SKIP",
     "integration": "SKIP",
     "e2e": "PASS",
-    "last_run": "2024-08-19T23:35:00Z"
+    "last_run": "2024-08-19T23:45:00Z"
   },
-  "blockers": [
-    "agents/** 31 erros TS: pipeline scaffold importa CaseContext que nunca existiu (ADR-005 documenta missing implementations). Fora do runtime path."
-  ],
+  "blockers": [],
   "warnings": [
-    "Topology unify (pipeline agents vs AGENTS.md) requer decisão arquitetural + ADR — não implementado, recomendado",
-    "Supabase types regen requer supabase CLI linked — não executado",
-    "ai.ts hardcode gemini-3.7-flash (3 ocorrências) — baixo impacto, gemini.ts já tem fallback chain"
+    "Redeploy backend Node (VPS): auth fix (eq user_id) só vale quando server.ts reiniciado em produção. Wrangler/Cloudflare não hospeda o Express.",
+    "HTTP Postgres RLS: 'user_profiles_insert_trigger' policy WITH CHECK (true) é broad - INSERT por any authenticated user. Monitorar."
   ],
   "decisions": [
-    "2024-08-19T23:22:00Z: Remover endpoint morto em vez de implementar (YAGNI)",
-    "2024-08-19T23:30:00Z: Reverter tsconfig paths fix (agents/** são scaffold morto, não criar tipos)",
-    "2024-08-19T23:33:00Z: Não redeploy wrangler — frontend não mudou nesta leva"
+    "2024-08-19T23:22:00Z: Remover endpoint morto em vez de implementar",
+    "2024-08-19T23:40:00Z: CompositeTypes alias → never (template Supabase bug TS2536, schema vazio)",
+    "2024-08-19T23:50:00Z: ADR-008: agents/ arquivado in place, não deletar nem migrar"
   ],
   "scope": {
-    "allowed_paths": ["src/**", "tests/**", "*.md", "docs/**", "tsconfig.json"],
+    "allowed_paths": ["src/**", "tests/**", "docs/**", "*.md", "tsconfig.json"],
     "forbidden_paths": ["supabase/migrations/**", "agents/**", "node_modules/**"]
   },
   "progress_history": [
-    {"cycle": 1, "gap_before": "3 P0", "gap_after": "0 P0", "progress": true, "timestamp": "2024-08-19T23:22:00Z"},
-    {"cycle": 2, "gap_before": "3 P1", "gap_after": "0 P1", "progress": true, "timestamp": "2024-08-19T23:27:00Z"},
-    {"cycle": 3, "gap_before": "3 P2 + 1 real TS bug (admin.ts)", "gap_after": "0 (P2 done, admin.ts fixado)", "progress": true, "timestamp": "2024-08-19T23:35:00Z"}
+    {"cycle": 1, "gap_before": "P0+P1+P2", "gap_after": "0", "progress": true, "timestamp": "2024-08-19T23:35:00Z"},
+    {"cycle": 2, "gap_before": "lint 31 erros agents/ + auth bug + types stale", "gap_after": "lint 0, auth fixado, types regenerados", "progress": true, "timestamp": "2024-08-19T23:55:00Z"}
   ],
-  "next_action": "none - ciclo completo. Próximo: topology ADR ou nova feature",
+  "next_action": "usuario: redeploy backend Node VPS p/ auth fix em produção",
   "created_at": "2024-08-19T23:10:00Z",
-  "updated_at": "2024-08-19T23:35:00Z"
+  "updated_at": "2024-08-19T23:55:00Z"
 }
