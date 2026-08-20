@@ -98,7 +98,7 @@ export async function authenticateToken(
     req.user = {
       id: 'dev_user',
       email: 'dev@local',
-      role: 'admin',
+      role: 'citizen',
     };
     return next();
   } catch (err: any) {

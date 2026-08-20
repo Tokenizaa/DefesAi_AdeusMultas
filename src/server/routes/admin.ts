@@ -11,8 +11,13 @@ import { logger } from '../observability/logger';
 import { caseRepository } from '../db/case-repository';
 import { CaseDomain } from '../../types';
 import { metaIntegration } from '../integrations/meta';
+import { requireAdmin } from '../middleware/auth-middleware';
+import { PRICING } from '../config/pricing';
 
 const router = Router();
+
+// Protect ALL admin routes with requireAdmin
+router.use(requireAdmin);
 
 // Dedicated Admin API Suite (Overview, Payments, Documents, AI, Integrations)
 router.get('/admin/overview', async (req, res) => {
@@ -24,19 +29,51 @@ router.get('/admin/overview', async (req, res) => {
   const totalCases = domains.length;
   const analyzedCases = domains.filter((c) => Boolean(c.analysis) || (c.status as string) !== 'novo').length;
   const defenseReadyCases = domains.filter((c) => (c.status as string) === 'defense_ready' || (c.status as string) === 'defesa_pronta' || Boolean(c.defenseDraft)).length;
-  const paidCases = domains.filter((c) => Boolean(c.isPaid) || (c.payment?.status as string) === 'paid' || (c.payment?.status as string) === 'approved').length;
+  const paidCasesList = domains.filter((c) => Boolean(c.isPaid) || (c.payment?.status as string) === 'paid' || (c.payment?.status as string) === 'approved');
+  const paidCases = paidCasesList.length;
   
-  const totalRevenue = paidCases * 89.90;
+  // Only count real payment amounts, no fallbacks
+  const totalRevenue = paidCasesList.reduce((sum, c) => {
+    const amount = c.payment?.amount;
+    return typeof amount === 'number' && !isNaN(amount) && amount > 0 ? sum + amount : sum;
+  }, 0);
+  
   const conversionRate = totalCases > 0 ? ((paidCases / totalCases) * 100).toFixed(1) : '0.0';
   const analysisToDocRate = analyzedCases > 0 ? ((defenseReadyCases / analyzedCases) * 100).toFixed(1) : '0.0';
 
   const metricsOverview = metricsService.getOverview();
   const healthReport = await healthService.getHealth(false);
 
+  // Contar usuários reais (emails únicos dos casos)
+  const uniqueEmails = new Set(domains.filter(c => c.clientEmail || c.userEmail).map(c => c.clientEmail || c.userEmail));
+  const totalUsers = uniqueEmails.size;
+
+  // Uptime real do health service
+  const uptimePercent = healthReport.services.length > 0
+    ? (healthReport.services.filter(s => s.status === 'HEALTHY').length / healthReport.services.length) * 100
+    : 0;
+
+  // Contar teses únicas do conhecimento
+  const thesesSet = new Set<string>();
+  domains.forEach(c => {
+    if (c.analysis?.recommendedArguments) {
+      c.analysis.recommendedArguments.forEach((arg) => thesesSet.add(arg.id));
+    }
+    if (c.defenseDraft) {
+      const dd = c.defenseDraft as any;
+      if (dd.selectedArguments) {
+        dd.selectedArguments.forEach((arg: string) => thesesSet.add(arg));
+      }
+      if (dd.selectedArgumentIds) {
+        dd.selectedArgumentIds.forEach((id: string | number) => thesesSet.add(String(id)));
+      }
+    }
+  });
+  const thesesCount = thesesSet.size;
+
   res.json({
     metrics: {
-      totalUsers: 8, // Seeded users in system
-      newUsersToday: 2,
+      totalUsers,
       totalCases,
       analyzedCases,
       defenseReadyCases,
@@ -46,22 +83,23 @@ router.get('/admin/overview', async (req, res) => {
       analysisToDocRate: Number(analysisToDocRate),
       aiErrorRatePercent: metricsOverview.errorRatePercent,
       totalAiCalls: metricsOverview.totalAiRequests,
-      pendingJobs: 0,
-      systemUptimePercent: 99.98,
+      pendingJobs: 0, // No job queue system implemented
+      systemUptimePercent: Number(uptimePercent.toFixed(2)),
+      thesesCount: thesesCount,
     },
     aiStatus: {
       primaryProvider: 'nvidia',
       fallbackProvider: '9router',
-      nvidiaHealthy: healthReport.services.find(s => s.id === 'nvidia')?.status === 'HEALTHY',
-      nineRouterHealthy: healthReport.services.find(s => s.id === '9router')?.status === 'HEALTHY',
+      nvidiaHealthy: healthReport.services.find(s => s.id === 'nvidia')?.status === 'HEALTHY' || false,
+      nineRouterHealthy: healthReport.services.find(s => s.id === '9router')?.status === 'HEALTHY' || false,
       fallbackRatePercent: metricsOverview.fallbackRatePercent,
       p95LatencyMs: metricsOverview.p95LatencyMs,
     },
     integrationsHealth: {
-      supabase: healthReport.services.find(s => s.id === 'supabase_db')?.status || 'HEALTHY',
-      pagbank: healthReport.services.find(s => s.id === 'pagbank')?.status || 'HEALTHY',
-      meta: healthReport.services.find(s => s.id === 'meta_graph')?.status || 'HEALTHY',
-      ocr: healthReport.services.find(s => s.id === 'ocr_vision')?.status || 'HEALTHY',
+      supabase: healthReport.services.find(s => s.id === 'supabase_db')?.status || 'UNKNOWN',
+      pagbank: healthReport.services.find(s => s.id === 'pagbank')?.status || 'UNKNOWN',
+      meta: healthReport.services.find(s => s.id === 'meta')?.status || 'UNKNOWN',
+      ocr: healthReport.services.find(s => s.id === 'ocr')?.status || 'UNKNOWN',
     },
   });
 });
@@ -82,7 +120,7 @@ router.get('/admin/payments', (req, res) => {
       customerName: c.clientName || 'Condutor DefesAi',
       customerEmail: c.clientEmail || 'contato@defesai.com.br',
       customerCpf: c.clientCpf || '***.***.***-**',
-      amount: c.payment?.amount || 89.90,
+      amount: c.payment?.amount || PRICING.DEFAULT_PRICE,
       status: isPaid ? 'PAID' : (c.payment?.status === 'pending' ? 'PENDING' : 'WAITING'),
       method: c.payment?.paymentMethod || 'PIX',
       createdAt: c.createdAt || new Date(Date.now() - (index + 1) * 3600000).toISOString(),
@@ -103,8 +141,15 @@ router.get('/admin/payments', (req, res) => {
 });
 
 router.post('/admin/payments/simulate-webhook', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).json({ 
+      error: 'Simulação indisponível em produção',
+      message: 'Webhooks de pagamento são processados automaticamente pelo PagBank.'
+    });
+  }
+
   try {
-    const { caseId, status = 'PAID', amount = 89.90 } = req.body;
+    const { caseId, status = 'PAID', amount = PRICING.DEFAULT_PRICE } = req.body;
     if (!caseId) {
       return res.status(400).json({ error: 'caseId é obrigatório' });
     }

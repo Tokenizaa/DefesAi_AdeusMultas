@@ -57,8 +57,12 @@ export class MarketingOrchestrator {
     }
     this.running = true;
     try {
-      for (const agent of this.agents) {
-        await agent.run();
+      const results = await Promise.allSettled(this.agents.map((a) => a.run()));
+      const failures = results.filter((r): r is PromiseRejectedResult => r.status === 'rejected');
+      if (failures.length > 0) {
+        logger.error('marketing', 'orchestrator', 'cycle', `${failures.length} agente(s) falharam no ciclo`, {
+          errors: failures.map((f) => String(f.reason)),
+        });
       }
       this.cycleCount += 1;
       this.lastCycleAt = new Date().toISOString();

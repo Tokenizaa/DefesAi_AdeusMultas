@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TRANSIT_DATABASE_REGISTRY } from '../../core/knowledge/knowledge-base';
+import { TRANSIT_DATABASE_REGISTRY } from '../../data/test-fixtures';
 
 const router = Router();
 

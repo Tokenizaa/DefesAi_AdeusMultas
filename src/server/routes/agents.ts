@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { eventBus, EventTopics } from '../../core/events/topics';
-import { runPipeline } from '../../agents/pipeline/runner';
 import { INITIAL_MARKETING_AGENTS, INITIAL_EDITORIAL_CONTENTS, BRAND_IDENTITY } from '../../data/marketing-agents-data';
 import { requireAdmin } from '../middleware/auth-middleware';
 
@@ -67,17 +66,6 @@ router.get('/agents/registry', (req, res) => {
       },
     ],
   });
-});
-
-router.post('/pipeline/run', async (req, res) => {
-  try {
-    const initialContext = req.body || {};
-    const result = await runPipeline(initialContext);
-    res.json(result);
-  } catch (error: any) {
-    console.error('[Pipeline Runner] Error:', error);
-    res.status(500).json({ success: false, error: error.message || 'Erro na execução do pipeline' });
-  }
 });
 
 export default router;

@@ -15,6 +15,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { CaseRow } from '../../types';
 import { Database } from '../../types/supabase';
+import { EventTopics, eventBus } from '../../core/events/topics';
 import { logger } from '../observability/logger';
 import { getSupabaseServerClient } from './supabase-server';
 
@@ -117,23 +118,30 @@ export class CaseRepository {
     };
   }
 
+  /** Loga e publica evento de auditoria para falha de persistência (best-effort, nunca lança). */
+  private handlePersistFailure(id: string, message: unknown): void {
+    logger.warn('supabase', 'case_repository', 'persist', `Falha ao persistir caso ${id}: ${message}`, {
+      caseId: id,
+      status: 'failed',
+      errorCode: 'SUPABASE_UPSERT',
+    });
+    eventBus.publish(EventTopics.AUDIT_LOG_RECORDED, {
+      type: 'persistence_failure',
+      caseId: id,
+      errorCode: 'SUPABASE_UPSERT',
+      message,
+    }, 'case_repository');
+  }
+
   private async persistAsync(id: string, payload: Database['public']['Tables']['cases']['Insert']): Promise<void> {
     if (!this.client) return;
     try {
       const { error } = await this.client.from('cases').upsert(payload);
       if (error) {
-        logger.warn('supabase', 'case_repository', 'persist', `Falha ao persistir caso ${id}: ${error.message}`, {
-          caseId: id,
-          status: 'failed',
-          errorCode: 'SUPABASE_UPSERT',
-        });
+        this.handlePersistFailure(id, error.message);
       }
     } catch (err: any) {
-      logger.warn('supabase', 'case_repository', 'persist', `Falha ao persistir caso ${id}: ${err?.message || err}`, {
-        caseId: id,
-        status: 'failed',
-        errorCode: 'SUPABASE_UPSERT',
-      });
+      this.handlePersistFailure(id, err?.message || err);
     }
   }
 

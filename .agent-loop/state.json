@@ -1,43 +1,49 @@
 {
   "version": "1.0",
   "task": {
-    "id": "TASK-ONBOARDING-ADMIN-TESTS",
-    "description": "Adicionar botões de teste no onboarding visíveis apenas para admin",
-    "objective": "Onboarding mostra botões de teste quando isAdmin=true, esconde quando isAdmin=false (user comum/primeira vez)",
-    "desired_state": "Admin logado vê botões de teste em todas as etapas do onboarding (dev e prod). User comum/primeira vez não vê botões de teste.",
-    "current_state": "OnboardingWizard não tem distinção por role; isAdmin disponível no AuthContext mas não passado para o wizard",
-    "gap": "1. Passar isAdmin do AuthContext para OnboardingWizard. 2. Adicionar botões de teste condicionais nas etapas. 3. Testar com admin e user comum."
+    "id": "TASK-FIX-P1-001",
+    "description": "Executar correções P1: rules unify, dev bypass, persistAsync metric + P2 batch",
+    "objective": "P1 resolvido, iniciar P2: orchestrator parallel, mock data, docs cleanup, model config",
+    "desired_state": "P1 3/3 completo; P2 em execução",
+    "current_state": "P1 done: rules unified, dev bypass citizen, persistAsync eventos. Iniciando P2.",
+    "gap": "P2 restante: orchestrator parallel, mock data, docs cleanup, model config"
   },
-  "status": "DISCOVERY",
-  "phase": "DISCOVERY",
+  "status": "EXECUTION",
+  "phase": "EXECUTION",
   "current_agent": "@agent-loop",
-  "attempt": 0,
+  "attempt": 1,
   "max_attempts": 3,
-  "changes": [],
-  "evidence": [],
+  "changes": [
+    "2024-08-19T23:25:00Z: @seguranca fix dev bypass role admin→citizen (auth-middleware.ts:101)",
+    "2024-08-19T23:26:00Z: @backend persistAsync agora publica AUDIT_LOG_RECORDED em falha"
+    ,"2024-08-19T23:27:00Z: @agent-loop unificou onboarding route: importa USER_SITUATIONS/USER_PROCESS_STAGES/RULES_MATRIX"
+  ],
+  "evidence": [
+    "2024-08-19T23:25:00Z: grep dev_user + diff: única mudança role citizen",
+    "2024-08-19T23:26:00Z: tsc limpo em case-repository.ts; eventBus publish AUDIT_LOG_RECORDED",
+    "2024-08-19T23:27:00Z: tsc limpo em onboarding.ts; zero duplicação"
+  ],
   "test_results": {
     "unit": "SKIP",
     "integration": "SKIP",
-    "e2e": "SKIP",
-    "last_run": null
+    "e2e": "PASS",
+    "last_run": "2024-08-19T23:18:00Z"
   },
   "blockers": [],
-  "warnings": [],
-  "decisions": [],
+  "warnings": [
+    "tsc global tem erros pré-existentes em agents/** (@/lib/types ausente) e admin.ts — fora de escopo P0/P1"
+  ],
+  "decisions": [
+    "2024-08-19T23:22:00Z: Reaproveitar AUDIT_LOG_RECORDED para falha de persistência (sem topic novo)"
+  ],
   "scope": {
-    "allowed_paths": [
-      "src/components/onboarding/**",
-      "src/core/auth/**",
-      "src/types/**"
-    ],
-    "forbidden_paths": [
-      "src/auth/**",
-      "src/billing/**",
-      "src/components/admin/**"
-    ]
+    "allowed_paths": ["src/server/**", "src/core/**", "tests/**", "*.md", "docs/**", "AGENTS.md"],
+    "forbidden_paths": ["src/components/**", "supabase/migrations/**", "agents/**"]
   },
-  "progress_history": [],
-  "next_action": "planning",
-  "created_at": "2024-08-19T00:00:00Z",
-  "updated_at": "2024-08-19T00:00:00Z"
+  "progress_history": [
+    {"cycle": 4, "gap_before": "3 P1 items", "gap_after": "0 P1 items", "progress": true, "timestamp": "2024-08-19T23:27:00Z"}
+  ],
+  "next_action": "delegate_p2_parallel",
+  "created_at": "2024-08-19T23:10:00Z",
+  "updated_at": "2024-08-19T23:27:00Z"
 }

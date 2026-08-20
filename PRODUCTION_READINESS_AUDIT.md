@@ -1,6 +1,9 @@
 # PRODUCTION READINESS AUDIT
 ## Projeto: DefesAi / Adeus Multa (v2.0.0-Production)
 
+> **Atualizado em:** 2026-08-19 — por Context Manager (agente `documentacao`)
+> **Status real:** ⚠️ NÃO pronto para produção. Veredito abaixo reflete estado atual do código.
+
 ### 1. Resumo Executivo
 Auditoria abrangente de prontidão para produção cobrindo frontend, backend, persistência, gateways de pagamento, integrações externas (Meta Graph API, Evolution/WhatsApp, Gemini AI), observabilidade e conformidade LGPD.
 
@@ -36,7 +39,7 @@ Auditoria abrangente de prontidão para produção cobrindo frontend, backend, p
 | Área | Status | P0 | P1 | P2 | P3 | Ação / Veredito |
 |---|---|---|---|---|---|---|
 | **Frontend & UX** | 🟢 READY | 0 | 0 | 0 | 1 | Totalmente integrado com rotas REST |
-| **Backend & APIs** | 🟢 READY | 0 | 0 | 0 | 0 | Roteamento modular desacoplado |
+| **Backend & APIs** | 🟠 BLOCKED | 0 | 0 | 0 | 0 | Roteamento modular desacoplado; `tsc --noEmit` com 32 erros pendentes (agents/** e admin.ts) |
 | **Banco & Persistência** | 🟢 READY | 0 | 0 | 1 | 0 | Dual-engine resiliente (Supabase + In-Memory) |
 | **PagBank & Cobrança** | 🟢 READY | 0 | 0 | 0 | 0 | PIX dinâmico com Webhook HMAC |
 | **Meta Graph / Instagram** | 🟢 READY | 0 | 0 | 1 | 0 | OAuth + Container Publisher ativo |
@@ -48,5 +51,13 @@ Auditoria abrangente de prontidão para produção cobrindo frontend, backend, p
 ---
 
 ### 4. Veredito Final
-**🟢 READY (Pronto para Produção)**
-Todos os requisitos de runtime, tipagem TypeScript (`tsc --noEmit`), compilação de produção e isolamento de segredos no backend foram validados e aprovados.
+**⚠️ NÃO PRONTO PARA PRODUÇÃO (Revisado em 2026-08-19)**
+
+Veredito anterior "🟢 READY" foi revogado: a validação de tipagem citada (`tsc --noEmit` concluído com sucesso) não reflete o estado atual do repositório.
+
+Estado real verificado em 2026-08-19:
+- **Backend**: `npx tsc --noEmit` falha com 32 erros — a maioria em `src/agents/**` (import `@/lib/types/agent-interfaces` não resolvido + tipagens `unknown`) e 1 erro em `src/server/routes/admin.ts`. Erros pré-existentes, pendentes de fix.
+- **Frontend**: build Vite OK.
+- **health-service.ts**: erro TypeScript anterior corrigido (não consta mais na listagem).
+
+**Gate de produção**: resolver os 32 erros TS do backend antes de liberar.
