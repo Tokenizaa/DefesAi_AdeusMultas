@@ -22,17 +22,16 @@ import {
 } from 'lucide-react';
 import { CaseAnalysis, InfractionData, VehicleData, ProcedureType } from '../../../types';
 
-// FUNÇÃO AUXILIAR: Formata explicações jurídicas no estilo GOV.BR
-const formatLegalPointGovBr = (arg: any, caseData: { infraction: InfractionData; vehicle: VehicleData }) => {
-  // Mapeia argumentos para explicações no estilo GOV.BR (focadas no usuário)
-  const govBrExplanations: Record<string, {
-    title: string;
-    lawExplanation: string;
-    evidenceCheck: (data: any) => string;
-    userImpact: string;
-    confidenceBase: string;
-  }> = {
-    'ARG-001': {
+// FUNÇÃO AUXILIAR: Formata explicações jurídicas no estilo GOV.BR com variação linguística
+const govBrExplanationsVariations: Record<string, Array<{
+  title: string;
+  lawExplanation: string;
+  evidenceCheck: (data: any) => string;
+  userImpact: string;
+  confidenceBase: string;
+}>> = {
+  'ARG-001': [
+    {
       title: 'Validação do radar que mediu sua velocidade',
       lawExplanation: 'Segundo a Resolução CONTRAN nº 798/2020, Art. 4º, III, todo equipamento de medição de velocidade deve passar por verificação anual obrigatória no INMETRO ou IPEM delegado. Sem laudo válido (máximo 12 meses na data da infração), a medição perde fé pública.',
       evidenceCheck: (data) => {
@@ -49,7 +48,43 @@ const formatLegalPointGovBr = (arg: any, caseData: { infraction: InfractionData;
       userImpact: 'Se confirmado que o radar estava com calibração vencida, este é fundamento sólido para solicitar anulação da multa',
       confidenceBase: 'Res. CONTRAN 798/2020'
     },
-    'ARG-051': {
+    {
+      title: 'Verificação do equipamento de medição de velocidade',
+      lawExplanation: 'Conforme Resolução CONTRAN 798/2020, artigo 4º, incisos III, os aparelhos de medição de velocidade necessitam de calibração periódica anual junto a instituições acreditadas como INMETRO ou IPEM. A ausência de comprovação dessa averificação dentro do período de validade implica nulidade da prova de velocidade.',
+      evidenceCheck: (data) => {
+        if (data.infraction.radarCalibrationDate) {
+          const calibDate = new Date(data.infraction.radarCalibrationDate);
+          const infDate = new Date(data.infraction.dateTime);
+          const diffMonths = (infDate.getTime() - calibDate.getTime()) / (1000 * 60 * 60 * 24 * 30.44);
+          return diffMonths > 12 
+            ? `Calibração vencida há ${Math.round(diffMonths)} meses (limite: 12 meses)`
+            : `Calibração válida há ${Math.round(diffMonths)} meses`;
+        }
+        return 'Dados de averificação do radar não informados nos autos';
+      },
+      userImpact: 'Comprovada a falta de averificação atual, há forte fundamento para questionar a validade da medição de velocidade e buscar a anulação da multa',
+      confidenceBase: 'Res. CONTRAN 798/2020'
+    },
+    {
+      title: 'Análise da validade técnica do radar utilizado',
+      lawExplanation: 'A Resolução CONTRAN nº 798/2020 estabelece que equipamentos de fiscalização de velocidade devem passar por verificações metrológicas anuais. O não cumprimento desse requisito acarreta a perda da presunção de veracidade da medição.',
+      evidenceCheck: (data) => {
+        if (data.infraction.radarCalibrationDate) {
+          const calibDate = new Date(data.infraction.radarCalibrationDate);
+          const infDate = new Date(data.infraction.dateTime);
+          const diffMonths = (infDate.getTime() - calibDate.getTime()) / (1000 * 60 * 60 * 24 * 30.44);
+          return diffMonths > 12 
+            ? `Última verificação realizada há ${Math.round(diffMonths)} meses (excede o prazo de 12 meses)`
+            : `Verificação dentro do prazo de validade (há ${Math.round(diffMonths)} meses)`;
+        }
+        return 'Não consta nos autos a data da última averificação do equipamento';
+      },
+      userImpact: 'Se o radar não passou pela averição anual obrigatória, a prova de velocidade pode ser considerada inválida, possibilitando a anulação da multa',
+      confidenceBase: 'Res. CONTRAN 798/2020'
+    }
+  ],
+  'ARG-051': [
+    {
       title: 'Direito à advertência por escrito (Art. 267 do CTB)',
       lawExplanation: 'A Lei nº 14.071/2020 alterou o Art. 267 do CTB para determinar que, quando a infração é leve ou média e o condutor não cometeu infrações nos últimos 12 meses, a autoridade é OBRIGADA a converter a multa em advertência por escrito, sem pagamento nem pontos na CNH.',
       evidenceCheck: (data) => {
@@ -65,7 +100,39 @@ const formatLegalPointGovBr = (arg: any, caseData: { infraction: InfractionData;
       userImpact: 'Você tem DIREITO SUBJETIVO de converter esta multa em advertência por escrito - não pagará valor e não perderá pontos na CNH',
       confidenceBase: 'Lei 14.071/2020, art. 267 do CTB'
     },
-    'ARG-002': {
+    {
+      title: 'Conversão automática em advertência por lei recente',
+      lawExplanation: 'Pela Lei 14.071/2020, que modificou o artigo 267 do Código de Trânsito Brasileiro, quando se trata de infração leve ou média e o condutor não possui outras infrações nos últimos 12 meses, a transformação da multa em advertência se torna obrigatória, eliminando o pagamento e a pontuação na carteira de habilitação.',
+      evidenceCheck: (data) => {
+        const infractionCode = data.infraction.infractionCode;
+        const isLightOrMedium = ['745-50', '735-80', '736-62', '735-80'].includes(infractionCode); 
+        const hasRecentInfractions = data.infraction.hasPreviousInfractionsLast12Months === true;
+        
+        if (!isLightOrMedium) return 'Infração de natureza grave ou gravíssima - não enquadrada no Art. 267';
+        if (hasRecentInfractions) return 'Existem infrações nos últimos 12 meses - direito à advertência não se aplica';
+        return 'Condições atendidas: infração leve/média e ausência de infrações nos últimos 12 meses';
+      },
+      userImpact: 'Nesse caso, você tem direito adquirente de não pagar a multa e não ter pontos adicionados à sua CNH, pois a lei determina a advertência por escrito',
+      confidenceBase: 'Lei 14.071/2020, art. 267 do CTB'
+    },
+    {
+      title: 'Benefício da não reincidência recente (Art. 267 CTB)',
+      lawExplanation: 'A redação atual do artigo 267 do CTB, após a Lei 14.071/2020, determina que a autoridade de trânsito deve converter a multa em advertência quando a infração for leve ou média e o condutor não houver cometido qualquer outra infração no período de 12 meses anteriores.',
+      evidenceCheck: (data) => {
+        const infractionCode = data.infraction.infractionCode;
+        const isLightOrMedium = ['745-50', '735-80', '736-62', '735-80'].includes(infractionCode); 
+        const hasRecentInfractions = data.infraction.hasPreviousInfractionsLast12Months === true;
+        
+        if (!isLightOrMedium) return 'A infração não é considerada leve ou média segundo o código de trânsito';
+        if (hasRecentInfractions) return 'Foi constatada a existência de infrações nos últimos 12 meses';
+        return 'Infração enquadrada como leve ou média e ausência de infrações nos últimos 12 meses confirmada';
+      },
+      userImpact: 'Ao comprovar que não cometeu outras infrações no último ano, você consegue evitar tanto o pagamento da multa quanto a perda de pontos na sua habilitação',
+      confidenceBase: 'Lei 14.071/2020, art. 267 do CTB'
+    }
+  ],
+  'ARG-002': [
+    {
       title: 'Sinalização de velocidade adequada no local',
       lawExplanation: 'O Art. 90, caput e §1º do CTB estabelece que nenhuma sanção pode ser aplicada por inobservância de sinalização quando esta for insuficiente, incorreta ou ausente. Para validade da medição por radar, é obrigatória placa R-19 visível na distância técnica mínima (Res. CONTRAN 798/2020).',
       evidenceCheck: (data) => {
@@ -75,10 +142,55 @@ const formatLegalPointGovBr = (arg: any, caseData: { infraction: InfractionData;
       },
       userImpact: 'Se constatada ausência ou inadequação da sinalização, isso pode invalidar a medição de velocidade como prova da infração',
       confidenceBase: 'Art. 90 do CTB, Res. CONTRAN 798/2020'
+    },
+    {
+      title: 'Verificação da placa de limite de velocidade (R-19)',
+      lawExplanation: 'Para que a medição de velocidade por radar seja considerada válida, é necessário que haja sinalização prévia e adequada. A ausência da placa R-19, que indica o limite máximo permitido, configura vício que pode anular a autuação.',
+      evidenceCheck: (data) => {
+        if (data.infraction.hasR19SignageProof === false) return 'Não há registro da presença da placa R-19 no local da medição';
+        if (data.infraction.hasR19SignageProof === true) return 'Placa R-19 constatada nos documentos fiscais';
+        return 'Informação sobre a placa de velocidade não fornecida nos autos';
+      },
+      userImpact: 'Se não houver comprovação da placa de limite de velocidade no trecho onde ocorreu a medição, a autuação pode ser anulada devido à sinalização insuficiente ou inadequada',
+      confidenceBase: 'Art. 90 do CTB, Res. CONTRAN 798/2020'
+    },
+    {
+      title: 'Análise da sinalização no local da infração',
+      lawExplanation: 'A lei exige que a sinalização de trânsito esteja visível, em bom estado e posicionada corretamente para que o condutor possa obedecer. Quando faltam esses elementos, principalmente em relação ao limite de velocidade, a multa pode ser considerada nula.',
+      evidenceCheck: (data) => {
+        if (data.infraction.hasR19SignageProof === false) return 'Ausência de evidência fotográfica ou documental da placa R-19';
+        if (data.infraction.hasR19SignageProof === true) return 'Placa R-19 identificada no material probatório';
+        return 'Não consta nos autos informação sobre a sinalização de velocidade no local';
+      },
+      userImpact: 'Se a placa indicando o limite máximo de velocidade não estiver presente ou não estiver em condições adequadas, isso pode ser utilizado como argumento para anular a multa',
+      confidenceBase: 'Art. 90 do CTB, Res. CONTRAN 798/2020'
     }
-  };
+  ]
+};
 
-  const explanation = govBrExplanations[arg.id] || {
+// Função para selecionar aleatoriamente uma variação de explicação
+const getRandomGovBrExplanation = (argId: string, caseData: { infraction: InfractionData; vehicle: VehicleData }) => {
+  const variations = govBrExplanationsVariations[argId];
+  if (!variations || variations.length === 0) {
+    // Fallback para explicação genérica caso não haja variação definida
+    return {
+      title: 'Explicação não disponível',
+      lawExplanation: 'Base jurídica não especificada',
+      evidenceCheck: () => 'Verificação não configurada',
+      userImpact: 'Impacto não determinado',
+      confidenceBase: 'Base não definida'
+    };
+  }
+  
+  // Seleciona uma variação aleatória (baseada no timestamp para mudar a cada renderização, mas podemos melhorar)
+  const index = Math.floor(Math.random() * variations.length);
+  return variations[index];
+};
+
+// FUNÇÃO AUXILIAR: Formata explicações jurídicas no estilo GOV.BR
+const formatLegalPointGovBr = (arg: any, caseData: { infraction: InfractionData; vehicle: VehicleData }) => {
+  // Obtém uma variação aleatória da explicação para este argumento
+  const explanation = getRandomGovBrExplanation(arg.id, caseData) || {
     title: arg.title,
     lawExplanation: `${arg.legalBase} ${arg.contraranResolution ? `(c/c ${arg.contraranResolution})` : ''}`,
     evidenceCheck: () => 'Verificação específica não configurada para este argumento',
@@ -91,10 +203,10 @@ const formatLegalPointGovBr = (arg: any, caseData: { infraction: InfractionData;
     infraction: caseData.infraction,
     vehicle: caseData.vehicle
   });
-   
+    
   let confidenceLevel: 'Baixo' | 'Médio' | 'Alto' | 'Muito Alto' = 'Médio';
   let confidenceReason = '';
-   
+    
   // Lógica de confiança baseada na qualidade da evidência
   if (explanation.confidenceBase.includes('Lei') && 
       (evidenceResult.includes('constatada') || evidenceResult.includes('fora da validade'))) {
@@ -105,8 +217,8 @@ const formatLegalPointGovBr = (arg: any, caseData: { infraction: InfractionData;
     confidenceLevel = 'Alto';
     confidenceReason = 'Baseado em resolução técnica com prazo claro e objetivo';
   } else if (evidenceResult.includes('Não há registro') || 
-             evidenceResult.includes('Não há comprovação') ||
-             evidenceResult.includes('ausência de')) {
+            evidenceResult.includes('Não há comprovação') ||
+            evidenceResult.includes('ausência de')) {
     confidenceLevel = 'Médio';
     confidenceReason = 'Baseado em ausência de comprovação disponível nos dados fornecidos';
   } else {
