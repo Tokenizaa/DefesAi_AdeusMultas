@@ -1,0 +1,195 @@
+- generic [ref=f4e3]:
+  - generic [ref=f4e5]:
+    - generic [ref=f4e6]:
+      - link "Ir para o conteúdo 1" [ref=f4e7] [cursor=pointer]:
+        - /url: "#main-content"
+        - generic [ref=f4e8]: Ir para o conteúdo
+        - generic [ref=f4e9]: "1"
+      - link "Ir para o menu 2" [ref=f4e10] [cursor=pointer]:
+        - /url: "#main-menu"
+        - generic [ref=f4e11]: Ir para o menu
+        - generic [ref=f4e12]: "2"
+      - link "Ir para a busca 3" [ref=f4e13] [cursor=pointer]:
+        - /url: "#main-search"
+        - generic [ref=f4e14]: Ir para a busca
+        - generic [ref=f4e15]: "3"
+      - link "Ir para o rodapé 4" [ref=f4e16] [cursor=pointer]:
+        - /url: "#footer"
+        - generic [ref=f4e17]: Ir para o rodapé
+        - generic [ref=f4e18]: "4"
+    - generic [ref=f4e19]:
+      - generic [ref=f4e20]:
+        - button "Diminuir tamanho da fonte" [ref=f4e21] [cursor=pointer]: A-
+        - button "Redefinir tamanho da fonte" [ref=f4e22] [cursor=pointer]: A
+        - button "Aumentar tamanho da fonte" [ref=f4e23] [cursor=pointer]: A+
+      - button "Alternar modo de alto contraste" [ref=f4e24] [cursor=pointer]:
+        - generic [ref=f4e31]: Alto Contraste
+  - banner [ref=f4e32]:
+    - generic [ref=f4e34]:
+      - generic [ref=f4e35]:
+        - generic [ref=f4e36]: DEFESAI
+        - generic [ref=f4e38]: Sistema de Defesa Autônoma
+      - generic [ref=f4e39]:
+        - link "Página Inicial" [ref=f4e40] [cursor=pointer]:
+          - /url: /
+        - link "Análise Gratuita" [ref=f4e41] [cursor=pointer]:
+          - /url: /novo-caso
+        - link "Base Jurídica" [ref=f4e42] [cursor=pointer]:
+          - /url: /knowledge
+    - generic [ref=f4e44]:
+      - generic [ref=f4e45]:
+        - button "Abrir menu de navegação" [ref=f4e46] [cursor=pointer]
+        - generic [ref=f4e48] [cursor=pointer]:
+          - generic [ref=f4e49]:
+            - generic [ref=f4e50]: Defe
+            - generic [ref=f4e51]: s
+            - generic [ref=f4e52]: Ai
+          - generic [ref=f4e54]:
+            - heading "Adeus Multa CTB • CONTRAN" [level=1] [ref=f4e55]:
+              - generic [ref=f4e56]: Adeus
+              - generic [ref=f4e57]: Multa
+              - generic [ref=f4e58]: CTB • CONTRAN
+            - paragraph [ref=f4e59]: Plataforma de Defesa Autônoma para Multas de Trânsito
+      - generic [ref=f4e60]:
+        - generic [ref=f4e61]:
+          - textbox "Buscar serviços ou infrações..." [ref=f4e62]
+          - button "Executar busca" [ref=f4e63] [cursor=pointer]
+        - button "Análise Gratuita" [ref=f4e67] [cursor=pointer]
+        - button "D Acessar Conta" [ref=f4e72] [cursor=pointer]:
+          - generic [ref=f4e73]: D
+          - generic [ref=f4e74]: Acessar Conta
+  - main [ref=f4e75]:
+    - generic [ref=f4e76]:
+      - generic [ref=f4e77]:
+        - generic [ref=f4e78]: MOTOR DE INTELIGÊNCIA JURÍDICA CTB & CONTRAN
+        - heading "Descubra se o seu auto de infração de trânsito possui vícios formais de anulação." [level=1] [ref=f4e83]
+        - paragraph [ref=f4e84]: Diagnóstico preliminar gratuito fundamentado nas resoluções vigentes do CONTRAN, prazos decadenciais do Art. 281 do CTB e jurisprudência dos tribunais superiores.
+        - generic [ref=f4e85]:
+          - button "Analisar Minha Multa Gratuitamente" [ref=f4e86] [cursor=pointer]
+          - button "Acessar Minha Conta" [ref=f4e93] [cursor=pointer]
+        - generic [ref=f4e94]:
+          - generic [ref=f4e95]: Diagnóstico Preliminar em 30 segundos
+          - generic [ref=f4e100]: 52 teses jurídicas canônicas
+          - generic [ref=f4e105]: 100% determinístico e auditável
+      - generic [ref=f4e110]:
+        - generic [ref=f4e111]:
+          - text: FLUXO TRANSPARENTE E ACESSÍVEL
+          - heading "Como funciona a análise e defesa de trânsito" [level=2] [ref=f4e112]
+          - paragraph [ref=f4e113]: A primeira fase é 100% gratuita para identificação de teses. A segunda fase gera a petição formal com todos os requisitos legais.
+        - generic [ref=f4e114]:
+          - generic [ref=f4e115]:
+            - generic [ref=f4e116]: "01"
+            - heading "Informe os Dados da Infração" [level=3] [ref=f4e117]
+            - paragraph [ref=f4e118]: Digite o número do auto (AIT), código do enquadramento ou envie a foto da notificação para auxílio de preenchimento.
+          - generic [ref=f4e119]:
+            - generic [ref=f4e120]: "02"
+            - heading "Diagnóstico Jurídico Gratuito" [level=3] [ref=f4e121]
+            - paragraph [ref=f4e122]: O sistema cruza as informações com o CTB, resoluções do CONTRAN e normas do INMETRO, calculando a probabilidade real de êxito.
+          - generic [ref=f4e123]:
+            - generic [ref=f4e124]: "03"
+            - heading "Geração da Petição Formal" [level=3] [ref=f4e125]
+            - paragraph [ref=f4e126]: Ao optar pela emissão, receba a minuta completa diagramada no padrão oficial em A4 com passo a passo para protocolo no órgão autuador.
+      - generic [ref=f4e127]:
+        - generic [ref=f4e128]:
+          - text: BASE JURÍDICA ESTRUTURADA
+          - heading "Principais Teses de Anulação no Sistema de Trânsito" [level=2] [ref=f4e129]
+          - paragraph [ref=f4e130]: Fundamentos previstos expressamente na Lei Federal nº 9.503/1997 e Resoluções Normativas do CONTRAN.
+        - generic [ref=f4e131]:
+          - generic [ref=f4e132]:
+            - text: Art. 281 do CTB
+            - heading "Decadência de Notificação de Autuação" [level=4] [ref=f4e133]
+            - paragraph [ref=f4e134]: Expedição da notificação que ultrapassa 30 dias contados da data da infração enseja o arquivamento sumário do auto.
+          - generic [ref=f4e135]:
+            - text: Resolução 798 CONTRAN
+            - heading "Aferição Metrológica do Radar" [level=4] [ref=f4e136]
+            - paragraph [ref=f4e137]: Medidores eletrônicos de velocidade exigem verificação anual obrigatória pelo INMETRO para validade do registro.
+          - generic [ref=f4e138]:
+            - text: Art. 267 do CTB
+            - heading "Conversão em Advertência por Escrito" [level=4] [ref=f4e139]
+            - paragraph [ref=f4e140]: Direito subjetivo do condutor sem reincidência nos últimos 12 meses em infrações leves ou médias (Lei 14.071/20).
+          - generic [ref=f4e141]:
+            - text: Resolução 909 CONTRAN
+            - heading "Sinalização de Videomonitoramento" [level=4] [ref=f4e142]
+            - paragraph [ref=f4e143]: Autuações por câmeras exigem placa informativa de fiscalização ostensiva na via sob pena de nulidade material.
+          - generic [ref=f4e144]:
+            - text: Súmula 312 do STJ
+            - heading "Garantia da Dupla Notificação" [level=4] [ref=f4e145]
+            - paragraph [ref=f4e146]: Obrigatória a expedição individualizada da Notificação de Autuação (NA) e da Notificação de Imposição de Penalidade (NIP).
+          - generic [ref=f4e147]:
+            - text: Resolução 432 CONTRAN
+            - heading "Margem de Erro do Etilômetro" [level=4] [ref=f4e148]
+            - paragraph [ref=f4e149]: Observância estrita da tabela de erro máximo admissível e termos de constatação regulamentares.
+      - generic [ref=f4e150]:
+        - generic [ref=f4e151]:
+          - text: PERGUNTAS FREQUENTES
+          - heading "Tire suas dúvidas sobre o processo" [level=2] [ref=f4e152]
+        - generic [ref=f4e153]:
+          - generic [ref=f4e154]:
+            - heading "A análise preliminar é realmente gratuita?" [level=4] [ref=f4e155]
+            - paragraph [ref=f4e156]: Sim, 100% gratuita. Você descobre as teses aplicáveis, probabilidade de êxito e prazos sem pagar nada e sem precisar informar dados bancários.
+          - generic [ref=f4e157]:
+            - heading "O que acontece após protocolar a defesa?" [level=4] [ref=f4e158]
+            - paragraph [ref=f4e159]: A defesa tempestiva suspende a exigibilidade da multa e os pontos na CNH até o julgamento pelo órgão autuador ou pela JARI.
+          - generic [ref=f4e160]:
+            - heading "Posso protocolar a defesa pela internet?" [level=4] [ref=f4e161]
+            - paragraph [ref=f4e162]: Sim. A petição gerada pelo DefesAi segue a estrutura formal exigida para protocolo presencial, envio postal ou protocolo digital nos portais do DETRAN, PRF, DNIT e prefeituras municipais.
+    - generic [ref=f4e248]:
+      - generic [ref=f4e254]:
+        - generic [ref=f4e255]:
+          - generic [ref=f4e256]: Instalar DefesAi App
+          - generic [ref=f4e257]: PWA
+        - paragraph [ref=f4e258]: Acesso rápido, modo offline e recursos com IA.
+      - generic [ref=f4e259]:
+        - button "Instalar" [ref=f4e260]
+        - button "Fechar" [ref=f4e264]
+  - contentinfo [ref=f4e163]:
+    - generic [ref=f4e164]:
+      - generic [ref=f4e165]:
+        - generic [ref=f4e166]:
+          - generic [ref=f4e167]:
+            - generic [ref=f4e168]:
+              - generic [ref=f4e169]: Defe
+              - generic [ref=f4e170]: s
+              - generic [ref=f4e171]: Ai
+            - generic [ref=f4e172]: "| Adeus Multa"
+          - paragraph [ref=f4e173]: Plataforma de inteligência jurídica para geração determinística de defesas e recursos de trânsito em conformidade com o Código de Trânsito Brasileiro (CTB) e Resoluções do CONTRAN.
+          - generic [ref=f4e174]: Sistema de Defesa Autônoma
+        - generic [ref=f4e178]:
+          - heading "Serviços ao Usuário" [level=3] [ref=f4e179]
+          - list [ref=f4e180]:
+            - listitem [ref=f4e181]:
+              - button "Análise Preliminar Gratuita de Multa" [ref=f4e182] [cursor=pointer]
+            - listitem [ref=f4e183]:
+              - button "Defesa Prévia (Notificação de Autuação)" [ref=f4e184] [cursor=pointer]
+            - listitem [ref=f4e185]:
+              - button "Recurso à JARI (1ª Instância)" [ref=f4e186] [cursor=pointer]
+            - listitem [ref=f4e187]:
+              - button "Recurso ao CETRAN (2ª Instância)" [ref=f4e188] [cursor=pointer]
+            - listitem [ref=f4e189]:
+              - button "Conversão em Advertência (Art. 267 CTB)" [ref=f4e190] [cursor=pointer]
+        - generic [ref=f4e191]:
+          - heading "Legislação & Normas" [level=3] [ref=f4e192]
+          - list [ref=f4e193]:
+            - listitem [ref=f4e194]:
+              - link "Lei nº 9.503/1997 (CTB)" [ref=f4e195] [cursor=pointer]:
+                - /url: https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm
+            - listitem [ref=f4e201]: Resoluções CONTRAN (798, 909, 918)
+            - listitem [ref=f4e202]: Súmula 312 do STJ (Notificação Dupla)
+            - listitem [ref=f4e203]: Tema 1.097 do STJ
+            - listitem [ref=f4e204]:
+              - link "SENATRAN — Secretaria Nacional" [ref=f4e205] [cursor=pointer]:
+                - /url: https://www.gov.br/transportes/pt-br/assuntos/transito/senatran
+        - generic [ref=f4e211]:
+          - heading "Acessibilidade & LGPD" [level=3] [ref=f4e212]
+          - paragraph [ref=f4e213]: Tratamento de dados realizado estritamente segundo as diretrizes da Lei nº 13.709/2018 (LGPD), garantindo sigilo e minimização de coleta.
+          - generic [ref=f4e214]:
+            - generic [ref=f4e215]: Criptografia de Ponta a Ponta
+            - paragraph [ref=f4e220]: Em conformidade com o eMAG e WCAG 2.1 / 2.2 AA.
+      - generic [ref=f4e221]:
+        - generic [ref=f4e222]:
+          - generic [ref=f4e223]: BRASIL
+          - paragraph [ref=f4e225]: © 2026 DefesAi • Tecnologia Jurídica Autônoma • Todos os direitos reservados.
+        - generic [ref=f4e226]:
+          - generic [ref=f4e227]: Padrão DefesAi
+          - generic [ref=f4e228]: •
+          - generic [ref=f4e229]: Versão 1.0.0

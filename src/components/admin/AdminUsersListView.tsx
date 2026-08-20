@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Users, Shield, User, ShieldCheck, Search, Check, RefreshCw } from 'lucide-react';
-import { getStoredUsers, saveStoredUser, DEMO_USERS } from '../../lib/supabase';
+import { getStoredUsers, saveStoredUser } from '../../lib/supabase';
 import { AuthUser, UserRole } from '../../types/auth';
 
 export const AdminUsersListView: React.FC = () => {

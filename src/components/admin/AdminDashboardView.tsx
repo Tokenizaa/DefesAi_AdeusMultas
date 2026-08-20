@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { CaseDomain } from '../../types';
 import { useRouter } from '../../core/router/RouterContext';
+import { PRICING } from '../../config/pricing';
 
 interface AdminDashboardViewProps {
   cases: CaseDomain[];
@@ -32,11 +33,11 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
   const [overviewData, setOverviewData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [probeStatus, setProbeStatus] = useState<Record<string, 'ok' | 'checking' | 'error'>>({
-    ai: 'ok',
-    pagbank: 'ok',
-    database: 'ok',
-    meta: 'ok',
-    whatsapp: 'ok',
+    ai: 'checking',
+    pagbank: 'checking',
+    database: 'checking',
+    meta: 'checking',
+    whatsapp: 'checking',
   });
 
   const fetchOverview = async () => {
@@ -63,7 +64,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
   const readyDraftCases = cases.filter((c) => c.status === 'defense_ready' || c.status === 'defesa_pronta' || Boolean(c.defenseDraft));
   const pendingDraftCases = cases.filter((c) => !c.defenseDraft && c.status !== 'defense_ready' && c.status !== 'defesa_pronta');
 
-  const totalRevenue = paidCases.length * 89.90;
+  const totalRevenue = paidCases.reduce((sum, c) => sum + (c.payment?.amount || PRICING.DEFAULT_PRICE), 0);
 
   // Simulate or execute quick probe
   const handleQuickProbe = async (serviceKey: string) => {
@@ -84,15 +85,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
     }
   };
 
-  const handleSimulatePayment = async (caseId: string) => {
-    try {
-      await fetch(`/api/payments/pix/${caseId}/simulate-pay`, { method: 'POST' });
-      fetchOverview();
-      window.location.reload();
-    } catch (err) {
-      console.error('Failed to simulate payment:', err);
-    }
-  };
+  
 
   return (
     <div className="space-y-6">
@@ -156,9 +149,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
               <Cpu className="w-3.5 h-3.5 text-purple-400" />
               <span className="text-slate-200">IA (NVIDIA/9R)</span>
             </div>
-            <span className="flex items-center gap-1 text-[10px] text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              {probeStatus.ai === 'checking' ? '...' : 'OK'}
+            <span className={`flex items-center gap-1 text-[10px] ${probeStatus.ai === 'error' ? 'text-rose-400' : 'text-emerald-400'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${probeStatus.ai === 'error' ? 'bg-rose-400' : 'bg-emerald-400'}`} />
+              {probeStatus.ai === 'checking' ? '...' : probeStatus.ai === 'error' ? 'ERRO' : 'OK'}
             </span>
           </div>
 
@@ -170,9 +163,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
               <CreditCard className="w-3.5 h-3.5 text-emerald-400" />
               <span className="text-slate-200">PagBank PIX</span>
             </div>
-            <span className="flex items-center gap-1 text-[10px] text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              {probeStatus.pagbank === 'checking' ? '...' : 'OK'}
+            <span className={`flex items-center gap-1 text-[10px] ${probeStatus.pagbank === 'error' ? 'text-rose-400' : 'text-emerald-400'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${probeStatus.pagbank === 'error' ? 'bg-rose-400' : 'bg-emerald-400'}`} />
+              {probeStatus.pagbank === 'checking' ? '...' : probeStatus.pagbank === 'error' ? 'ERRO' : 'OK'}
             </span>
           </div>
 
@@ -184,9 +177,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
               <Database className="w-3.5 h-3.5 text-sky-400" />
               <span className="text-slate-200">Supabase DB</span>
             </div>
-            <span className="flex items-center gap-1 text-[10px] text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              {probeStatus.database === 'checking' ? '...' : 'OK'}
+            <span className={`flex items-center gap-1 text-[10px] ${probeStatus.database === 'error' ? 'text-rose-400' : 'text-emerald-400'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${probeStatus.database === 'error' ? 'bg-rose-400' : 'bg-emerald-400'}`} />
+              {probeStatus.database === 'checking' ? '...' : probeStatus.database === 'error' ? 'ERRO' : 'OK'}
             </span>
           </div>
 
@@ -198,9 +191,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
               <Share2 className="w-3.5 h-3.5 text-blue-400" />
               <span className="text-slate-200">Meta API</span>
             </div>
-            <span className="flex items-center gap-1 text-[10px] text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              {probeStatus.meta === 'checking' ? '...' : 'OK'}
+            <span className={`flex items-center gap-1 text-[10px] ${probeStatus.meta === 'error' ? 'text-rose-400' : 'text-emerald-400'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${probeStatus.meta === 'error' ? 'bg-rose-400' : 'bg-emerald-400'}`} />
+              {probeStatus.meta === 'checking' ? '...' : probeStatus.meta === 'error' ? 'ERRO' : 'OK'}
             </span>
           </div>
 
@@ -212,9 +205,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
               <MessageSquare className="w-3.5 h-3.5 text-teal-400" />
               <span className="text-slate-200">WhatsApp Evo</span>
             </div>
-            <span className="flex items-center gap-1 text-[10px] text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              {probeStatus.whatsapp === 'checking' ? '...' : 'OK'}
+            <span className={`flex items-center gap-1 text-[10px] ${probeStatus.whatsapp === 'error' ? 'text-rose-400' : 'text-emerald-400'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${probeStatus.whatsapp === 'error' ? 'bg-rose-400' : 'bg-emerald-400'}`} />
+              {probeStatus.whatsapp === 'checking' ? '...' : probeStatus.whatsapp === 'error' ? 'ERRO' : 'OK'}
             </span>
           </div>
         </div>
@@ -231,7 +224,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
                 Aguardando Pagamento
               </span>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                {pendingPaymentCases.length} Casos
+                {((overviewData?.metrics?.totalCases ?? 0) - (overviewData?.metrics?.paidCases ?? 0))} Casos
               </span>
             </div>
             <p className="text-[11px] text-slate-400 font-sans">
@@ -257,7 +250,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
                 Minutas Diagramadas
               </span>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                {readyDraftCases.length} Prontas
+                {overviewData?.metrics?.defenseReadyCases ?? 0} Prontas
               </span>
             </div>
             <p className="text-[11px] text-slate-400 font-sans">
@@ -283,7 +276,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
                 Motor CTB Canônico
               </span>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30">
-                52 Teses Ativas
+                {overviewData?.metrics?.thesesCount ?? 0} Teses Ativas
               </span>
             </div>
             <p className="text-[11px] text-slate-400 font-sans">
@@ -308,7 +301,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
             <span>Total de Casos</span>
             <Folders className="w-4 h-4 text-orange-400" />
           </div>
-          <div className="text-2xl font-bold text-white">{cases.length}</div>
+          <div className="text-2xl font-bold text-white">{overviewData?.metrics?.totalCases ?? 0}</div>
           <div className="text-[10px] text-slate-500">Cadastros no sistema</div>
         </div>
 
@@ -318,9 +311,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
             <CreditCard className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="text-2xl font-bold text-emerald-400">
-            R$ {totalRevenue.toFixed(2)}
+            R$ {overviewData?.metrics?.totalRevenue?.toFixed(2) ?? '0.00'}
           </div>
-          <div className="text-[10px] text-slate-500">{paidCases.length} defesas pagas via PIX</div>
+          <div className="text-[10px] text-slate-500">{overviewData?.metrics?.paidCases ?? 0} defesas pagas via PIX</div>
         </div>
 
         <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl space-y-1">
@@ -328,7 +321,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
             <span>Peças Finalizadas</span>
             <FileCheck className="w-4 h-4 text-sky-400" />
           </div>
-          <div className="text-2xl font-bold text-white">{readyDraftCases.length}</div>
+          <div className="text-2xl font-bold text-white">{overviewData?.metrics?.defenseReadyCases ?? 0}</div>
           <div className="text-[10px] text-slate-500">Minutas ABNT geradas</div>
         </div>
 
@@ -337,7 +330,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
             <span>Condutores</span>
             <Users className="w-4 h-4 text-purple-400" />
           </div>
-          <div className="text-2xl font-bold text-white">8</div>
+          <div className="text-2xl font-bold text-white">{overviewData?.metrics?.totalUsers ?? 0}</div>
           <div className="text-[10px] text-slate-500">Contas ativas</div>
         </div>
       </div>
@@ -402,15 +395,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ cases, o
                       </span>
                     </td>
                     <td className="py-3 px-4 text-right space-x-2">
-                      {!isPaid && (
-                        <button
-                          onClick={() => handleSimulatePayment(c.id)}
-                          className="px-2 py-1 bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 rounded-lg text-[11px] font-semibold transition-colors cursor-pointer border border-emerald-800"
-                          title="Simular Liquidação PIX"
-                        >
-                          Simular PIX
-                        </button>
-                      )}
+                      
                       <button
                         onClick={() => navigate(`/admin/cases/${c.id}`)}
                         className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-orange-400 rounded-lg text-xs font-bold transition-colors cursor-pointer border border-slate-700"

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { CaseDomain, CaseDocumentData, InfractionData, VehicleData, CaseAnalysis, ProcedureType } from '../../../types';
 import { CreditCardForm } from '../../checkout/CreditCardForm';
+import { PRICING } from '../../../config/pricing';
 
 interface DocumentCheckoutStepProps {
   currentCaseId?: string;
@@ -55,7 +56,7 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
   } | null>(null);
   const [creditCardError, setCreditCardError] = useState<string | null>(null);
 
-  const price = 89.90;
+  const price = PRICING.DEFAULT_PRICE;
 
   // Load PIX when payment method is PIX
   useEffect(() => {
@@ -112,7 +113,7 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
       // 1. Create / Persist Case if not existing
       const casePayload: CaseDomain = {
         id: currentCaseId || `case_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-        title: `Recurso Auto ${infractionData.aitNumber || '1B892014'} — ${infractionData.ctbArticle || 'Art. 218 CTB'}`,
+        title: `Recurso Auto ${infractionData.aitNumber || 'N/A'} — ${infractionData.ctbArticle || 'Art. 218 CTB'}`,
         clientName: documentData.applicantName,
         clientEmail: documentData.applicantEmail,
         clientPhone: documentData.applicantPhone,
@@ -132,7 +133,7 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
           {
             id: `tl_${Date.now()}_1`,
             title: 'Diagnóstico Gratuito Realizado',
-            description: `Análise técnica com ${analysis?.overallSuccessRate || 94}% de probabilidade de êxito.`,
+            description: `Análise técnica com ${analysis?.overallSuccessRate != null ? analysis.overallSuccessRate : 0}% de probabilidade de êxito.`,
             timestamp: new Date(Date.now() - 300000).toISOString(),
             type: 'analysis',
           },
@@ -194,7 +195,7 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
               <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-50 text-orange-700 border border-orange-200 uppercase font-mono">
                 Fase 2 • Emissão da Peça
               </span>
-              <span className="text-[11px] font-mono text-slate-500">Auto nº {infractionData.aitNumber || '1B892014'}</span>
+              <span className="text-[11px] font-mono text-slate-500">Auto nº {infractionData.aitNumber || 'N/A'}</span>
             </div>
 
             <h1 className="text-lg sm:text-xl font-bold text-slate-900">

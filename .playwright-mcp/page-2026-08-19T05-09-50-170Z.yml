@@ -1,0 +1,250 @@
+- generic [ref=f12e3]:
+  - generic [ref=f12e5]:
+    - generic [ref=f12e6]:
+      - link "Ir para o conteúdo 1" [ref=f12e7] [cursor=pointer]:
+        - /url: "#main-content"
+        - generic [ref=f12e8]: Ir para o conteúdo
+        - generic [ref=f12e9]: "1"
+      - link "Ir para o menu 2" [ref=f12e10] [cursor=pointer]:
+        - /url: "#main-menu"
+        - generic [ref=f12e11]: Ir para o menu
+        - generic [ref=f12e12]: "2"
+      - link "Ir para a busca 3" [ref=f12e13] [cursor=pointer]:
+        - /url: "#main-search"
+        - generic [ref=f12e14]: Ir para a busca
+        - generic [ref=f12e15]: "3"
+      - link "Ir para o rodapé 4" [ref=f12e16] [cursor=pointer]:
+        - /url: "#footer"
+        - generic [ref=f12e17]: Ir para o rodapé
+        - generic [ref=f12e18]: "4"
+    - generic [ref=f12e19]:
+      - generic [ref=f12e20]:
+        - button "Diminuir tamanho da fonte" [ref=f12e21] [cursor=pointer]: A-
+        - button "Redefinir tamanho da fonte" [ref=f12e22] [cursor=pointer]: A
+        - button "Aumentar tamanho da fonte" [ref=f12e23] [cursor=pointer]: A+
+      - button "Alternar modo de alto contraste" [ref=f12e24] [cursor=pointer]:
+        - generic [ref=f12e31]: Alto Contraste
+  - banner [ref=f12e32]:
+    - generic [ref=f12e34]:
+      - generic [ref=f12e35]:
+        - generic [ref=f12e36]: DEFESAI
+        - generic [ref=f12e38]: Sistema de Defesa Autônoma
+      - generic [ref=f12e39]:
+        - link "Página Inicial" [ref=f12e40] [cursor=pointer]:
+          - /url: /
+        - link "Análise Gratuita" [ref=f12e41] [cursor=pointer]:
+          - /url: /novo-caso
+        - link "Base Jurídica" [ref=f12e42] [cursor=pointer]:
+          - /url: /knowledge
+    - generic [ref=f12e44]:
+      - generic [ref=f12e45]:
+        - button "Abrir menu de navegação" [ref=f12e46] [cursor=pointer]
+        - generic [ref=f12e48] [cursor=pointer]:
+          - generic [ref=f12e49]:
+            - generic [ref=f12e50]: Defe
+            - generic [ref=f12e51]: s
+            - generic [ref=f12e52]: Ai
+          - generic [ref=f12e54]:
+            - heading "Adeus Multa CTB • CONTRAN" [level=1] [ref=f12e55]:
+              - generic [ref=f12e56]: Adeus
+              - generic [ref=f12e57]: Multa
+              - generic [ref=f12e58]: CTB • CONTRAN
+            - paragraph [ref=f12e59]: Plataforma de Defesa Autônoma para Multas de Trânsito
+      - generic [ref=f12e60]:
+        - generic [ref=f12e61]:
+          - textbox "Buscar serviços ou infrações..." [ref=f12e62]
+          - button "Executar busca" [ref=f12e63] [cursor=pointer]
+        - button "Análise Gratuita" [ref=f12e67] [cursor=pointer]
+        - button "D Acessar Conta" [ref=f12e72] [cursor=pointer]:
+          - generic [ref=f12e73]: D
+          - generic [ref=f12e74]: Acessar Conta
+  - main [ref=f12e75]:
+    - generic [ref=f12e77]:
+      - generic [ref=f12e78]:
+        - generic [ref=f12e79]:
+          - generic [ref=f12e80]: F1
+          - generic [ref=f12e81]:
+            - generic [ref=f12e82]:
+              - generic [ref=f12e83]: Fase 1 • Diagnóstico Preliminar
+              - generic [ref=f12e84]: •
+              - generic [ref=f12e85]: 100% Gratuito
+            - heading "6. Diagnóstico Preliminar Concluído" [level=2] [ref=f12e263]
+        - generic [ref=f12e87]:
+          - generic "Etapa 1" [ref=f12e88]
+          - generic "Etapa 2" [ref=f12e89]
+          - generic "Etapa 3" [ref=f12e90]
+          - generic "Etapa 4" [ref=f12e91]
+          - generic "Etapa 5" [ref=f12e92]
+          - generic "Etapa 6" [ref=f12e93]
+          - generic "Etapa 7" [ref=f12e94]
+          - generic "Etapa 8" [ref=f12e95]
+          - generic "Etapa 9" [ref=f12e96]
+      - generic [ref=f12e264]:
+        - generic [ref=f12e265]:
+          - generic [ref=f12e266]:
+            - generic [ref=f12e267]:
+              - generic [ref=f12e268]: Diagnóstico Jurídico Gratuito Concluído
+              - heading "Diagnóstico de Gabriel" [level=1] [ref=f12e272]
+              - paragraph [ref=f12e273]:
+                - text: Auto nº 9881821803 • Placa MPG9N71
+                - generic [ref=f12e274]: "• WhatsApp: (62) 99417-4498"
+            - generic [ref=f12e275]:
+              - generic [ref=f12e276]: Probabilidade de Êxito
+              - generic [ref=f12e277]: 94%
+              - text: Alto potencial de anulação
+          - generic [ref=f12e278]:
+            - generic [ref=f12e279]:
+              - text: Enquadramento
+              - paragraph [ref=f12e280]: Art. 218, I
+              - paragraph [ref=f12e281]: Cód. 745-50
+            - generic [ref=f12e282]:
+              - text: Órgão Julgador
+              - paragraph [ref=f12e283]: DETRAN-MG
+              - paragraph [ref=f12e284]: "Instância: Defesa Administrativa"
+            - generic [ref=f12e285]:
+              - text: Impacto Estimado
+              - paragraph [ref=f12e286]: R$ 130.16
+              - paragraph [ref=f12e287]: 4 Pontos na CNH
+          - generic [ref=f12e288]:
+            - heading "Vícios Formais & Teses de Anulação Identificadas (4)" [level=3] [ref=f12e294]
+            - generic [ref=f12e295]:
+              - generic [ref=f12e300]:
+                - generic [ref=f12e301]:
+                  - heading "Aferição Metrológica do Radar Vencida ou Ausente (Res. CONTRAN 798/2020)" [level=4] [ref=f12e302]
+                  - generic [ref=f12e303]: Art. 280, §2º do CTB c/c Portaria INMETRO nº 158/2022
+                  - generic [ref=f12e304]: 95% êxito
+                - paragraph [ref=f12e305]: Nulidade absoluta da autuação por excesso de velocidade quando o equipamento medidor de velocidade não foi submetido à verificação metrológica anual obrigatória (validade máxima de 12 meses) pelo INMETRO ou IPEM delegado.
+              - generic [ref=f12e310]:
+                - generic [ref=f12e311]:
+                  - heading "Direito Subjetivo à Conversão em Advertência por Escrito (Art. 267 do CTB)" [level=4] [ref=f12e312]
+                  - generic [ref=f12e313]: Art. 267 do Código de Trânsito Brasileiro (com redação da Lei nº 14.071/2020)
+                  - generic [ref=f12e314]: 99% êxito
+                - paragraph [ref=f12e315]: Imposição obrigatória da conversão de multa leve ou média em advertência por escrito quando o condutor não cometeu infrações nos últimos 12 meses (Lei 14.071/2020).
+              - generic [ref=f12e320]:
+                - generic [ref=f12e321]:
+                  - heading "Ausência ou Ilegibilidade de Sinalização Regulamentadora R-19 (Art. 90 do CTB)" [level=4] [ref=f12e322]
+                  - generic [ref=f12e323]: Art. 90, caput e §1º do CTB
+                  - generic [ref=f12e324]: 90% êxito
+                - paragraph [ref=f12e325]: Inaplicabilidade de penalidade de trânsito em virtude de sinalização de velocidade inexistente, insuficiente, encoberta por vegetação/obstáculos ou instalada fora das distâncias regulamentares.
+              - generic [ref=f12e330]:
+                - generic [ref=f12e331]:
+                  - heading "Cerceamento de Defesa por Ausência de Dupla Notificação (Súmula 312 STJ)" [level=4] [ref=f12e332]
+                  - generic [ref=f12e333]: Art. 5º, LIV e LV da CF/88 c/c Súmula 312 do STJ
+                  - generic [ref=f12e334]: 98% êxito
+                - paragraph [ref=f12e335]: Nulidade insanável de processo de trânsito em que o órgão autuador aplicou penalidade sem a comprovação de envio da Notificação de Autuação prévia.
+          - generic [ref=f12e336]:
+            - generic [ref=f12e337]: Atenção aos Prazos de Protocolo
+            - paragraph [ref=f12e342]: O prazo legal para protocolar esta defesa perante o órgão autuador expira em aproximadamente 30 dias contados da expedição da notificação (Art. 281-A CTB — Lei 14.071/2020). Protocolar tempestivamente garante o efeito suspensivo e impede o bloqueio da CNH.
+          - generic [ref=f12e343]:
+            - generic [ref=f12e344]:
+              - generic [ref=f12e345]: Fontes Oficiais Verificadas
+              - generic [ref=f12e351]:
+                - generic [ref=f12e352]: Planalto (Lei 9.503/97 consolidada)
+                - generic [ref=f12e357]: CONTRAN (Res. 798/20, 432/13, 985/22)
+                - generic [ref=f12e362]: STJ (Súmula 312, Tema 1.097)
+                - generic [ref=f12e367]: Sincronização diária via DOU
+            - generic [ref=f12e374]:
+              - generic [ref=f12e375]: Aplicação Temporal de Leis
+              - paragraph [ref=f12e379]: "O sistema considera automaticamente a vigência de cada lei. Exemplo: Art. 261 (pontuação 20/30/40 pontos) e Art. 267 (conversão em advertência) foram alterados pela Lei 14.071/2020 e só se aplicam a infrações posteriores à sua vigência."
+              - paragraph [ref=f12e380]: Lei 14.229/2021 • Lei 14.440/2022 • Lei 14.599/2023 — todas mapeadas.
+        - generic [ref=f12e381]:
+          - generic [ref=f12e382]:
+            - generic [ref=f12e383]: Fase 2 — Geração da Peça Jurídica
+            - heading "Pronto para transformar este diagnóstico na sua Petição Formal?" [level=2] [ref=f12e387]
+            - paragraph [ref=f12e388]: Gere a minuta jurídica completa em PDF (A4), diagramada nos padrões do órgão autuador com todas as teses, jurisprudência do STJ e blocos documentais aplicáveis.
+          - generic [ref=f12e389]:
+            - button "Salvar e Ver no Painel" [ref=f12e390] [cursor=pointer]
+            - button "Gerar Minha Defesa" [ref=f12e391] [cursor=pointer]
+      - generic [ref=f12e396]:
+        - generic [ref=f12e397]:
+          - generic [ref=f12e398]:
+            - generic [ref=f12e399]: 100% dos Dados Coletados Preservados
+            - button "Voltar ao Diagnóstico" [ref=f12e403] [cursor=pointer]
+          - generic [ref=f12e404]:
+            - heading "Acesso à Sua Defesa Jurídica" [level=2] [ref=f12e405]
+            - paragraph [ref=f12e406]:
+              - text: Verificamos seu cadastro para vincular o auto nº
+              - strong [ref=f12e407]: "9881821803"
+              - text: (Placa
+              - strong [ref=f12e408]: MPG9N71
+              - text: ) com segurança.
+        - generic [ref=f12e409]:
+          - generic [ref=f12e410]:
+            - generic [ref=f12e411]: Diagnóstico Preliminar Concluído (94% de êxito)
+            - generic [ref=f12e415]: 3 Teses Mapeadas
+          - paragraph [ref=f12e416]: Você não precisará preencher os dados do veículo e da autuação novamente.
+        - generic [ref=f12e417]:
+          - button "Criar Nova Conta (1º Acesso)" [ref=f12e418] [cursor=pointer]
+          - button "Já Tenho Conta (Entrar)" [ref=f12e423] [cursor=pointer]
+        - generic [ref=f12e473]: Database error saving new user
+        - button "🧪 Preencher com dados de teste" [ref=f12e429] [cursor=pointer]
+        - generic [ref=f12e430]:
+          - generic [ref=f12e431]:
+            - generic [ref=f12e432]:
+              - generic [ref=f12e433]: Nome Completo *
+              - 'textbox "Ex: Carlos Eduardo Silveira" [ref=f12e438]': João Pedro Oliveira Nascimento
+            - generic [ref=f12e439]:
+              - generic [ref=f12e440]: WhatsApp com DDD *
+              - textbox "(11) 98765-4321" [ref=f12e444]: (85) 97729-4534
+          - generic [ref=f12e445]:
+            - generic [ref=f12e446]: Seu Melhor E-mail *
+            - textbox "seu.email@exemplo.com.br" [ref=f12e451]: joao.pedro.oliveira.nascimento70@gmail.com
+          - generic [ref=f12e452]:
+            - generic [ref=f12e453]: Defina uma Senha Segura *
+            - textbox "Mínimo 6 caracteres" [ref=f12e458]: "123456"
+          - button "Criar Conta & Prosseguir para Geração" [ref=f12e459] [cursor=pointer]
+        - generic [ref=f12e463]:
+          - generic [ref=f12e464]: Criptografia de Ponta a Ponta
+          - generic [ref=f12e468]: •
+          - generic [ref=f12e469]: Conformidade LGPD
+  - contentinfo [ref=f12e196]:
+    - generic [ref=f12e197]:
+      - generic [ref=f12e198]:
+        - generic [ref=f12e199]:
+          - generic [ref=f12e200]:
+            - generic [ref=f12e201]:
+              - generic [ref=f12e202]: Defe
+              - generic [ref=f12e203]: s
+              - generic [ref=f12e204]: Ai
+            - generic [ref=f12e205]: "| Adeus Multa"
+          - paragraph [ref=f12e206]: Plataforma de inteligência jurídica para geração determinística de defesas e recursos de trânsito em conformidade com o Código de Trânsito Brasileiro (CTB) e Resoluções do CONTRAN.
+          - generic [ref=f12e207]: Sistema de Defesa Autônoma
+        - generic [ref=f12e211]:
+          - heading "Serviços ao Usuário" [level=3] [ref=f12e212]
+          - list [ref=f12e213]:
+            - listitem [ref=f12e214]:
+              - button "Análise Preliminar Gratuita de Multa" [ref=f12e215] [cursor=pointer]
+            - listitem [ref=f12e216]:
+              - button "Defesa Prévia (Notificação de Autuação)" [ref=f12e217] [cursor=pointer]
+            - listitem [ref=f12e218]:
+              - button "Recurso à JARI (1ª Instância)" [ref=f12e219] [cursor=pointer]
+            - listitem [ref=f12e220]:
+              - button "Recurso ao CETRAN (2ª Instância)" [ref=f12e221] [cursor=pointer]
+            - listitem [ref=f12e222]:
+              - button "Conversão em Advertência (Art. 267 CTB)" [ref=f12e223] [cursor=pointer]
+        - generic [ref=f12e224]:
+          - heading "Legislação & Normas" [level=3] [ref=f12e225]
+          - list [ref=f12e226]:
+            - listitem [ref=f12e227]:
+              - link "Lei nº 9.503/1997 (CTB)" [ref=f12e228] [cursor=pointer]:
+                - /url: https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm
+            - listitem [ref=f12e234]: Resoluções CONTRAN (798, 909, 918)
+            - listitem [ref=f12e235]: Súmula 312 do STJ (Notificação Dupla)
+            - listitem [ref=f12e236]: Tema 1.097 do STJ
+            - listitem [ref=f12e237]:
+              - link "SENATRAN — Secretaria Nacional" [ref=f12e238] [cursor=pointer]:
+                - /url: https://www.gov.br/transportes/pt-br/assuntos/transito/senatran
+        - generic [ref=f12e244]:
+          - heading "Acessibilidade & LGPD" [level=3] [ref=f12e245]
+          - paragraph [ref=f12e246]: Tratamento de dados realizado estritamente segundo as diretrizes da Lei nº 13.709/2018 (LGPD), garantindo sigilo e minimização de coleta.
+          - generic [ref=f12e247]:
+            - generic [ref=f12e248]: Criptografia de Ponta a Ponta
+            - paragraph [ref=f12e253]: Em conformidade com o eMAG e WCAG 2.1 / 2.2 AA.
+      - generic [ref=f12e254]:
+        - generic [ref=f12e255]:
+          - generic [ref=f12e256]: BRASIL
+          - paragraph [ref=f12e258]: © 2026 DefesAi • Tecnologia Jurídica Autônoma • Todos os direitos reservados.
+        - generic [ref=f12e259]:
+          - generic [ref=f12e260]: Padrão DefesAi
+          - generic [ref=f12e261]: •
+          - generic [ref=f12e262]: Versão 1.0.0

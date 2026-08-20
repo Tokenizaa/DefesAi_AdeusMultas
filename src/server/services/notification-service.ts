@@ -11,6 +11,7 @@ export interface PushSubscriptionDTO {
   };
   userId?: string;
   userEmail?: string;
+  fcmToken?: string;
   createdAt: string;
   userAgent?: string;
 }

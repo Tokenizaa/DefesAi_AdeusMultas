@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { CaseDomain } from '../../types';
 import { CreditCardForm } from './CreditCardForm';
+import { PRICING } from '../../config/pricing';
 
 interface CheckoutViewProps {
   currentCase: CaseDomain;
@@ -50,7 +51,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
 
   // Dynamic Commercial State
   const [standardPrice, setStandardPrice] = useState<number>(119.90);
-  const [basePrice, setBasePrice] = useState<number>(89.90);
+  const [basePrice, setBasePrice] = useState<number>(PRICING.DEFAULT_PRICE);
   const [couponCode, setCouponCode] = useState<string>('');
   const [appliedCoupon, setAppliedCoupon] = useState<{
     code: string;
@@ -99,7 +100,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
           const target = prices.find((p: any) => p.serviceType === 'recurso_multa') || prices[0];
           if (target) {
             setStandardPrice(target.standardPrice || 119.90);
-            setBasePrice(target.promotionalPrice || target.standardPrice || 89.90);
+            setBasePrice(target.promotionalPrice || target.standardPrice || PRICING.DEFAULT_PRICE);
           }
         }
       } catch (err) {

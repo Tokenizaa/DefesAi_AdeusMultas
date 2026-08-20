@@ -3,8 +3,12 @@ import { settingsService } from '../services/settings-service';
 import { logger } from '../observability/logger';
 import { auditLogs } from '../app';
 import { healthService } from '../observability/health-service';
+import { requireAdmin } from '../middleware/auth-middleware';
 
 const router = Router();
+
+// Protect ALL settings routes with requireAdmin
+router.use(requireAdmin);
 
 // Centralized Settings & Secret Management Endpoints
 router.get('/settings', async (req, res) => {

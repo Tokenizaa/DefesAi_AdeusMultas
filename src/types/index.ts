@@ -73,6 +73,8 @@ export interface InfractionData {
   notificationExpeditionDate?: string;
   defenseDeadline?: string; // Prazo fixado na notificação informada pelo usuário
   formalFlawsDetected?: string[];
+  hasPreviousInfractionsLast12Months?: boolean;
+  hasR19SignageProof?: boolean;
 }
 
 export interface LegalArgumentDomain {

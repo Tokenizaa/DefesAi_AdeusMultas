@@ -162,7 +162,7 @@ export const EXPERT_RULES: RuleModel[] = [
     description: 'Aplica a inexigibilidade de sanção quando a sinalização regulamentadora for insuficiente ou incorreta.',
     category: 'sinalizacao_viaria',
     evaluate: (ctx) => {
-      if (ctx.hasR19SignageProof === false) {
+      if (ctx.hasR19SignageProof === false || ctx.hasR19SignageProof === undefined) {
         return {
           ruleId: 'RULE_SINALIZACAO_INSUFICIENTE_90',
           title: 'Ausência de Placa Regulamentadora R-19 na Distância Técnica Mínima',
@@ -194,6 +194,8 @@ export class ExpertRuleEngine {
       radarEquipmentId: infraction.radarEquipmentId,
       radarCalibrationDate: infraction.inmetroAferitionDate,
       autuadorBody: infraction.autuadorBody,
+      hasPreviousInfractionsLast12Months: infraction.hasPreviousInfractionsLast12Months,
+      hasR19SignageProof: infraction.hasR19SignageProof,
     };
 
     const detectedInconsistencies: CaseAnalysis['detectedInconsistencies'] = [];

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PRICING } from '../../config/pricing';
 import {
   FileText,
   PlusCircle,
@@ -354,7 +355,7 @@ export const CasesTable: React.FC<CasesTableProps> = ({
                         <td className="py-3 px-4">
                           {c.payment?.status === 'paid' ? (
                             <span className="text-emerald-400 flex items-center gap-1 font-bold text-[10px]">
-                              <CheckCircle2 className="w-3.5 h-3.5" /> Pago (R$ 89,90)
+                              <CheckCircle2 className="w-3.5 h-3.5" /> Pago (R$ {(c.payment?.amount || PRICING.DEFAULT_PRICE).toFixed(2).replace('.', ',')})
                             </span>
                           ) : (
                             <button

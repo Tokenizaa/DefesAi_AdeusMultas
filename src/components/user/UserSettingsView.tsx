@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   User,
   Bell,
@@ -16,6 +16,14 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../core/auth/AuthContext';
 import { usePushNotifications } from '../../hooks/usePushNotifications';
+import { TestFillButton } from '../ui/TestFillButton';
+import {
+  generateRandomName,
+  generateRandomCPF,
+  generateRandomCNH,
+  generateRandomPhone,
+  CIDADES_UF,
+} from '../../utils/test-data-generator';
 
 export const UserSettingsView: React.FC = () => {
   const { user, updateProfile } = useAuth();
@@ -45,6 +53,16 @@ export const UserSettingsView: React.FC = () => {
   
   // Tab state
   const [activeTab, setActiveTab] = useState<'profile' | 'settings' | 'privacy'>('profile');
+
+  // Test data filler
+  const handleFillTestData = useCallback(() => {
+    const name = generateRandomName();
+    setName(name);
+    setCpf(generateRandomCPF());
+    setCnh(generateRandomCNH());
+    setPhone(generateRandomPhone());
+    setCityState(CIDADES_UF[Math.floor(Math.random() * CIDADES_UF.length)]);
+  }, []);
 
   // Profile handlers
   const handleProfileSubmit = async (e: React.FormEvent) => {
@@ -124,11 +142,14 @@ export const UserSettingsView: React.FC = () => {
       {activeTab === 'profile' ? (
         <div className="space-y-6">
           {/* Profile Form */}
-          <div>
-            <h3 className="text-lg font-bold text-slate-900">Meus Dados Pessoais</h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Estes dados são utilizados para preencher automaticamente o cabeçalho e qualificação das suas petições.
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-bold text-slate-900">Meus Dados Pessoais</h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Estes dados são utilizados para preencher automaticamente o cabeçalho e qualificação das suas petições.
+              </p>
+            </div>
+            <TestFillButton onClick={handleFillTestData} />
           </div>
 
           {profileSavedSuccess && (

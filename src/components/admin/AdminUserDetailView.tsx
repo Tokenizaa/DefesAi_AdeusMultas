@@ -14,6 +14,7 @@ import {
   Lock,
 } from 'lucide-react';
 import { useRouter } from '../../core/router/RouterContext';
+import { PRICING } from '../../config/pricing';
 
 export const AdminUserDetailView: React.FC = () => {
   const { params, navigate } = useRouter();
@@ -44,7 +45,7 @@ export const AdminUserDetailView: React.FC = () => {
           status: 'active',
           createdAt: matchedCases[0]?.createdAt || new Date(Date.now() - 30 * 86400000).toISOString(),
           casesCount: matchedCases.length || 1,
-          totalSpent: matchedCases.filter((c: any) => c.isPaid).length * 89.90,
+          totalSpent: matchedCases.filter((c: any) => c.isPaid).length * PRICING.DEFAULT_PRICE,
         });
 
         setUserCases(matchedCases.length > 0 ? matchedCases : cases.slice(0, 3));
@@ -131,7 +132,7 @@ export const AdminUserDetailView: React.FC = () => {
             <h2 className="text-sm font-bold text-white uppercase">Total Investido</h2>
           </div>
           <p className="text-2xl font-bold text-emerald-400">
-            R$ {user?.totalSpent?.toFixed(2) || '89.90'}
+            R$ {user?.totalSpent?.toFixed(2) || PRICING.DEFAULT_PRICE.toFixed(2)}
           </p>
           <p className="text-[11px] text-slate-500">
             Pagamentos via PIX PagBank conciliados com sucesso
@@ -180,7 +181,7 @@ export const AdminUserDetailView: React.FC = () => {
                   )}
                 </div>
                 <p className="text-[11px] text-slate-400 mt-1">
-                  Auto {c.infraction?.aitNumber || '1B892014'} • Placa {c.vehicle?.plate || 'BRA2E19'} • {c.infraction?.autuadorBody || 'DETRAN'}
+                  Auto {c.infraction?.aitNumber || 'N/A'} • Placa {c.vehicle?.plate || 'N/A'} • {c.infraction?.autuadorBody || 'DETRAN'}
                 </p>
               </div>
 

@@ -1,0 +1,263 @@
+- generic [ref=f11e3]:
+  - generic [ref=f11e5]:
+    - generic [ref=f11e6]:
+      - link "Ir para o conteúdo 1" [ref=f11e7] [cursor=pointer]:
+        - /url: "#main-content"
+        - generic [ref=f11e8]: Ir para o conteúdo
+        - generic [ref=f11e9]: "1"
+      - link "Ir para o menu 2" [ref=f11e10] [cursor=pointer]:
+        - /url: "#main-menu"
+        - generic [ref=f11e11]: Ir para o menu
+        - generic [ref=f11e12]: "2"
+      - link "Ir para a busca 3" [ref=f11e13] [cursor=pointer]:
+        - /url: "#main-search"
+        - generic [ref=f11e14]: Ir para a busca
+        - generic [ref=f11e15]: "3"
+      - link "Ir para o rodapé 4" [ref=f11e16] [cursor=pointer]:
+        - /url: "#footer"
+        - generic [ref=f11e17]: Ir para o rodapé
+        - generic [ref=f11e18]: "4"
+    - generic [ref=f11e19]:
+      - generic [ref=f11e20]:
+        - button "Diminuir tamanho da fonte" [ref=f11e21] [cursor=pointer]: A-
+        - button "Redefinir tamanho da fonte" [ref=f11e22] [cursor=pointer]: A
+        - button "Aumentar tamanho da fonte" [ref=f11e23] [cursor=pointer]: A+
+      - button "Alternar modo de alto contraste" [ref=f11e24] [cursor=pointer]:
+        - generic [ref=f11e31]: Alto Contraste
+  - banner [ref=f11e32]:
+    - generic [ref=f11e34]:
+      - generic [ref=f11e35]:
+        - generic [ref=f11e36]: DEFESAI
+        - generic [ref=f11e38]: Sistema de Defesa Autônoma
+      - generic [ref=f11e39]:
+        - link "Página Inicial" [ref=f11e40] [cursor=pointer]:
+          - /url: /
+        - link "Análise Gratuita" [ref=f11e41] [cursor=pointer]:
+          - /url: /novo-caso
+        - link "Base Jurídica" [ref=f11e42] [cursor=pointer]:
+          - /url: /knowledge
+    - generic [ref=f11e44]:
+      - generic [ref=f11e45]:
+        - button "Abrir menu de navegação" [ref=f11e46] [cursor=pointer]
+        - generic [ref=f11e48] [cursor=pointer]:
+          - generic [ref=f11e49]:
+            - generic [ref=f11e50]: Defe
+            - generic [ref=f11e51]: s
+            - generic [ref=f11e52]: Ai
+          - generic [ref=f11e54]:
+            - heading "Adeus Multa CTB • CONTRAN" [level=1] [ref=f11e55]:
+              - generic [ref=f11e56]: Adeus
+              - generic [ref=f11e57]: Multa
+              - generic [ref=f11e58]: CTB • CONTRAN
+            - paragraph [ref=f11e59]: Plataforma de Defesa Autônoma para Multas de Trânsito
+      - generic [ref=f11e60]:
+        - generic [ref=f11e61]:
+          - textbox "Buscar serviços ou infrações..." [ref=f11e62]
+          - button "Executar busca" [ref=f11e63] [cursor=pointer]
+        - button "Análise Gratuita" [ref=f11e67] [cursor=pointer]
+        - button "D Acessar Conta" [ref=f11e72] [cursor=pointer]:
+          - generic [ref=f11e73]: D
+          - generic [ref=f11e74]: Acessar Conta
+  - main [ref=f11e75]:
+    - generic [ref=f11e77]:
+      - generic [ref=f11e78]:
+        - generic [ref=f11e79]:
+          - generic [ref=f11e80]: F1
+          - generic [ref=f11e81]:
+            - generic [ref=f11e82]:
+              - generic [ref=f11e83]: Fase 1 • Diagnóstico Preliminar
+              - generic [ref=f11e84]: •
+              - generic [ref=f11e85]: 100% Gratuito
+            - heading "3. Identificação da Autuação & Veículo" [level=2] [ref=f11e371]
+        - generic [ref=f11e87]:
+          - generic "Etapa 1" [ref=f11e88]
+          - generic "Etapa 2" [ref=f11e89]
+          - generic "Etapa 3" [ref=f11e90]
+          - generic "Etapa 4" [ref=f11e91]
+          - generic "Etapa 5" [ref=f11e92]
+          - generic "Etapa 6" [ref=f11e93]
+          - generic "Etapa 7" [ref=f11e94]
+          - generic "Etapa 8" [ref=f11e95]
+          - generic "Etapa 9" [ref=f11e96]
+      - generic [ref=f11e372]:
+        - generic [ref=f11e373]:
+          - generic [ref=f11e374]: Passo 3 de 4 • Identificação da Autuação
+          - heading "Qual é o auto de infração e o condutor?" [level=1] [ref=f11e378]
+          - paragraph [ref=f11e379]: Coletamos os dados da autuação e seu contato para envio imediato do diagnóstico jurídico gratuito e alertas de prazo.
+        - button "🧪 Preencher com dados de teste" [active] [ref=f11e381] [cursor=pointer]
+        - generic [ref=f11e382]:
+          - generic [ref=f11e383]:
+            - generic [ref=f11e384]: Seus Dados para o Diagnóstico Gratuito
+            - generic [ref=f11e389]: 100% Gratuito
+          - generic [ref=f11e390]:
+            - generic [ref=f11e391]:
+              - generic [ref=f11e392]: Seu Nome Completo *
+              - 'textbox "Ex: Carlos Eduardo Silveira" [ref=f11e396]': Thiago Barbosa Souza Araújo
+            - generic [ref=f11e397]:
+              - generic [ref=f11e398]: WhatsApp com DDD *
+              - textbox "(11) 98765-4321" [ref=f11e401]: (67) 92358-6664
+        - generic [ref=f11e403] [cursor=pointer]:
+          - generic [ref=f11e408]:
+            - paragraph [ref=f11e409]: Anexe uma foto ou PDF da notificação para melhorar a análise (Opcional)
+            - paragraph [ref=f11e410]: "Formatos aceitos: PDF, JPG ou PNG. Os dados abaixo devem ser preenchidos manualmente."
+          - generic [ref=f11e411]: Carregar Notificação
+        - generic [ref=f11e412]:
+          - generic [ref=f11e413]:
+            - generic [ref=f11e414]:
+              - generic [ref=f11e415]: Número do Auto de Infração (AIT)
+              - 'textbox "Ex: 1B892014 ou R459201" [ref=f11e419]': "073379453207"
+              - generic [ref=f11e420]: Consta no topo ou centro da notificação recebida.
+            - generic [ref=f11e421]:
+              - generic [ref=f11e422]: Placa do Veículo *
+              - 'textbox "Ex: BRA2E19 ou ABC1234" [ref=f11e427]': XET5E76
+              - generic [ref=f11e428]: Placa no formato Mercosul ou padrão anterior cinza.
+          - generic [ref=f11e429]:
+            - generic [ref=f11e430]: Código da Infração *
+            - combobox [ref=f11e434]:
+              - option "Selecione o código da infração..."
+              - option "745-50 — Transitar em velocidade superior à máxima permitida em até 20%..."
+              - option "746-30 — Transitar em velocidade superior à máxima permitida em mais de 20% até..."
+              - option "747-10 — Transitar em velocidade superior à máxima permitida em mais de 50% (Su..."
+              - option "516-91 — Recusar-se a ser submetido a teste, exame clínico ou perícia de alcool..."
+              - option "516-92 — Dirigir sob a influência de álcool ou substância psicoativa..."
+              - option "736-62 — Dirigir veículo segurando ou manuseando telefone celular..."
+              - option "735-80 — Dirigir veículo utilizando-se de fones nos ouvidos conectados a aparel..."
+              - option "605-01 — Avançar o sinal vermelho do semáforo ou de parada obrigatória (Semafór..."
+              - option "605-02 — Avançar o sinal de parada obrigatória em cruzamento (Fiscalização Huma..."
+              - option "545-21 — Estacionar o veículo no passeio ou sobre faixa destinada a pedestre..."
+              - option "554-12 — Estacionar o veículo em desacordo com as condições de estacionamento r..."
+              - option "501-00 — Dirigir veículo sem possuir Carteira Nacional de Habilitação ou Permis..."
+              - option "504-50 — Dirigir veículo com validade da CNH vencida há mais de 30 dias..."
+              - option "581-70 — Transitar com o veículo em calçadas, passeios, passarelas ou acostamen..."
+              - option "596-70 — Ultrapassar pela contramão outro veículo onde houver linha dupla contí..."
+              - option "659-92 — Conduzir o veículo que não esteja registrado e devidamente licenciado..."
+              - option "685-80 — Transitar com o veículo com lotação excedente..." [selected]
+              - option "703-81 — Conduzir motocicleta, motoneta ou ciclomotor sem usar capacete de segu..."
+              - option "704-81 — Conduzir motocicleta transportando passageiro sem o capacete de segura..."
+              - option "518-51 — Deixar o condutor de usar o cinto de segurança..."
+              - option "518-52 — Deixar o passageiro de usar o cinto de segurança..."
+              - option "758-70 — Transitar na faixa ou pista da esquerda regulamentada como de circulaç..."
+              - option "759-50 — Transitar na faixa ou via de trânsito exclusivo para transporte públic..."
+              - option "672-61 — Conduzir o veículo em mau estado de conservação, comprometendo a segur..."
+            - generic [ref=f11e457]:
+              - generic [ref=f11e458]: Art. 231, VII do CTB
+              - generic [ref=f11e459]: 4 pontos
+              - generic [ref=f11e460]: R$ 130.16
+              - generic [ref=f11e461]: media
+          - generic [ref=f11e435]:
+            - generic [ref=f11e436]:
+              - generic [ref=f11e437]: Órgão Autuador / Julgador *
+              - combobox [ref=f11e441]:
+                - option "Selecione o órgão autuador..."
+                - option "PRF — Polícia Rodoviária Federal"
+                - option "DNIT — Depto. Nac. de Infraestrutura de Transportes"
+                - option "ANTT — Agência Nac. de Transportes Terrestres"
+                - option "IBAMA — Instituto Brasileiro do Meio Ambiente"
+                - option "DETRAN-AC — Acre"
+                - option "DETRAN-AL — Alagoas"
+                - option "DETRAN-AP — Amapá"
+                - option "DETRAN-AM — Amazonas"
+                - option "DETRAN-BA — Bahia"
+                - option "DETRAN-CE — Ceará"
+                - option "DETRAN-DF — Distrito Federal"
+                - option "DETRAN-ES — Espírito Santo"
+                - option "DETRAN-GO — Goiás"
+                - option "DETRAN-MA — Maranhão"
+                - option "DETRAN-MT — Mato Grosso"
+                - option "DETRAN-MS — Mato Grosso do Sul"
+                - option "DETRAN-MG — Minas Gerais"
+                - option "DETRAN-PA — Pará"
+                - option "DETRAN-PB — Paraíba"
+                - option "DETRAN-PR — Paraná"
+                - option "DETRAN-PE — Pernambuco"
+                - option "DETRAN-PI — Piauí"
+                - option "DETRAN-RJ — Rio de Janeiro"
+                - option "DETRAN-RN — Rio Grande do Norte"
+                - option "DETRAN-RS — Rio Grande do Sul"
+                - option "DETRAN-RO — Rondônia"
+                - option "DETRAN-RR — Roraima"
+                - option "DETRAN-SC — Santa Catarina"
+                - option "DETRAN-SP — São Paulo"
+                - option "DETRAN-SE — Sergipe"
+                - option "DETRAN-TO — Tocantins"
+                - option "DER-SP — Depto. Estadual de Estradas de Rodagem (SP)" [selected]
+                - option "DER-RJ — Depto. Estadual de Estradas de Rodagem (RJ)"
+                - option "DER-MG — Depto. Estadual de Estradas de Rodagem (MG)"
+                - option "DER-PR — Depto. Estadual de Estradas de Rodagem (PR)"
+                - option "DER-RS — Depto. Estadual de Estradas de Rodagem (RS)"
+                - option "DER-SC — Depto. Estadual de Estradas de Rodagem (SC)"
+                - option "DER-BA — Depto. Estadual de Estradas de Rodagem (BA)"
+                - option "DER-GO — Depto. Estadual de Estradas de Rodagem (GO)"
+                - option "CET-SP — Comp. de Trânsito de São Paulo"
+                - option "CET-RJ — Comp. de Trânsito do Rio de Janeiro"
+                - option "CET-BH — Comp. de Trânsito de Belo Horizonte"
+                - option "CET-CUR — Comp. de Trânsito de Curitiba"
+                - option "CET-GOI — Comp. de Trânsito de Goiânia"
+                - option "CET-BSB — Comp. de Trânsito de Brasília"
+                - option "TRANSALVADOR — Empresa de Trans. de Salvador"
+                - option "TRANSPE — Dept. de Trânsito de Recife"
+                - option "TRANSFOR — Trans. Fortaleza"
+                - option "PMT-SP — Prefeitura de São Paulo (Mobilidade)"
+                - option "Polícia Militar (Multa Eletrônica)"
+                - option "Polícia Rodoviária Estadual"
+                - option "ARU-SP — Admin. Regional de Urbanismo (SP)"
+                - option "INFRAERO — Aeroportos"
+                - option "Outro órgão (digitar manualmente)"
+            - generic [ref=f11e442]:
+              - generic [ref=f11e443]: Data da Ocorrência
+              - textbox [ref=f11e446]: 2026-08-06
+              - generic [ref=f11e447]: Art. 281-A CTB
+        - generic [ref=f11e448]:
+          - button "Voltar à fase" [ref=f11e449] [cursor=pointer]
+          - button "Continuar para Perguntas do Caso" [ref=f11e453] [cursor=pointer]
+  - contentinfo [ref=f11e196]:
+    - generic [ref=f11e197]:
+      - generic [ref=f11e198]:
+        - generic [ref=f11e199]:
+          - generic [ref=f11e200]:
+            - generic [ref=f11e201]:
+              - generic [ref=f11e202]: Defe
+              - generic [ref=f11e203]: s
+              - generic [ref=f11e204]: Ai
+            - generic [ref=f11e205]: "| Adeus Multa"
+          - paragraph [ref=f11e206]: Plataforma de inteligência jurídica para geração determinística de defesas e recursos de trânsito em conformidade com o Código de Trânsito Brasileiro (CTB) e Resoluções do CONTRAN.
+          - generic [ref=f11e207]: Sistema de Defesa Autônoma
+        - generic [ref=f11e211]:
+          - heading "Serviços ao Usuário" [level=3] [ref=f11e212]
+          - list [ref=f11e213]:
+            - listitem [ref=f11e214]:
+              - button "Análise Preliminar Gratuita de Multa" [ref=f11e215] [cursor=pointer]
+            - listitem [ref=f11e216]:
+              - button "Defesa Prévia (Notificação de Autuação)" [ref=f11e217] [cursor=pointer]
+            - listitem [ref=f11e218]:
+              - button "Recurso à JARI (1ª Instância)" [ref=f11e219] [cursor=pointer]
+            - listitem [ref=f11e220]:
+              - button "Recurso ao CETRAN (2ª Instância)" [ref=f11e221] [cursor=pointer]
+            - listitem [ref=f11e222]:
+              - button "Conversão em Advertência (Art. 267 CTB)" [ref=f11e223] [cursor=pointer]
+        - generic [ref=f11e224]:
+          - heading "Legislação & Normas" [level=3] [ref=f11e225]
+          - list [ref=f11e226]:
+            - listitem [ref=f11e227]:
+              - link "Lei nº 9.503/1997 (CTB)" [ref=f11e228] [cursor=pointer]:
+                - /url: https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm
+            - listitem [ref=f11e234]: Resoluções CONTRAN (798, 909, 918)
+            - listitem [ref=f11e235]: Súmula 312 do STJ (Notificação Dupla)
+            - listitem [ref=f11e236]: Tema 1.097 do STJ
+            - listitem [ref=f11e237]:
+              - link "SENATRAN — Secretaria Nacional" [ref=f11e238] [cursor=pointer]:
+                - /url: https://www.gov.br/transportes/pt-br/assuntos/transito/senatran
+        - generic [ref=f11e244]:
+          - heading "Acessibilidade & LGPD" [level=3] [ref=f11e245]
+          - paragraph [ref=f11e246]: Tratamento de dados realizado estritamente segundo as diretrizes da Lei nº 13.709/2018 (LGPD), garantindo sigilo e minimização de coleta.
+          - generic [ref=f11e247]:
+            - generic [ref=f11e248]: Criptografia de Ponta a Ponta
+            - paragraph [ref=f11e253]: Em conformidade com o eMAG e WCAG 2.1 / 2.2 AA.
+      - generic [ref=f11e254]:
+        - generic [ref=f11e255]:
+          - generic [ref=f11e256]: BRASIL
+          - paragraph [ref=f11e258]: © 2026 DefesAi • Tecnologia Jurídica Autônoma • Todos os direitos reservados.
+        - generic [ref=f11e259]:
+          - generic [ref=f11e260]: Padrão DefesAi
+          - generic [ref=f11e261]: •
+          - generic [ref=f11e262]: Versão 1.0.0

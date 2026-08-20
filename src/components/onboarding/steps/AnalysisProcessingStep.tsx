@@ -8,13 +8,43 @@ import {
   Zap,
   FileSearch
 } from 'lucide-react';
+import { InfractionData, CaseAnalysis } from '../../../types';
+import { ExpertRuleEngine } from '../../../core/rules/rule-engine';
 
 interface AnalysisProcessingStepProps {
+  infractionData: InfractionData;
   onComplete: () => void;
+  onAnalysisComplete: (analysis: CaseAnalysis) => void;
 }
 
-export const AnalysisProcessingStep: React.FC<AnalysisProcessingStepProps> = ({ onComplete }) => {
+export const AnalysisProcessingStep: React.FC<AnalysisProcessingStepProps> = ({ 
+  infractionData, 
+  onComplete, 
+  onAnalysisComplete 
+}) => {
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
+  const [analysisResult, setAnalysisResult] = useState<CaseAnalysis | null>(null);
+
+  // Executar ExpertRuleEngine quando o componente montar
+  useEffect(() => {
+    try {
+      // Enriquecer infractionData com campos que o ExpertRuleEngine espera
+      const enrichedData: InfractionData = {
+        ...infractionData,
+        // Por padrão, assumir que NÃO temos dados de infrações anteriores
+        // O motor vai avaliar com cuidado (regra de advertência pode não disparar)
+        hasPreviousInfractionsLast12Months: infractionData.hasPreviousInfractionsLast12Months ?? undefined,
+        // Por padrão, assumir que NÃO temos prova de sinalização R-19
+        // O motor vai considerar como possível inconsistência
+        hasR19SignageProof: infractionData.hasR19SignageProof ?? undefined,
+      };
+      
+      const result = ExpertRuleEngine.evaluate(`temp_${Date.now()}`, enrichedData);
+      setAnalysisResult(result);
+    } catch (err) {
+      console.error('ExpertRuleEngine evaluation failed:', err);
+    }
+  }, []);
 
   const stages = [
     { label: 'Recebendo e validando dados informados pelo condutor', duration: 700 },
@@ -33,12 +63,15 @@ export const AnalysisProcessingStep: React.FC<AnalysisProcessingStepProps> = ({ 
       }, stages[currentStageIndex].duration);
     } else {
       timer = setTimeout(() => {
+        if (analysisResult) {
+          onAnalysisComplete(analysisResult);
+        }
         onComplete();
       }, stages[currentStageIndex].duration);
     }
 
     return () => clearTimeout(timer);
-  }, [currentStageIndex]);
+  }, [currentStageIndex, analysisResult, stages, onComplete, onAnalysisComplete]);
 
   const progressPercentage = Math.round(((currentStageIndex + 1) / stages.length) * 100);
 

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CreditCard, CheckCircle, AlertCircle, Loader2, Eye, EyeOff, Lock } from 'lucide-react';
+import { TestFillButton } from '../ui/TestFillButton';
+import { generateRandomCardData } from '../../utils/test-data-generator';
 
 interface CreditCardFormProps {
   caseId: string;
@@ -237,7 +239,20 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+    <>
+      <div className="flex justify-center mb-3">
+        <TestFillButton
+          onClick={() => {
+            const data = generateRandomCardData();
+            setCardNumber(data.cardNumber);
+            setCardHolderName(data.cardHolderName);
+            setCardExpiry(data.cardExpiry);
+            setCardCvv(data.cardCvv);
+            setCardCpf(data.cardCpf);
+          }}
+        />
+      </div>
+      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       {/* Card Brand Detection */}
       <div className="flex items-center gap-2 text-xs text-slate-500">
         <span className="font-mono uppercase">Bandeira:</span>
@@ -455,5 +470,6 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
         )}
       </div>
     </form>
+    </>
   );
 };

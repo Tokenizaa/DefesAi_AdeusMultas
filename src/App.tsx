@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './core/auth/AuthContext';
 import { RouterProvider, useRouter } from './core/router/RouterContext';
 import { AccessibilityProvider } from './context/AccessibilityContext';
+import { api } from './lib/api/client';
 
 // Layouts
 import { PublicLayout } from './components/layout/PublicLayout';
@@ -59,8 +60,7 @@ function AppContent() {
 
   const loadCases = async () => {
     try {
-      const res = await fetch('/api/cases');
-      const data = await res.json();
+      const data = await api.get<CaseDomain[]>('/api/cases');
       setCases(data);
       if (!activeCase && data.length > 0) {
         setActiveCase(data[0]);
@@ -107,11 +107,7 @@ function AppContent() {
   const handleUpdateCase = (updated: CaseDomain) => {
     setActiveCase(updated);
     setCases((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
-    fetch(`/api/cases/${updated.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated),
-    }).catch(console.error);
+    api.put(`/api/cases/${updated.id}`, updated).catch(console.error);
   };
 
   const handleOpenWhatsAppModal = (caseId: string) => {
@@ -311,6 +307,9 @@ function AppContent() {
   // =========================================================================
   // 3. ÁREA PÚBLICA (Rotas /, /login, /cadastro, /novo-caso)
   // =========================================================================
+  const knownPublicRoutes = ['/', '/login', '/cadastro', '/novo-caso'];
+  const matchedPublicRoute = knownPublicRoutes.includes(currentPath);
+
   return (
     <PublicLayout>
       {currentPath === '/' && <LandingPageView />}
@@ -325,6 +324,19 @@ function AppContent() {
             onCaseReadyForCheckout={handleCaseReadyForCheckout}
             onOpenKnowledge={() => navigate('/admin/knowledge')}
           />
+        </div>
+      )}
+
+      {/* 404 fallback */}
+      {!matchedPublicRoute && (
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-slate-800 mb-4">404</h1>
+            <p className="text-slate-600 mb-6">Pagina nao encontrada</p>
+            <button onClick={() => navigate('/')} className="px-4 py-2 bg-blue-600 text-white rounded-lg">
+              Voltar ao inicio
+            </button>
+          </div>
         </div>
       )}
 

@@ -61,14 +61,14 @@ export const DocumentReviewStep: React.FC<DocumentReviewStepProps> = ({
               </h3>
             </div>
             <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded">
-              {analysis?.overallSuccessRate || 94}% Êxito
+              {analysis?.overallSuccessRate != null ? `${analysis.overallSuccessRate}%` : 'Análise pendente'}
             </span>
           </div>
 
           <div className="space-y-2 text-xs">
             <div className="flex justify-between py-1 border-b border-slate-100">
               <span className="text-slate-500">Auto de Infração (AIT):</span>
-              <span className="font-mono font-bold text-slate-900">{infractionData.aitNumber || '1B892014'}</span>
+              <span className="font-mono font-bold text-slate-900">{infractionData.aitNumber || 'N/A'}</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-100">
               <span className="text-slate-500">Código & Enquadramento:</span>

@@ -50,42 +50,42 @@ class MetricsService {
     name: 'NVIDIA NIM Provider',
     role: 'primary',
     status: 'operational',
-    requestsTotal: 1284,
-    requestsSuccess: 1267,
-    requestsFailed: 17,
-    successRate: 98.7,
-    p50LatencyMs: 640,
-    p95LatencyMs: 1820,
-    p99LatencyMs: 2450,
-    avgLatencyMs: 820,
-    timeoutsCount: 4,
-    retriesCount: 17,
-    fallbackTriggeredCount: 3,
-    lastRequestAt: new Date(Date.now() - 45000).toISOString(),
-    lastErrorAt: new Date(Date.now() - 12 * 60000).toISOString(),
-    lastErrorMessage: '503 Service Unavailable (Transient load spike - Auto-recovered)',
-    estimatedTokensUsed: 428900,
+    requestsTotal: 0,
+    requestsSuccess: 0,
+    requestsFailed: 0,
+    successRate: 0,
+    p50LatencyMs: 0,
+    p95LatencyMs: 0,
+    p99LatencyMs: 0,
+    avgLatencyMs: 0,
+    timeoutsCount: 0,
+    retriesCount: 0,
+    fallbackTriggeredCount: 0,
+    lastRequestAt: undefined,
+    lastErrorAt: undefined,
+    lastErrorMessage: undefined,
+    estimatedTokensUsed: 0,
   };
 
   private nineRouterMetrics: ProviderMetrics = {
     name: '9Router Provider (Fallback)',
     role: 'fallback',
     status: 'operational',
-    requestsTotal: 48,
-    requestsSuccess: 47,
-    requestsFailed: 1,
-    successRate: 97.9,
-    p50LatencyMs: 890,
-    p95LatencyMs: 2100,
-    p99LatencyMs: 2800,
-    avgLatencyMs: 1040,
-    timeoutsCount: 1,
-    retriesCount: 2,
-    fallbackTriggeredCount: 3, // Received 3 fallbacks from NVIDIA
-    lastRequestAt: new Date(Date.now() - 2 * 60000).toISOString(),
-    lastErrorAt: new Date(Date.now() - 4 * 3600000).toISOString(),
-    lastErrorMessage: 'Rate limit 429 on secondary endpoint',
-    estimatedTokensUsed: 18450,
+    requestsTotal: 0,
+    requestsSuccess: 0,
+    requestsFailed: 0,
+    successRate: 0,
+    p50LatencyMs: 0,
+    p95LatencyMs: 0,
+    p99LatencyMs: 0,
+    avgLatencyMs: 0,
+    timeoutsCount: 0,
+    retriesCount: 0,
+    fallbackTriggeredCount: 0,
+    lastRequestAt: undefined,
+    lastErrorAt: undefined,
+    lastErrorMessage: undefined,
+    estimatedTokensUsed: 0,
   };
 
   private edgeFunctions: EdgeFunctionMetrics[] = [
@@ -93,45 +93,45 @@ class MetricsService {
       name: 'analysis-engine',
       endpoint: '/functions/v1/analysis-engine',
       status: 'healthy',
-      requests: 438,
-      successRate: 99.1,
-      p95LatencyMs: 1420,
-      lastExecutionAt: new Date(Date.now() - 18000).toISOString(),
+      requests: 0,
+      successRate: 0,
+      p95LatencyMs: 0,
+      lastExecutionAt: '',
     },
     {
       name: 'knowledge-search',
       endpoint: '/functions/v1/knowledge-search',
       status: 'healthy',
-      requests: 892,
-      successRate: 99.8,
-      p95LatencyMs: 340,
-      lastExecutionAt: new Date(Date.now() - 8000).toISOString(),
+      requests: 0,
+      successRate: 0,
+      p95LatencyMs: 0,
+      lastExecutionAt: '',
     },
     {
       name: 'ocr-processor',
       endpoint: '/functions/v1/ocr-processor',
       status: 'healthy',
-      requests: 215,
-      successRate: 97.6,
-      p95LatencyMs: 1890,
-      lastExecutionAt: new Date(Date.now() - 35000).toISOString(),
+      requests: 0,
+      successRate: 0,
+      p95LatencyMs: 0,
+      lastExecutionAt: '',
     },
     {
       name: 'document-generator',
       endpoint: '/functions/v1/document-generator',
       status: 'healthy',
-      requests: 312,
-      successRate: 100.0,
-      p95LatencyMs: 620,
-      lastExecutionAt: new Date(Date.now() - 22000).toISOString(),
+      requests: 0,
+      successRate: 0,
+      p95LatencyMs: 0,
+      lastExecutionAt: '',
     },
   ];
 
   constructor() {
-    // Seed initial latency distribution
-    this.latencies = [120, 145, 180, 210, 240, 310, 450, 620, 890, 1200, 1540];
-    this.aiLatenciesNvidia = [580, 620, 710, 820, 950, 1100, 1420, 1820];
-    this.aiLatencies9Router = [780, 840, 920, 1050, 1250, 1600, 2100];
+    // Start with empty arrays - no seed data
+    this.latencies = [];
+    this.aiLatenciesNvidia = [];
+    this.aiLatencies9Router = [];
   }
 
   public recordRequest(durationMs: number, success = true): void {
@@ -196,19 +196,34 @@ class MetricsService {
     fallbackRatePercent: number;
     totalAiRequests: number;
   } {
-    const sorted = [...this.latencies].sort((a, b) => a - b);
-    const p50 = sorted[Math.floor(sorted.length * 0.5)] || 240;
-    const p95 = sorted[Math.floor(sorted.length * 0.95)] || 980;
-    const p99 = sorted[Math.floor(sorted.length * 0.99)] || 1650;
-
+    // Calculate requests per minute based on recent activity
+    // For now, we'll calculate from latency timestamps or use a simple approach
+    // In a real implementation, we'd track request timestamps
+    const requestsPerMin = this.latencies.length > 0 ? Math.min(this.latencies.length * 6, 1000) : 0; // Rough estimate
+    
     const totalAi = this.nvidiaMetrics.requestsTotal + this.nineRouterMetrics.requestsTotal;
+    const totalErrors = this.nvidiaMetrics.requestsFailed + this.nineRouterMetrics.requestsFailed;
+    const errorRatePercent = totalAi > 0 ? Number(((totalErrors / totalAi) * 100).toFixed(1)) : 0;
+    
+    // Calculate latency percentiles from actual data
+    const sortedLatencies = [...this.latencies].sort((a, b) => a - b);
+    const p50 = sortedLatencies.length > 0 
+      ? sortedLatencies[Math.floor(sortedLatencies.length * 0.5)] 
+      : 0;
+    const p95 = sortedLatencies.length > 0 
+      ? sortedLatencies[Math.floor(sortedLatencies.length * 0.95)] 
+      : 0;
+    const p99 = sortedLatencies.length > 0 
+      ? sortedLatencies[Math.floor(sortedLatencies.length * 0.99)] 
+      : 0;
+
     const fallbackRate = totalAi > 0
       ? Number(((this.nvidiaMetrics.fallbackTriggeredCount / totalAi) * 100).toFixed(2))
       : 0;
 
     return {
-      requestsPerMin: 84,
-      errorRatePercent: 0.8,
+      requestsPerMin,
+      errorRatePercent,
       p50LatencyMs: p50,
       p95LatencyMs: p95,
       p99LatencyMs: p99,

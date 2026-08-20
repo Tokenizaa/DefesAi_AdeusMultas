@@ -31,6 +31,7 @@ import {
 } from '../../types/commercial';
 import { logger } from '../observability/logger';
 import { commercialRepository } from '../db/commercial-repository';
+import { PRICING } from '../config/pricing';
 
 class CommercialService {
   private pricings: Map<string, ServicePricing> = new Map();
@@ -59,408 +60,51 @@ class CommercialService {
   };
 
   constructor() {
-    this.seedInitialData();
+    this.loadDataFromRepository();
   }
 
-  private seedInitialData() {
-    // 1. Seed Service Pricings
-    const initialPricings: ServicePricing[] = [
-      {
-        id: 'price_recurso_multa',
-        serviceType: 'recurso_multa',
-        serviceName: 'Recurso de Multa (Defesa Prévia / JARI)',
-        description: 'Elaboração técnica de defesa fundamentada no CTB e resoluções CONTRAN para multas de trânsito.',
-        standardPrice: 119.90,
-        promotionalPrice: 89.90,
-        isActive: true,
-        history: [
-          {
-            id: 'ph_init_01',
-            previousStandardPrice: 139.90,
-            newStandardPrice: 119.90,
-            previousPromoPrice: 99.90,
-            newPromoPrice: 89.90,
-            reason: 'Alinhamento com campanha de aquisição e conversão',
-            changedBy: 'Admin Diretor Comercial',
-            changedAt: new Date(Date.now() - 30 * 86400000).toISOString(),
-          },
-        ],
-        updatedAt: new Date().toISOString(),
-        updatedBy: 'Admin Diretor Comercial',
-      },
-      {
-        id: 'price_suspensao',
-        serviceType: 'suspensao',
-        serviceName: 'Processo de Suspensão do Direito de Dirigir',
-        description: 'Defesa e recursos para processos de suspensão de CNH por pontos ou infrações autossuspensivas.',
-        standardPrice: 249.90,
-        promotionalPrice: 189.90,
-        isActive: true,
-        history: [],
-        updatedAt: new Date().toISOString(),
-        updatedBy: 'Admin Diretor Comercial',
-      },
-      {
-        id: 'price_cassacao',
-        serviceType: 'cassacao',
-        serviceName: 'Processo de Cassação da CNH',
-        description: 'Defesa altamente especializada perante CETRAN contra a perda definitiva da habilitação.',
-        standardPrice: 349.90,
-        promotionalPrice: 289.90,
-        isActive: true,
-        history: [],
-        updatedAt: new Date().toISOString(),
-        updatedBy: 'Admin Diretor Comercial',
-      },
-      {
-        id: 'price_indicacao_condutor',
-        serviceType: 'indicacao_condutor',
-        serviceName: 'Indicação de Real Condutor Infrator',
-        description: 'Requerimento formal com declaração de responsabilidade e documentação tempestiva.',
-        standardPrice: 59.90,
-        promotionalPrice: 49.90,
-        isActive: true,
-        history: [],
-        updatedAt: new Date().toISOString(),
-        updatedBy: 'Admin Diretor Comercial',
-      },
-      {
-        id: 'price_conversao_advertencia',
-        serviceType: 'conversao_advertencia',
-        serviceName: 'Conversão em Advertência por Escrito (Art. 267 CTB)',
-        description: 'Requerimento para infrações leves ou médias sem reincidência nos últimos 12 meses.',
-        standardPrice: 79.90,
-        promotionalPrice: 59.90,
-        isActive: true,
-        history: [],
-        updatedAt: new Date().toISOString(),
-        updatedBy: 'Admin Diretor Comercial',
-      },
-    ];
-
-    for (const p of initialPricings) {
-      this.pricings.set(p.id, p);
+  
+  private async loadDataFromRepository(): Promise<void> {
+    // Load all data from Supabase repository
+    await commercialRepository.loadAllFromSupabase();
+    
+    // Populate service internal state from repository getters
+    const pricingsArray = commercialRepository.getPricings();
+    this.pricings.clear();
+    for (const pricing of pricingsArray) {
+      this.pricings.set(pricing.id, pricing);
     }
-
-    // 2. Seed Promotional Campaigns
-    const initialPromos: PromotionCampaign[] = [
-      {
-        id: 'promo_black_friday',
-        name: 'Black Friday LegalTech',
-        description: 'Campanha especial com 30% de desconto em todas as defesas de trânsito.',
-        discountType: 'percentage',
-        discountValue: 30,
-        applicableServices: ['all'],
-        startDate: new Date(Date.now() - 5 * 86400000).toISOString(),
-        endDate: new Date(Date.now() + 25 * 86400000).toISOString(),
-        usageLimit: 1000,
-        usageCount: 42,
-        userUsageLimit: 1,
-        promoCode: 'BLACK30',
-        status: 'active',
-        createdAt: new Date(Date.now() - 5 * 86400000).toISOString(),
-      },
-      {
-        id: 'promo_primeira_defesa',
-        name: 'Primeira Defesa Garantida',
-        description: 'Bônus de R$ 20,00 de desconto na primeira contratação do condutor.',
-        discountType: 'fixed_amount',
-        discountValue: 20.0,
-        applicableServices: ['recurso_multa', 'conversao_advertencia'],
-        startDate: new Date(Date.now() - 20 * 86400000).toISOString(),
-        endDate: new Date(Date.now() + 60 * 86400000).toISOString(),
-        usageLimit: 500,
-        usageCount: 88,
-        userUsageLimit: 1,
-        status: 'active',
-        createdAt: new Date(Date.now() - 20 * 86400000).toISOString(),
-      },
-      {
-        id: 'promo_cnh_segura',
-        name: 'CNH Protegida — Suspensão & Cassação',
-        description: 'Desconto especial de R$ 50,00 em processos complexos de habilitação.',
-        discountType: 'fixed_amount',
-        discountValue: 50.0,
-        applicableServices: ['suspensao', 'cassacao'],
-        startDate: new Date(Date.now() - 10 * 86400000).toISOString(),
-        endDate: new Date(Date.now() + 30 * 86400000).toISOString(),
-        usageLimit: 200,
-        usageCount: 15,
-        userUsageLimit: 1,
-        status: 'active',
-        createdAt: new Date(Date.now() - 10 * 86400000).toISOString(),
-      },
-    ];
-
-    for (const promo of initialPromos) {
-      this.promotions.set(promo.id, promo);
+    
+    const promotionsArray = commercialRepository.getPromotions();
+    this.promotions.clear();
+    for (const promotion of promotionsArray) {
+      this.promotions.set(promotion.id, promotion);
     }
-
-    // 3. Seed Coupons
-    const initialCoupons: Coupon[] = [
-      {
-        id: 'cupom_defesai10',
-        code: 'DEFESAI10',
-        discountType: 'percentage',
-        discountValue: 10,
-        applicableServices: ['all'],
-        totalLimit: 500,
-        usedCount: 24,
-        userLimit: 1,
-        validFrom: new Date(Date.now() - 15 * 86400000).toISOString(),
-        validUntil: new Date(Date.now() + 45 * 86400000).toISOString(),
-        isActive: true,
-        createdAt: new Date(Date.now() - 15 * 86400000).toISOString(),
-        usageHistory: [
-          {
-            id: 'cup_log_1',
-            userId: 'usr_001',
-            userName: 'Carlos Eduardo Silveira',
-            caseId: 'case_sp_001',
-            orderAmount: 89.90,
-            discountApplied: 8.99,
-            usedAt: new Date(Date.now() - 2 * 86400000).toISOString(),
-          },
-        ],
-      },
-      {
-        id: 'cupom_primeiradefesa',
-        code: 'PRIMEIRADEFESA',
-        discountType: 'fixed_amount',
-        discountValue: 20.0,
-        minOrderValue: 80.0,
-        applicableServices: ['all'],
-        totalLimit: 200,
-        usedCount: 38,
-        userLimit: 1,
-        validFrom: new Date(Date.now() - 30 * 86400000).toISOString(),
-        validUntil: new Date(Date.now() + 30 * 86400000).toISOString(),
-        isActive: true,
-        createdAt: new Date(Date.now() - 30 * 86400000).toISOString(),
-        usageHistory: [],
-      },
-      {
-        id: 'cupom_vip25',
-        code: 'VIP25',
-        discountType: 'percentage',
-        discountValue: 25,
-        applicableServices: ['suspensao', 'cassacao', 'recurso_multa'],
-        totalLimit: 50,
-        usedCount: 11,
-        userLimit: 1,
-        validFrom: new Date(Date.now() - 10 * 86400000).toISOString(),
-        validUntil: new Date(Date.now() + 20 * 86400000).toISOString(),
-        isActive: true,
-        createdAt: new Date(Date.now() - 10 * 86400000).toISOString(),
-        usageHistory: [],
-      },
-      {
-        id: 'cupom_expirado2023',
-        code: 'EXPIRADO2023',
-        discountType: 'fixed_amount',
-        discountValue: 15.0,
-        applicableServices: ['all'],
-        totalLimit: 100,
-        usedCount: 100,
-        userLimit: 1,
-        validFrom: new Date(Date.now() - 180 * 86400000).toISOString(),
-        validUntil: new Date(Date.now() - 60 * 86400000).toISOString(),
-        isActive: false,
-        createdAt: new Date(Date.now() - 180 * 86400000).toISOString(),
-        usageHistory: [],
-      },
-    ];
-
-    for (const c of initialCoupons) {
-      this.coupons.set(c.code.toUpperCase(), c);
+    
+    const couponsArray = commercialRepository.getCoupons();
+    this.coupons.clear();
+    for (const coupon of couponsArray) {
+      this.coupons.set(coupon.code.toUpperCase(), coupon);
     }
-
-    // 4. Seed Referral Tree Hierarchy (3 levels: Carlos -> Beatriz -> André -> Daniela)
-    // Carlos (usr_carlos) -> Beatriz (usr_beatriz) [Level 1 of Carlos]
-    // Beatriz (usr_beatriz) -> André (usr_andre) [Level 1 of Beatriz, Level 2 of Carlos]
-    // André (usr_andre) -> Daniela (usr_daniela) [Level 1 of André, Level 2 of Beatriz, Level 3 of Carlos]
-    this.referralParents.set('usr_beatriz', 'usr_carlos');
-    this.referralParents.set('usr_andre', 'usr_beatriz');
-    this.referralParents.set('usr_daniela', 'usr_andre');
-    this.referralParents.set('usr_felipe', 'usr_carlos'); // Level 1 of Carlos
-    this.referralParents.set('usr_gabriela', 'usr_felipe'); // Level 2 of Carlos
-
-    // 5. Seed Bonus Ledger Entries
-    this.bonusLedger = [
-      {
-        id: 'bon_001',
-        userId: 'usr_carlos',
-        userName: 'Carlos Eduardo Silveira',
-        type: 'CREDIT',
-        amount: 20.0,
-        origin: 'signup',
-        reason: 'Bônus de boas-vindas no cadastro DefesAi',
-        balanceAfter: 20.0,
-        createdAt: new Date(Date.now() - 25 * 86400000).toISOString(),
-      },
-      {
-        id: 'bon_002',
-        userId: 'usr_carlos',
-        userName: 'Carlos Eduardo Silveira',
-        type: 'CREDIT',
-        amount: 20.0,
-        origin: 'referral',
-        referenceId: 'ref_beatriz_01',
-        reason: 'Bônus por indicação confirmada de Beatriz Santos',
-        balanceAfter: 40.0,
-        createdAt: new Date(Date.now() - 20 * 86400000).toISOString(),
-      },
-      {
-        id: 'bon_003',
-        userId: 'usr_beatriz',
-        userName: 'Beatriz Santos',
-        type: 'CREDIT',
-        amount: 20.0,
-        origin: 'signup',
-        reason: 'Bônus de boas-vindas com código de Carlos',
-        balanceAfter: 20.0,
-        createdAt: new Date(Date.now() - 20 * 86400000).toISOString(),
-      },
-      {
-        id: 'bon_004',
-        userId: 'usr_carlos',
-        userName: 'Carlos Eduardo Silveira',
-        type: 'DEBIT',
-        amount: -20.0,
-        origin: 'checkout_redemption',
-        referenceId: 'ord_pagbank_carlos_01',
-        reason: 'Utilização de bônus na geração de minuta recursal',
-        balanceAfter: 20.0,
-        createdAt: new Date(Date.now() - 10 * 86400000).toISOString(),
-      },
-    ];
-
-    // 6. Seed Initial Commission Ledger
-    this.commissionLedger = [
-      {
-        id: 'comm_001',
-        beneficiaryId: 'usr_carlos',
-        beneficiaryName: 'Carlos Eduardo Silveira',
-        buyerUserId: 'usr_beatriz',
-        buyerUserName: 'Beatriz Santos',
-        level: 1,
-        appliedPercent: 10,
-        baseAmount: 89.90,
-        commissionAmount: 8.99,
-        paymentId: 'ord_pagbank_beatriz_01',
-        caseId: 'case_sp_beatriz_01',
-        status: 'AVAILABLE',
-        createdAt: new Date(Date.now() - 18 * 86400000).toISOString(),
-        availableAt: new Date(Date.now() - 18 * 86400000).toISOString(),
-      },
-      {
-        id: 'comm_002',
-        beneficiaryId: 'usr_carlos',
-        beneficiaryName: 'Carlos Eduardo Silveira',
-        buyerUserId: 'usr_andre',
-        buyerUserName: 'André Oliveira',
-        level: 2,
-        appliedPercent: 5,
-        baseAmount: 89.90,
-        commissionAmount: 4.50,
-        paymentId: 'ord_pagbank_andre_01',
-        caseId: 'case_mg_andre_01',
-        status: 'AVAILABLE',
-        createdAt: new Date(Date.now() - 12 * 86400000).toISOString(),
-        availableAt: new Date(Date.now() - 12 * 86400000).toISOString(),
-      },
-      {
-        id: 'comm_003',
-        beneficiaryId: 'usr_beatriz',
-        beneficiaryName: 'Beatriz Santos',
-        buyerUserId: 'usr_andre',
-        buyerUserName: 'André Oliveira',
-        level: 1,
-        appliedPercent: 10,
-        baseAmount: 89.90,
-        commissionAmount: 8.99,
-        paymentId: 'ord_pagbank_andre_01',
-        caseId: 'case_mg_andre_01',
-        status: 'AVAILABLE',
-        createdAt: new Date(Date.now() - 12 * 86400000).toISOString(),
-        availableAt: new Date(Date.now() - 12 * 86400000).toISOString(),
-      },
-      {
-        id: 'comm_004',
-        beneficiaryId: 'usr_carlos',
-        beneficiaryName: 'Carlos Eduardo Silveira',
-        buyerUserId: 'usr_daniela',
-        buyerUserName: 'Daniela Ferreira',
-        level: 3,
-        appliedPercent: 2,
-        baseAmount: 189.90,
-        commissionAmount: 3.80,
-        paymentId: 'ord_pagbank_daniela_01',
-        caseId: 'case_rj_daniela_01',
-        status: 'AVAILABLE',
-        createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-        availableAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-      },
-      {
-        id: 'comm_005',
-        beneficiaryId: 'usr_beatriz',
-        beneficiaryName: 'Beatriz Santos',
-        buyerUserId: 'usr_daniela',
-        buyerUserName: 'Daniela Ferreira',
-        level: 2,
-        appliedPercent: 5,
-        baseAmount: 189.90,
-        commissionAmount: 9.50,
-        paymentId: 'ord_pagbank_daniela_01',
-        caseId: 'case_rj_daniela_01',
-        status: 'AVAILABLE',
-        createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-        availableAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-      },
-      {
-        id: 'comm_006',
-        beneficiaryId: 'usr_andre',
-        beneficiaryName: 'André Oliveira',
-        buyerUserId: 'usr_daniela',
-        buyerUserName: 'Daniela Ferreira',
-        level: 1,
-        appliedPercent: 10,
-        baseAmount: 189.90,
-        commissionAmount: 18.99,
-        paymentId: 'ord_pagbank_daniela_01',
-        caseId: 'case_rj_daniela_01',
-        status: 'AVAILABLE',
-        createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-        availableAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-      },
-    ];
-
-    // 7. Seed Initial Commercial Audit Logs
-    this.commercialAuditLogs = [
-      {
-        id: 'caudit_001',
-        action: 'PRICE_CHANGE',
-        changedBy: 'Admin Diretor Comercial',
-        target: 'price_recurso_multa',
-        previousState: { standardPrice: 139.90, promotionalPrice: 99.90 },
-        newState: { standardPrice: 119.90, promotionalPrice: 89.90 },
-        reason: 'Campanha de expansão e redução de atrito no checkout',
-        timestamp: new Date(Date.now() - 30 * 86400000).toISOString(),
-      },
-      {
-        id: 'caudit_002',
-        action: 'REFERRAL_CONFIG_CHANGE',
-        changedBy: 'Admin Diretor Geral',
-        target: 'referral_config',
-        previousState: { level1: 8, level2: 4, level3: 1 },
-        newState: { level1: 10, level2: 5, level3: 2 },
-        reason: 'Incentivo ao programa de indicações em 3 níveis',
-        timestamp: new Date(Date.now() - 20 * 86400000).toISOString(),
-      },
-    ];
+    
+    this.bonusLedger = [...commercialRepository.getBonusLedger()];
+    this.commissionLedger = [...commercialRepository.getCommissionLedger()];
+    this.commercialAuditLogs = [...commercialRepository.getCommercialAuditLogs()];
+    
+    // Rebuild referralParents map from referral relations
+    this.referralParents.clear();
+    const relations = commercialRepository.getReferralRelations();
+    for (const relation of relations) {
+      this.referralParents.set(relation.referredId, relation.referrerId);
+    }
+    
+    // Set referral config
+    const config = commercialRepository.getReferralConfig();
+    if (config) {
+      this.referralConfig = config;
+    }
   }
 
-  // =========================================================================
   // 1. GESTÃO DE PREÇOS
   // =========================================================================
 
@@ -1284,8 +928,7 @@ class CommercialService {
         revenueGenerated: Number(rev.toFixed(2)),
         commissionGeneratedForReferrer: Number(earned.toFixed(2)),
       };
-    };
-
+  }
     const level1 = l1Ids.map((id) => mapUserNode(id, 1));
     const level2 = l2Ids.map((id) => mapUserNode(id, 2));
     const level3 = l3Ids.map((id) => mapUserNode(id, 3));
@@ -1320,16 +963,24 @@ class CommercialService {
 
   public getCommercialMetrics(): CommercialOverviewMetrics {
     const totalComms = this.commissionLedger.filter((c) => c.status !== 'REVERSED');
-    const totalRev = totalComms.reduce((acc, c) => acc + c.baseAmount, 0) + 1200.0; // Base plus organic
+    const totalRev = totalComms.reduce((acc, c) => acc + c.baseAmount, 0);
     const totalCommsAmount = totalComms.reduce((acc, c) => acc + c.commissionAmount, 0);
     const pendingComms = this.commissionLedger.filter((c) => c.status === 'PENDING' || c.status === 'AVAILABLE').reduce((acc, c) => acc + c.commissionAmount, 0);
     const paidComms = this.commissionLedger.filter((c) => c.status === 'PAID').reduce((acc, c) => acc + c.commissionAmount, 0);
     const totalBonuses = this.bonusLedger.reduce((acc, b) => acc + b.amount, 0);
 
+    // Compute totalPaidOrders from distinct paymentIds with status PAID
+    const paidCommissionEntries = this.commissionLedger.filter((c) => c.status === 'PAID');
+    const paidPaymentIds = new Set(paidCommissionEntries.map((c) => c.paymentId).filter((id): id is string => !!id));
+    const totalPaidOrders = paidPaymentIds.size;
+
+    // Compute averageTicket from real data (totalRevenueGMV / totalPaidOrders or fallback)
+    const averageTicket = totalPaidOrders > 0 ? totalRev / totalPaidOrders : 0;
+
     return {
       totalRevenueGMV: Number(totalRev.toFixed(2)),
-      totalPaidOrders: 18,
-      averageTicket: 89.90,
+      totalPaidOrders,
+      averageTicket: Number(averageTicket.toFixed(2)),
       totalCommissionsGenerated: Number(totalCommsAmount.toFixed(2)),
       totalCommissionsPending: Number(pendingComms.toFixed(2)),
       totalCommissionsPaid: Number(paidComms.toFixed(2)),

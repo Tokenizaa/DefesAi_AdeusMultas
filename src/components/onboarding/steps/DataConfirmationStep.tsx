@@ -113,7 +113,7 @@ export const DataConfirmationStep: React.FC<DataConfirmationStepProps> = ({
           <div className="space-y-2 text-xs">
             <div className="flex justify-between py-1 border-b border-slate-100">
               <span className="text-slate-500">Placa do Veículo:</span>
-              <span className="font-mono font-bold text-slate-900">{vehicleData.plate || 'BRA2E19'}</span>
+              <span className="font-mono font-bold text-slate-900">{vehicleData.plate || 'N/A'}</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-100">
               <span className="text-slate-500">Procedimento Selecionado:</span>

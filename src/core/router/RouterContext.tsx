@@ -115,7 +115,7 @@ export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     // 2. User Guard: /dashboard, /cases, /perfil, /configuracoes requires Authentication
-    const protectedUserPaths = ['/dashboard', '/cases', '/perfil', '/configuracoes', '/checkout'];
+    const protectedUserPaths = ['/dashboard', '/cases', '/perfil', '/configuracoes', '/checkout', '/afiliado', '/affiliate'];
     const isProtectedUserPath = protectedUserPaths.some((p) => currentPath.startsWith(p));
 
     if (isProtectedUserPath && !isAuthenticated) {

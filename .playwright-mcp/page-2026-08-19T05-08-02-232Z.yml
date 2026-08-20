@@ -1,0 +1,177 @@
+- generic [ref=f12e3]:
+  - generic [ref=f12e5]:
+    - generic [ref=f12e6]:
+      - link "Ir para o conteúdo 1" [ref=f12e7] [cursor=pointer]:
+        - /url: "#main-content"
+        - generic [ref=f12e8]: Ir para o conteúdo
+        - generic [ref=f12e9]: "1"
+      - link "Ir para o menu 2" [ref=f12e10] [cursor=pointer]:
+        - /url: "#main-menu"
+        - generic [ref=f12e11]: Ir para o menu
+        - generic [ref=f12e12]: "2"
+      - link "Ir para a busca 3" [ref=f12e13] [cursor=pointer]:
+        - /url: "#main-search"
+        - generic [ref=f12e14]: Ir para a busca
+        - generic [ref=f12e15]: "3"
+      - link "Ir para o rodapé 4" [ref=f12e16] [cursor=pointer]:
+        - /url: "#footer"
+        - generic [ref=f12e17]: Ir para o rodapé
+        - generic [ref=f12e18]: "4"
+    - generic [ref=f12e19]:
+      - generic [ref=f12e20]:
+        - button "Diminuir tamanho da fonte" [ref=f12e21] [cursor=pointer]: A-
+        - button "Redefinir tamanho da fonte" [ref=f12e22] [cursor=pointer]: A
+        - button "Aumentar tamanho da fonte" [ref=f12e23] [cursor=pointer]: A+
+      - button "Alternar modo de alto contraste" [ref=f12e24] [cursor=pointer]:
+        - generic [ref=f12e31]: Alto Contraste
+  - banner [ref=f12e32]:
+    - generic [ref=f12e34]:
+      - generic [ref=f12e35]:
+        - generic [ref=f12e36]: DEFESAI
+        - generic [ref=f12e38]: Sistema de Defesa Autônoma
+      - generic [ref=f12e39]:
+        - link "Página Inicial" [ref=f12e40] [cursor=pointer]:
+          - /url: /
+        - link "Análise Gratuita" [ref=f12e41] [cursor=pointer]:
+          - /url: /novo-caso
+        - link "Base Jurídica" [ref=f12e42] [cursor=pointer]:
+          - /url: /knowledge
+    - generic [ref=f12e44]:
+      - generic [ref=f12e45]:
+        - button "Abrir menu de navegação" [ref=f12e46] [cursor=pointer]
+        - generic [ref=f12e48] [cursor=pointer]:
+          - generic [ref=f12e49]:
+            - generic [ref=f12e50]: Defe
+            - generic [ref=f12e51]: s
+            - generic [ref=f12e52]: Ai
+          - generic [ref=f12e54]:
+            - heading "Adeus Multa CTB • CONTRAN" [level=1] [ref=f12e55]:
+              - generic [ref=f12e56]: Adeus
+              - generic [ref=f12e57]: Multa
+              - generic [ref=f12e58]: CTB • CONTRAN
+            - paragraph [ref=f12e59]: Plataforma de Defesa Autônoma para Multas de Trânsito
+      - generic [ref=f12e60]:
+        - generic [ref=f12e61]:
+          - textbox "Buscar serviços ou infrações..." [ref=f12e62]
+          - button "Executar busca" [ref=f12e63] [cursor=pointer]
+        - button "Análise Gratuita" [ref=f12e67] [cursor=pointer]
+        - button "D Acessar Conta" [ref=f12e72] [cursor=pointer]:
+          - generic [ref=f12e73]: D
+          - generic [ref=f12e74]: Acessar Conta
+  - main [ref=f12e75]:
+    - generic [ref=f12e77]:
+      - generic [ref=f12e78]:
+        - generic [ref=f12e79]:
+          - generic [ref=f12e80]: F1
+          - generic [ref=f12e81]:
+            - generic [ref=f12e82]:
+              - generic [ref=f12e83]: Fase 1 • Diagnóstico Preliminar
+              - generic [ref=f12e84]: •
+              - generic [ref=f12e85]: 100% Gratuito
+            - heading "1. Situação que deseja resolver" [level=2] [ref=f12e86]
+        - generic [ref=f12e87]:
+          - generic "Etapa 1" [ref=f12e88]
+          - generic "Etapa 2" [ref=f12e89]
+          - generic "Etapa 3" [ref=f12e90]
+          - generic "Etapa 4" [ref=f12e91]
+          - generic "Etapa 5" [ref=f12e92]
+          - generic "Etapa 6" [ref=f12e93]
+          - generic "Etapa 7" [ref=f12e94]
+          - generic "Etapa 8" [ref=f12e95]
+          - generic "Etapa 9" [ref=f12e96]
+      - generic [ref=f12e97]:
+        - generic [ref=f12e98]:
+          - generic [ref=f12e99]: Passo 1 de 4 • Diagnóstico Preliminar Gratuito
+          - heading "Qual situação você quer resolver?" [level=1] [ref=f12e103]
+          - paragraph [ref=f12e104]: Selecione o objetivo da sua defesa para aplicarmos as teses exatas do Código de Trânsito Brasileiro.
+        - generic [ref=f12e105]:
+          - button "Multa de Trânsito Radar, celular ao volante, sinal vermelho, estacionamento, rodízio ou infrações gerais. Análise Gratuita Continuar" [ref=f12e106] [cursor=pointer]:
+            - generic [ref=f12e113]:
+              - heading "Multa de Trânsito" [level=3] [ref=f12e115]
+              - paragraph [ref=f12e116]: Radar, celular ao volante, sinal vermelho, estacionamento, rodízio ou infrações gerais.
+            - generic [ref=f12e117]:
+              - generic [ref=f12e118]: Análise Gratuita
+              - generic [ref=f12e119]: Continuar
+          - button "Conversão em Advertência (0 Reais de Multa) Art. 267 do CTB (Lei 14.071/20). Isenção total de pagamento e 0 pontos na CNH para infrações leves ou médias. 100% Isenção Continuar" [ref=f12e122] [cursor=pointer]:
+            - generic [ref=f12e129]:
+              - heading "Conversão em Advertência (0 Reais de Multa)" [level=3] [ref=f12e131]
+              - paragraph [ref=f12e132]: Art. 267 do CTB (Lei 14.071/20). Isenção total de pagamento e 0 pontos na CNH para infrações leves ou médias.
+            - generic [ref=f12e133]:
+              - generic [ref=f12e134]: 100% Isenção
+              - generic [ref=f12e135]: Continuar
+          - button "Indicação de Real Condutor Transferência legal da pontuação para o motorista que estava dirigindo o veículo no momento da infração. Art. 257 § 7º Continuar" [ref=f12e138] [cursor=pointer]:
+            - generic [ref=f12e144]:
+              - heading "Indicação de Real Condutor" [level=3] [ref=f12e146]
+              - paragraph [ref=f12e147]: Transferência legal da pontuação para o motorista que estava dirigindo o veículo no momento da infração.
+            - generic [ref=f12e148]:
+              - generic [ref=f12e149]: Art. 257 § 7º
+              - generic [ref=f12e150]: Continuar
+          - button "Suspensão da CNH / Lei Seca Processo de suspensão por bafômetro (Art. 165/165-A), excesso de velocidade acima de 50% ou acúmulo de pontos. Proteção CNH Continuar" [ref=f12e153] [cursor=pointer]:
+            - generic [ref=f12e158]:
+              - heading "Suspensão da CNH / Lei Seca" [level=3] [ref=f12e160]
+              - paragraph [ref=f12e161]: Processo de suspensão por bafômetro (Art. 165/165-A), excesso de velocidade acima de 50% ou acúmulo de pontos.
+            - generic [ref=f12e162]:
+              - generic [ref=f12e163]: Proteção CNH
+              - generic [ref=f12e164]: Continuar
+          - button "Cassação da CNH (PCDD) Defesa contra processo de cancelamento do direito de dirigir por conduzir com CNH suspensa ou reincidência. Instância Crítica Continuar" [ref=f12e167] [cursor=pointer]:
+            - generic [ref=f12e173]:
+              - heading "Cassação da CNH (PCDD)" [level=3] [ref=f12e175]
+              - paragraph [ref=f12e176]: Defesa contra processo de cancelamento do direito de dirigir por conduzir com CNH suspensa ou reincidência.
+            - generic [ref=f12e177]:
+              - generic [ref=f12e178]: Instância Crítica
+              - generic [ref=f12e179]: Continuar
+        - generic [ref=f12e182]:
+          - generic [ref=f12e183]: Sem necessidade de cadastro prévio
+          - generic [ref=f12e187]: Cálculo determinístico de prazos
+          - generic [ref=f12e191]: Base jurídica atualizada com a Lei 14.071/20
+  - contentinfo [ref=f12e196]:
+    - generic [ref=f12e197]:
+      - generic [ref=f12e198]:
+        - generic [ref=f12e199]:
+          - generic [ref=f12e200]:
+            - generic [ref=f12e201]:
+              - generic [ref=f12e202]: Defe
+              - generic [ref=f12e203]: s
+              - generic [ref=f12e204]: Ai
+            - generic [ref=f12e205]: "| Adeus Multa"
+          - paragraph [ref=f12e206]: Plataforma de inteligência jurídica para geração determinística de defesas e recursos de trânsito em conformidade com o Código de Trânsito Brasileiro (CTB) e Resoluções do CONTRAN.
+          - generic [ref=f12e207]: Sistema de Defesa Autônoma
+        - generic [ref=f12e211]:
+          - heading "Serviços ao Usuário" [level=3] [ref=f12e212]
+          - list [ref=f12e213]:
+            - listitem [ref=f12e214]:
+              - button "Análise Preliminar Gratuita de Multa" [ref=f12e215] [cursor=pointer]
+            - listitem [ref=f12e216]:
+              - button "Defesa Prévia (Notificação de Autuação)" [ref=f12e217] [cursor=pointer]
+            - listitem [ref=f12e218]:
+              - button "Recurso à JARI (1ª Instância)" [ref=f12e219] [cursor=pointer]
+            - listitem [ref=f12e220]:
+              - button "Recurso ao CETRAN (2ª Instância)" [ref=f12e221] [cursor=pointer]
+            - listitem [ref=f12e222]:
+              - button "Conversão em Advertência (Art. 267 CTB)" [ref=f12e223] [cursor=pointer]
+        - generic [ref=f12e224]:
+          - heading "Legislação & Normas" [level=3] [ref=f12e225]
+          - list [ref=f12e226]:
+            - listitem [ref=f12e227]:
+              - link "Lei nº 9.503/1997 (CTB)" [ref=f12e228] [cursor=pointer]:
+                - /url: https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm
+            - listitem [ref=f12e234]: Resoluções CONTRAN (798, 909, 918)
+            - listitem [ref=f12e235]: Súmula 312 do STJ (Notificação Dupla)
+            - listitem [ref=f12e236]: Tema 1.097 do STJ
+            - listitem [ref=f12e237]:
+              - link "SENATRAN — Secretaria Nacional" [ref=f12e238] [cursor=pointer]:
+                - /url: https://www.gov.br/transportes/pt-br/assuntos/transito/senatran
+        - generic [ref=f12e244]:
+          - heading "Acessibilidade & LGPD" [level=3] [ref=f12e245]
+          - paragraph [ref=f12e246]: Tratamento de dados realizado estritamente segundo as diretrizes da Lei nº 13.709/2018 (LGPD), garantindo sigilo e minimização de coleta.
+          - generic [ref=f12e247]:
+            - generic [ref=f12e248]: Criptografia de Ponta a Ponta
+            - paragraph [ref=f12e253]: Em conformidade com o eMAG e WCAG 2.1 / 2.2 AA.
+      - generic [ref=f12e254]:
+        - generic [ref=f12e255]:
+          - generic [ref=f12e256]: BRASIL
+          - paragraph [ref=f12e258]: © 2026 DefesAi • Tecnologia Jurídica Autônoma • Todos os direitos reservados.
+        - generic [ref=f12e259]:
+          - generic [ref=f12e260]: Padrão DefesAi
+          - generic [ref=f12e261]: •
+          - generic [ref=f12e262]: Versão 1.0.0

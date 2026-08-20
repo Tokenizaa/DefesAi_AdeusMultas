@@ -23,6 +23,10 @@ class StateService {
   }
 
   private seedInitialData() {
+    // Seed data — APENAS em desenvolvimento
+    if (process.env.NODE_ENV === 'production') {
+      return;
+    }
     // Seed initial demo case - simplified version
     const sampleDomain: CaseDomain = {
       id: 'case_sp_74550_demo',

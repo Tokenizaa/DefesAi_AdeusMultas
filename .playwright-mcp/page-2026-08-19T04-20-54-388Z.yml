@@ -1,0 +1,230 @@
+- generic [ref=f6e3]:
+  - generic [ref=f6e5]:
+    - generic [ref=f6e6]:
+      - link "Ir para o conteúdo 1" [ref=f6e7] [cursor=pointer]:
+        - /url: "#main-content"
+        - generic [ref=f6e8]: Ir para o conteúdo
+        - generic [ref=f6e9]: "1"
+      - link "Ir para o menu 2" [ref=f6e10] [cursor=pointer]:
+        - /url: "#main-menu"
+        - generic [ref=f6e11]: Ir para o menu
+        - generic [ref=f6e12]: "2"
+      - link "Ir para a busca 3" [ref=f6e13] [cursor=pointer]:
+        - /url: "#main-search"
+        - generic [ref=f6e14]: Ir para a busca
+        - generic [ref=f6e15]: "3"
+      - link "Ir para o rodapé 4" [ref=f6e16] [cursor=pointer]:
+        - /url: "#footer"
+        - generic [ref=f6e17]: Ir para o rodapé
+        - generic [ref=f6e18]: "4"
+    - generic [ref=f6e19]:
+      - generic [ref=f6e20]:
+        - button "Diminuir tamanho da fonte" [ref=f6e21] [cursor=pointer]: A-
+        - button "Redefinir tamanho da fonte" [ref=f6e22] [cursor=pointer]: A
+        - button "Aumentar tamanho da fonte" [ref=f6e23] [cursor=pointer]: A+
+      - button "Alternar modo de alto contraste" [ref=f6e24] [cursor=pointer]:
+        - generic [ref=f6e31]: Alto Contraste
+  - banner [ref=f6e32]:
+    - generic [ref=f6e34]:
+      - generic [ref=f6e35]:
+        - generic [ref=f6e36]: DEFESAI
+        - generic [ref=f6e38]: Sistema de Defesa Autônoma
+      - generic [ref=f6e39]:
+        - link "Página Inicial" [ref=f6e40] [cursor=pointer]:
+          - /url: /
+        - link "Análise Gratuita" [ref=f6e41] [cursor=pointer]:
+          - /url: /novo-caso
+        - link "Base Jurídica" [ref=f6e42] [cursor=pointer]:
+          - /url: /knowledge
+    - generic [ref=f6e44]:
+      - generic [ref=f6e45]:
+        - button "Abrir menu de navegação" [ref=f6e46] [cursor=pointer]
+        - generic [ref=f6e48] [cursor=pointer]:
+          - generic [ref=f6e49]:
+            - generic [ref=f6e50]: Defe
+            - generic [ref=f6e51]: s
+            - generic [ref=f6e52]: Ai
+          - generic [ref=f6e54]:
+            - heading "Adeus Multa CTB • CONTRAN" [level=1] [ref=f6e55]:
+              - generic [ref=f6e56]: Adeus
+              - generic [ref=f6e57]: Multa
+              - generic [ref=f6e58]: CTB • CONTRAN
+            - paragraph [ref=f6e59]: Plataforma de Defesa Autônoma para Multas de Trânsito
+      - generic [ref=f6e60]:
+        - generic [ref=f6e61]:
+          - textbox "Buscar serviços ou infrações..." [ref=f6e62]
+          - button "Executar busca" [ref=f6e63] [cursor=pointer]
+        - button "Análise Gratuita" [ref=f6e67] [cursor=pointer]
+        - button "D Acessar Conta" [ref=f6e72] [cursor=pointer]:
+          - generic [ref=f6e73]: D
+          - generic [ref=f6e74]: Acessar Conta
+  - main [ref=f6e75]:
+    - generic [ref=f6e77]:
+      - generic [ref=f6e78]:
+        - generic [ref=f6e79]:
+          - generic [ref=f6e80]: F1
+          - generic [ref=f6e81]:
+            - generic [ref=f6e82]:
+              - generic [ref=f6e83]: Fase 1 • Diagnóstico Preliminar
+              - generic [ref=f6e84]: •
+              - generic [ref=f6e85]: 100% Gratuito
+            - heading "3. Identificação da Autuação & Veículo" [level=2] [ref=f6e371]
+        - generic [ref=f6e87]:
+          - generic "Etapa 1" [ref=f6e88]
+          - generic "Etapa 2" [ref=f6e89]
+          - generic "Etapa 3" [ref=f6e90]
+          - generic "Etapa 4" [ref=f6e91]
+          - generic "Etapa 5" [ref=f6e92]
+          - generic "Etapa 6" [ref=f6e93]
+          - generic "Etapa 7" [ref=f6e94]
+          - generic "Etapa 8" [ref=f6e95]
+          - generic "Etapa 9" [ref=f6e96]
+      - generic [ref=f6e372]:
+        - generic [ref=f6e373]:
+          - generic [ref=f6e374]: Passo 3 de 4 • Identificação da Autuação
+          - heading "Qual é o auto de infração e o condutor?" [level=1] [ref=f6e378]
+          - paragraph [ref=f6e379]: Coletamos os dados da autuação e seu contato para envio imediato do diagnóstico jurídico gratuito e alertas de prazo.
+        - button "🧪 Preencher com dados de teste" [ref=f6e381] [cursor=pointer]
+        - generic [ref=f6e382]:
+          - generic [ref=f6e383]:
+            - generic [ref=f6e384]: Seus Dados para o Diagnóstico Gratuito
+            - generic [ref=f6e389]: 100% Gratuito
+          - generic [ref=f6e390]:
+            - generic [ref=f6e391]:
+              - generic [ref=f6e392]: Seu Nome Completo *
+              - 'textbox "Ex: Carlos Eduardo Silveira" [ref=f6e396]': Carlos Eduardo Silveira
+            - generic [ref=f6e397]:
+              - generic [ref=f6e398]: WhatsApp com DDD *
+              - textbox "(11) 98765-4321" [ref=f6e401]
+        - generic [ref=f6e403] [cursor=pointer]:
+          - generic [ref=f6e408]:
+            - paragraph [ref=f6e409]: Anexe uma foto ou PDF da notificação para melhorar a análise (Opcional)
+            - paragraph [ref=f6e410]: "Formatos aceitos: PDF, JPG ou PNG. Os dados abaixo devem ser preenchidos manualmente."
+          - generic [ref=f6e411]: Carregar Notificação
+        - generic [ref=f6e412]:
+          - generic [ref=f6e413]:
+            - generic [ref=f6e414]:
+              - generic [ref=f6e415]: Número do Auto de Infração (AIT) *
+              - 'textbox "Ex: 1B892014 ou R459201" [ref=f6e419]'
+              - generic [ref=f6e420]: Consta no topo ou centro da notificação recebida.
+            - generic [ref=f6e421]:
+              - generic [ref=f6e422]: Placa do Veículo *
+              - 'textbox "Ex: BRA2E19 ou ABC1234" [ref=f6e427]'
+              - generic [ref=f6e428]: Placa no formato Mercosul ou padrão anterior cinza.
+          - generic [ref=f6e429]:
+            - generic [ref=f6e430]: Órgão Autuador / Julgador *
+            - combobox [ref=f6e434]:
+              - option "Selecione o órgão autuador..." [selected]
+              - option "PRF — Polícia Rodoviária Federal"
+              - option "DNIT — Depto. Nac. de Infraestrutura de Transportes"
+              - option "ANTT — Agência Nac. de Transportes Terrestres"
+              - option "IBAMA — Instituto Brasileiro do Meio Ambiente"
+              - option "DETRAN-AC — Acre"
+              - option "DETRAN-AL — Alagoas"
+              - option "DETRAN-AP — Amapá"
+              - option "DETRAN-AM — Amazonas"
+              - option "DETRAN-BA — Bahia"
+              - option "DETRAN-CE — Ceará"
+              - option "DETRAN-DF — Distrito Federal"
+              - option "DETRAN-ES — Espírito Santo"
+              - option "DETRAN-GO — Goiás"
+              - option "DETRAN-MA — Maranhão"
+              - option "DETRAN-MT — Mato Grosso"
+              - option "DETRAN-MS — Mato Grosso do Sul"
+              - option "DETRAN-MG — Minas Gerais"
+              - option "DETRAN-PA — Pará"
+              - option "DETRAN-PB — Paraíba"
+              - option "DETRAN-PR — Paraná"
+              - option "DETRAN-PE — Pernambuco"
+              - option "DETRAN-PI — Piauí"
+              - option "DETRAN-RJ — Rio de Janeiro"
+              - option "DETRAN-RN — Rio Grande do Norte"
+              - option "DETRAN-RS — Rio Grande do Sul"
+              - option "DETRAN-RO — Rondônia"
+              - option "DETRAN-RR — Roraima"
+              - option "DETRAN-SC — Santa Catarina"
+              - option "DETRAN-SP — São Paulo"
+              - option "DETRAN-SE — Sergipe"
+              - option "DETRAN-TO — Tocantins"
+              - option "DER-SP — Depto. Estadual de Estradas de Rodagem (SP)"
+              - option "DER-RJ — Depto. Estadual de Estradas de Rodagem (RJ)"
+              - option "DER-MG — Depto. Estadual de Estradas de Rodagem (MG)"
+              - option "DER-PR — Depto. Estadual de Estradas de Rodagem (PR)"
+              - option "DER-RS — Depto. Estadual de Estradas de Rodagem (RS)"
+              - option "DER-SC — Depto. Estadual de Estradas de Rodagem (SC)"
+              - option "DER-BA — Depto. Estadual de Estradas de Rodagem (BA)"
+              - option "DER-GO — Depto. Estadual de Estradas de Rodagem (GO)"
+              - option "CET-SP — Comp. de Trânsito de São Paulo"
+              - option "CET-RJ — Comp. de Trânsito do Rio de Janeiro"
+              - option "CET-BH — Comp. de Trânsito de Belo Horizonte"
+              - option "CET-CUR — Comp. de Trânsito de Curitiba"
+              - option "CET-GOI — Comp. de Trânsito de Goiânia"
+              - option "CET-BSB — Comp. de Trânsito de Brasília"
+              - option "TRANSALVADOR — Empresa de Trans. de Salvador"
+              - option "TRANSPE — Dept. de Trânsito de Recife"
+              - option "TRANSFOR — Trans. Fortaleza"
+              - option "PMT-SP — Prefeitura de São Paulo (Mobilidade)"
+              - option "Polícia Militar (Multa Eletrônica)"
+              - option "Polícia Rodoviária Estadual"
+              - option "ARU-SP — Admin. Regional de Urbanismo (SP)"
+              - option "INFRAERO — Aeroportos"
+              - option "Outro órgão (digitar manualmente)"
+            - generic [ref=f6e435]: Selecione o DETRAN do seu estado ou outro órgão responsável pela autuação.
+          - generic [ref=f6e436]:
+            - generic [ref=f6e437]: Data da Ocorrência (Opcional)
+            - textbox [ref=f6e440]
+            - generic [ref=f6e441]: Usada para calcular a decadência de expedição da notificação em 30 dias (Art. 281-A CTB).
+        - generic [ref=f6e442]:
+          - button "Voltar à fase" [ref=f6e443] [cursor=pointer]
+          - button "Continuar para Perguntas do Caso" [disabled] [ref=f6e447]
+  - contentinfo [ref=f6e196]:
+    - generic [ref=f6e197]:
+      - generic [ref=f6e198]:
+        - generic [ref=f6e199]:
+          - generic [ref=f6e200]:
+            - generic [ref=f6e201]:
+              - generic [ref=f6e202]: Defe
+              - generic [ref=f6e203]: s
+              - generic [ref=f6e204]: Ai
+            - generic [ref=f6e205]: "| Adeus Multa"
+          - paragraph [ref=f6e206]: Plataforma de inteligência jurídica para geração determinística de defesas e recursos de trânsito em conformidade com o Código de Trânsito Brasileiro (CTB) e Resoluções do CONTRAN.
+          - generic [ref=f6e207]: Sistema de Defesa Autônoma
+        - generic [ref=f6e211]:
+          - heading "Serviços ao Usuário" [level=3] [ref=f6e212]
+          - list [ref=f6e213]:
+            - listitem [ref=f6e214]:
+              - button "Análise Preliminar Gratuita de Multa" [ref=f6e215] [cursor=pointer]
+            - listitem [ref=f6e216]:
+              - button "Defesa Prévia (Notificação de Autuação)" [ref=f6e217] [cursor=pointer]
+            - listitem [ref=f6e218]:
+              - button "Recurso à JARI (1ª Instância)" [ref=f6e219] [cursor=pointer]
+            - listitem [ref=f6e220]:
+              - button "Recurso ao CETRAN (2ª Instância)" [ref=f6e221] [cursor=pointer]
+            - listitem [ref=f6e222]:
+              - button "Conversão em Advertência (Art. 267 CTB)" [ref=f6e223] [cursor=pointer]
+        - generic [ref=f6e224]:
+          - heading "Legislação & Normas" [level=3] [ref=f6e225]
+          - list [ref=f6e226]:
+            - listitem [ref=f6e227]:
+              - link "Lei nº 9.503/1997 (CTB)" [ref=f6e228] [cursor=pointer]:
+                - /url: https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm
+            - listitem [ref=f6e234]: Resoluções CONTRAN (798, 909, 918)
+            - listitem [ref=f6e235]: Súmula 312 do STJ (Notificação Dupla)
+            - listitem [ref=f6e236]: Tema 1.097 do STJ
+            - listitem [ref=f6e237]:
+              - link "SENATRAN — Secretaria Nacional" [ref=f6e238] [cursor=pointer]:
+                - /url: https://www.gov.br/transportes/pt-br/assuntos/transito/senatran
+        - generic [ref=f6e244]:
+          - heading "Acessibilidade & LGPD" [level=3] [ref=f6e245]
+          - paragraph [ref=f6e246]: Tratamento de dados realizado estritamente segundo as diretrizes da Lei nº 13.709/2018 (LGPD), garantindo sigilo e minimização de coleta.
+          - generic [ref=f6e247]:
+            - generic [ref=f6e248]: Criptografia de Ponta a Ponta
+            - paragraph [ref=f6e253]: Em conformidade com o eMAG e WCAG 2.1 / 2.2 AA.
+      - generic [ref=f6e254]:
+        - generic [ref=f6e255]:
+          - generic [ref=f6e256]: BRASIL
+          - paragraph [ref=f6e258]: © 2026 DefesAi • Tecnologia Jurídica Autônoma • Todos os direitos reservados.
+        - generic [ref=f6e259]:
+          - generic [ref=f6e260]: Padrão DefesAi
+          - generic [ref=f6e261]: •
+          - generic [ref=f6e262]: Versão 1.0.0

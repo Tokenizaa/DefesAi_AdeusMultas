@@ -26,7 +26,10 @@ export type LogService =
   | 'auth'
   | 'communication'
   | 'commercial'
-  | 'knowledge';
+  | 'knowledge'
+  | 'email'
+  | 'push'
+  | 'whatsapp';
 
 export type LogOperationStatus =
   | 'success'

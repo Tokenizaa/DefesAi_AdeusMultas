@@ -17,48 +17,53 @@ export const supabase: SupabaseClient<Database> | null = isSupabaseConfigured
   : null;
 
 // =========================================================================
-// Pre-configured Demo Accounts for Instant Evaluation & Test
+// Pre-configured Demo Accounts — available ONLY in development mode
 // =========================================================================
-export const DEMO_USERS: Record<string, { user: AuthUser; passwordHash: string }> = {
-  'motorista@defesai.com.br': {
-    user: {
-      id: 'usr_motorista_carlos',
-      name: 'Carlos Eduardo Silveira',
-      email: 'motorista@defesai.com.br',
-      role: 'citizen',
-      cpf: '123.456.789-00',
-      phone: '(11) 98765-4321',
-      cnh: '05492817492',
-      cityState: 'São Paulo/SP',
-      createdAt: '2026-06-10T10:00:00.000Z',
-    },
-    passwordHash: '123456',
-  },
-  'admin@defesai.com.br': {
-    user: {
-      id: 'usr_admin_defesai',
-      name: 'Administrador DefesAi',
-      email: 'admin@defesai.com.br',
-      role: 'admin',
-      cpf: '000.111.222-33',
-      phone: '(11) 99999-0000',
-      cityState: 'Brasília/DF',
-      createdAt: '2026-01-01T08:00:00.000Z',
-    },
-    passwordHash: 'admin123',
-  },
-};
+export const DEMO_USERS: Record<string, { user: AuthUser; passwordHash: string }> = (import.meta as any).env?.DEV
+  ? {
+      'motorista@defesai.com.br': {
+        user: {
+          id: 'usr_motorista_carlos',
+          name: 'Carlos Eduardo Silveira',
+          email: 'motorista@defesai.com.br',
+          role: 'citizen',
+          cpf: '123.456.789-00',
+          phone: '(11) 98765-4321',
+          cnh: '05492817492',
+          cityState: 'São Paulo/SP',
+          createdAt: '2026-06-10T10:00:00.000Z',
+        },
+        passwordHash: '123456',
+      },
+      'admin@defesai.com.br': {
+        user: {
+          id: 'usr_admin_defesai',
+          name: 'Administrador DefesAi',
+          email: 'admin@defesai.com.br',
+          role: 'admin',
+          cpf: '000.111.222-33',
+          phone: '(11) 99999-0000',
+          cityState: 'Brasília/DF',
+          createdAt: '2026-01-01T08:00:00.000Z',
+        },
+        passwordHash: 'admin123',
+      },
+    }
+  : {};
 
 const STORAGE_KEY_AUTH = 'defesai_auth_session_v1';
 const STORAGE_KEY_USERS = 'defesai_registered_users_v1';
 
 export function getStoredUsers(): Record<string, { user: AuthUser; passwordHash: string }> {
+  if (typeof window === 'undefined') return {};
+
+  const raw = localStorage.getItem(STORAGE_KEY_USERS);
+  if (!raw) return {};
+
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_USERS);
-    if (!raw) return { ...DEMO_USERS };
-    return { ...DEMO_USERS, ...JSON.parse(raw) };
+    return JSON.parse(raw);
   } catch {
-    return { ...DEMO_USERS };
+    return {};
   }
 }
 

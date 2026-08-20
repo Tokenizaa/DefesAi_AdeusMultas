@@ -17,6 +17,7 @@ import {
 import { CaseDetailBase } from '../shared/CaseDetailBase';
 import { CaseDomain } from '../../types';
 import { useRouter } from '../../core/router/RouterContext';
+import { PRICING } from '../../config/pricing';
 
 export const AdminCaseDetailView: React.FC = () => {
   const { params, navigate } = useRouter();
@@ -103,7 +104,7 @@ export const AdminCaseDetailView: React.FC = () => {
               </span>
               {isPaid ? (
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" /> PAGO (R$ 89,90)
+                  <CheckCircle2 className="w-3 h-3" /> PAGO (R$ {(caseData.payment?.amount || PRICING.DEFAULT_PRICE).toFixed(2).replace('.', ',')})
                 </span>
               ) : (
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-amber-500/20 text-amber-400 border border-amber-500/30">
@@ -233,12 +234,12 @@ export const AdminCaseDetailView: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
                 <div>
                   <span className="text-slate-500 text-[10px] uppercase">Auto de Infração (AIT)</span>
-                  <p className="text-white font-bold text-sm">{caseData.infraction?.aitNumber || '1B892014'}</p>
+                  <p className="text-white font-bold text-sm">{caseData.infraction?.aitNumber || 'N/A'}</p>
                 </div>
                 <div>
                   <span className="text-slate-500 text-[10px] uppercase">Placa / Renavam</span>
                   <p className="text-white font-bold text-sm">
-                    {caseData.vehicle?.plate || 'BRA2E19'} • {caseData.vehicle?.renavam || '00123984712'}
+                    {caseData.vehicle?.plate || 'N/A'} • {caseData.vehicle?.renavam || 'N/A'}
                   </p>
                 </div>
                 <div>
@@ -377,7 +378,7 @@ export const AdminCaseDetailView: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-mono font-bold">
-                Probabilidade: {caseData.analysis?.overallSuccessRate || 85}%
+                Probabilidade: {caseData.analysis?.overallSuccessRate ?? 0}%
               </span>
             </div>
           </div>
@@ -473,7 +474,7 @@ export const AdminCaseDetailView: React.FC = () => {
               </div>
               <div>
                 <span className="text-slate-500 text-[10px] uppercase">Valor Total</span>
-                <p className="text-emerald-400 font-bold text-sm">R$ {caseData.payment?.amount?.toFixed(2) || '89.90'}</p>
+                <p className="text-emerald-400 font-bold text-sm">R$ {caseData.payment?.amount?.toFixed(2) || PRICING.DEFAULT_PRICE.toFixed(2)}</p>
               </div>
               <div>
                 <span className="text-slate-500 text-[10px] uppercase">Método</span>

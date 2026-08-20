@@ -1,23 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-  ShieldCheck,
-  Lock,
-  UserCheck,
-  UserPlus,
-  ArrowRight,
-  Sparkles,
-  CheckCircle2,
-  AlertCircle,
-  KeyRound,
-  Mail,
-  Phone,
-  User,
-  Car,
-  FileCheck2
-} from 'lucide-react';
+import { ShieldCheck, Sparkles, Mail, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../../core/auth/AuthContext';
-import { getStoredUsers, DEMO_USERS } from '../../lib/supabase';
+import { supabase as supabaseClient } from '../../lib/supabase';
 import { InfractionData, VehicleData, CaseAnalysis } from '../../types';
+import { SharedAuthForm, AuthFormMode } from '../auth/SharedAuthForm';
+
+// Safe wrapper — if supabase is not configured, these are no-ops
+const supabase = supabaseClient;
 
 interface AccountVerificationGateProps {
   leadName?: string;
@@ -40,24 +29,12 @@ export const AccountVerificationGate: React.FC<AccountVerificationGateProps> = (
 }) => {
   const { login, signUp, user, isAuthenticated } = useAuth();
 
-  // Mode: 'check' | 'login' | 'register'
-  const [mode, setMode] = useState<'login' | 'register'>('register');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [name, setName] = useState<string>(leadName || 'Carlos Eduardo Silveira');
-  const [phone, setPhone] = useState<string>(leadPhone || '(11) 98765-4321');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [checkedAccountStatus, setCheckedAccountStatus] = useState<{
-    tested: boolean;
-    exists: boolean;
-  }>({ tested: false, exists: false });
+  const [mode, setMode] = useState<AuthFormMode>('register');
 
-  // Pre-fill name and phone when props change
-  useEffect(() => {
-    if (leadName && !name) setName(leadName);
-    if (leadPhone && !phone) setPhone(leadPhone);
-  }, [leadName, leadPhone]);
+  // "Check your email" state — shown after registration when email isn't confirmed
+  const [pendingConfirmation, setPendingConfirmation] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState('');
+  const [waitingForConfirmation, setWaitingForConfirmation] = useState(false);
 
   // If already authenticated, trigger success immediately
   useEffect(() => {
@@ -66,99 +43,145 @@ export const AccountVerificationGate: React.FC<AccountVerificationGateProps> = (
     }
   }, [isAuthenticated, user, onSuccess]);
 
-  // Auto-detect if user already has an account when email or phone changes
+  // Listen for Supabase auth state changes (email confirmation)
   useEffect(() => {
-    if (email.includes('@') && email.length > 5) {
-      const allUsers = getStoredUsers();
-      const clean = email.trim().toLowerCase();
-      const found = allUsers[clean] || DEMO_USERS[clean];
-      if (found) {
-        setCheckedAccountStatus({ tested: true, exists: true });
-        setMode('login');
-      } else {
-        setCheckedAccountStatus({ tested: true, exists: false });
-      }
-    }
-  }, [email]);
+    if (!waitingForConfirmation || !supabase) return;
 
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrorMessage(null);
-
-    try {
-      const result = await login(email, password);
-      if (result.success) {
-        // Fetch current user from storage/context
-        const storedUsers = getStoredUsers();
-        const loggedUser = storedUsers[email.trim().toLowerCase()]?.user || DEMO_USERS[email.trim().toLowerCase()]?.user;
-        onSuccess(loggedUser || { name, email, phone });
-      } else {
-        setErrorMessage(result.error || 'Credenciais inválidas. Verifique os dados ou crie uma conta.');
-      }
-    } catch (err: any) {
-      setErrorMessage('Erro de autenticação: ' + (err.message || 'Tente novamente.'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleRegisterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrorMessage(null);
-
-    if (!name.trim()) {
-      setErrorMessage('Por favor, informe seu nome completo.');
-      setIsLoading(false);
-      return;
-    }
-
-    if (!email.includes('@')) {
-      setErrorMessage('Por favor, informe um e-mail válido.');
-      setIsLoading(false);
-      return;
-    }
-
-    if (password.length < 6) {
-      setErrorMessage('A senha deve conter no mínimo 6 caracteres.');
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const result = await signUp(name, email, password);
-      if (result.success) {
-        const storedUsers = getStoredUsers();
-        const newUser = storedUsers[email.trim().toLowerCase()]?.user || {
-          id: 'usr_' + Math.random().toString(36).substring(2, 9),
-          name,
-          email,
-          phone,
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        setWaitingForConfirmation(false);
+        setPendingConfirmation(false);
+        onSuccess({
+          id: session.user.id,
+          name: session.user.user_metadata?.name || leadName,
+          email: session.user.email || pendingEmail,
+          phone: session.user.phone || leadPhone,
           role: 'citizen',
-        };
-        onSuccess(newUser);
-      } else {
-        setErrorMessage(result.error || 'Não foi possível criar a conta. Tente novamente.');
+        });
       }
-    } catch (err: any) {
-      setErrorMessage('Erro ao criar conta: ' + (err.message || 'Tente novamente.'));
-    } finally {
-      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [waitingForConfirmation, pendingEmail, supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-detect if user already has an account when email changes
+  const handleEmailChange = (emailValue: string) => {
+    if (emailValue.includes('@') && emailValue.length > 5) {
+      // Check localStorage for existing users (dev/demo mode)
+      try {
+        const raw = localStorage.getItem('defesai_users');
+        if (raw) {
+          const allUsers = JSON.parse(raw);
+          const clean = emailValue.trim().toLowerCase();
+          if (allUsers[clean]) {
+            setMode('login');
+          }
+        }
+      } catch { /* ignore */ }
     }
   };
 
-  const handleQuickDemoLogin = async () => {
-    setEmail('motorista@defesai.com.br');
-    setPassword('123456');
-    setIsLoading(true);
-    const res = await login('motorista@defesai.com.br', '123456');
-    setIsLoading(false);
-    if (res.success) {
-      onSuccess(DEMO_USERS['motorista@defesai.com.br'].user);
+  const handleLogin = async (loginEmail: string, loginPassword: string) => {
+    const result = await login(loginEmail, loginPassword);
+    if (result.success) {
+      // Try to get user from Supabase session first, fallback to localStorage
+      const session = supabase ? await supabase.auth.getSession() : { data: { session: null } };
+      const supaUser = session?.data?.session?.user;
+      const storedUsers = (() => { try { return JSON.parse(localStorage.getItem('defesai_users') || '{}'); } catch { return {}; } })();
+      const loggedUser = supaUser
+        ? { id: supaUser.id, name: supaUser.user_metadata?.name || leadName, email: supaUser.email, phone: supaUser.phone || leadPhone, role: 'citizen' }
+        : storedUsers[loginEmail.trim().toLowerCase()]?.user || { name: leadName, email: loginEmail, phone: leadPhone };
+      onSuccess(loggedUser);
     }
+    return result;
   };
 
+  const handleRegister = async (registerName: string, registerEmail: string, registerPassword: string, registerPhone?: string) => {
+    const result = await signUp(registerName, registerEmail, registerPassword, registerPhone);
+    if (result.success) {
+      // Check if email confirmation is required
+      const session = supabase ? await supabase.auth.getSession() : { data: { session: null } };
+      if (!session?.data?.session) {
+        // Email confirmation required — show "check your email" state
+        setPendingEmail(registerEmail);
+        setPendingConfirmation(true);
+        setWaitingForConfirmation(true);
+        return { success: true }; // Don't call onSuccess yet
+      }
+
+      // Session exists (email auto-confirmed) — proceed normally
+      onSuccess({
+        id: session.data.session.user.id,
+        name: registerName,
+        email: registerEmail,
+        phone: registerPhone || leadPhone,
+        role: 'citizen',
+      });
+    }
+    return result;
+  };
+
+  // ==========================================================================
+  // "Check Your Email" State
+  // ==========================================================================
+  if (pendingConfirmation) {
+    return (
+      <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in duration-200 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-50 mx-auto">
+            <Mail className="w-8 h-8 text-[#155BCB] animate-pulse" />
+          </div>
+
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">Confirme seu E-mail</h2>
+            <p className="text-sm text-slate-500 mt-2">
+              Enviamos um link de confirmação para:
+            </p>
+            <p className="text-sm font-bold text-[#155BCB] mt-1 font-mono">{pendingEmail}</p>
+          </div>
+
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl text-left text-xs text-blue-900 space-y-2">
+            <p className="font-bold flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-[#155BCB]" />
+              Seus dados foram salvos com segurança
+            </p>
+            <ul className="list-disc list-inside space-y-1 text-blue-800">
+              <li>Nome e telefone preservados</li>
+              <li>Diagnóstico jurídico mantido</li>
+              <li>Processo retomará de onde parou</li>
+            </ul>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs text-slate-500">
+              Clique no link do e-mail para confirmar sua conta. Esta janela detectará automaticamente a confirmação.
+            </p>
+
+            {waitingForConfirmation && (
+              <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Aguardando confirmação...</span>
+              </div>
+            )}
+
+            <button
+              onClick={() => {
+                setPendingConfirmation(false);
+                setWaitingForConfirmation(false);
+              }}
+              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+            >
+              Voltar ao Formulário
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================================================
+  // Main Auth Form
+  // ==========================================================================
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-xl w-full p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in duration-200">
@@ -183,7 +206,7 @@ export const AccountVerificationGate: React.FC<AccountVerificationGateProps> = (
               Acesso à Sua Defesa Jurídica
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Verificamos seu cadastro para vincular o auto nº <strong className="font-mono text-slate-800">{infractionData.aitNumber || '1B892014'}</strong> (Placa <strong className="font-mono text-slate-800">{vehicleData.plate || 'BRA2E19'}</strong>) com segurança.
+              Verificamos seu cadastro para vincular o auto nº <strong className="font-mono text-slate-800">{infractionData.aitNumber || 'N/A'}</strong> (Placa <strong className="font-mono text-slate-800">{vehicleData.plate || 'N/A'}</strong>) com segurança.
             </p>
           </div>
         </div>
@@ -193,10 +216,10 @@ export const AccountVerificationGate: React.FC<AccountVerificationGateProps> = (
           <div className="flex items-center justify-between">
             <span className="font-bold text-blue-950 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[#155BCB]" />
-              Diagnóstico Preliminar Concluído ({analysis.overallSuccessRate || 94}% de êxito)
+              Diagnóstico Preliminar Concluído ({analysis.overallSuccessRate ?? 0}% de êxito)
             </span>
             <span className="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded">
-              3 Teses Mapeadas
+              {analysis.recommendedArguments?.length || 3} Teses Mapeadas
             </span>
           </div>
           <p className="text-[11px] text-blue-900">
@@ -204,225 +227,23 @@ export const AccountVerificationGate: React.FC<AccountVerificationGateProps> = (
           </p>
         </div>
 
-        {/* Tab Switcher: Criar Conta (Não) vs Já Tenho Conta (Sim) */}
-        <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-xl">
-          <button
-            type="button"
-            onClick={() => {
-              setMode('register');
-              setErrorMessage(null);
-            }}
-            className={`py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-              mode === 'register'
-                ? 'bg-white text-[#155BCB] shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <UserPlus className="w-3.5 h-3.5" />
-            <span>Criar Nova Conta (1º Acesso)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setMode('login');
-              setErrorMessage(null);
-            }}
-            className={`py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-              mode === 'login'
-                ? 'bg-white text-[#155BCB] shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <UserCheck className="w-3.5 h-3.5" />
-            <span>Já Tenho Conta (Entrar)</span>
-          </button>
-        </div>
-
-        {/* Error Alert */}
-        {errorMessage && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-            <span>{errorMessage}</span>
-          </div>
-        )}
-
-        {/* REGISTER FORM (NÃO -> CRIAÇÃO DE CONTA) */}
-        {mode === 'register' && (
-          <form onSubmit={handleRegisterSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1 block">
-                  Nome Completo *
-                </label>
-                <div className="relative">
-                  <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    id="reg-input-name"
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Ex: Carlos Eduardo Silveira"
-                    className="w-full pl-9 pr-3 py-2 text-xs font-medium bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1 block">
-                  WhatsApp com DDD *
-                </label>
-                <div className="relative">
-                  <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    id="reg-input-phone"
-                    type="text"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="(11) 98765-4321"
-                    className="w-full pl-9 pr-3 py-2 text-xs font-medium bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1 block">
-                Seu Melhor E-mail *
-              </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  id="reg-input-email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu.email@exemplo.com.br"
-                  className="w-full pl-9 pr-3 py-2 text-xs font-medium bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1 block">
-                Defina uma Senha Segura *
-              </label>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  id="reg-input-password"
-                  type="password"
-                  required
-                  minLength={6}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Mínimo 6 caracteres"
-                  className="w-full pl-9 pr-3 py-2 text-xs font-medium bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none"
-                />
-              </div>
-            </div>
-
-            <button
-              id="btn-register-and-continue"
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-3 bg-[#155BCB] hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              {isLoading ? (
-                <span>Criando Conta e Vinculando Defesa...</span>
-              ) : (
-                <>
-                  <span>Criar Conta & Prosseguir para Geração</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </form>
-        )}
-
-        {/* LOGIN FORM (SIM -> LOGIN / VINCULAÇÃO) */}
-        {mode === 'login' && (
-          <form onSubmit={handleLoginSubmit} className="space-y-4">
-            <div>
-              <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1 block">
-                E-mail Cadastrado *
-              </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  id="login-input-email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="motorista@defesai.com.br"
-                  className="w-full pl-9 pr-3 py-2 text-xs font-medium bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-[11px] font-bold text-slate-700 uppercase font-mono mb-1 block">
-                Sua Senha *
-              </label>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  id="login-input-password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-9 pr-3 py-2 text-xs font-medium bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-1">
-              <button
-                type="button"
-                onClick={handleQuickDemoLogin}
-                className="text-[11px] text-[#155BCB] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
-              >
-                <KeyRound className="w-3 h-3" />
-                Usar Conta Demonstração Rápida
-              </button>
-            </div>
-
-            <button
-              id="btn-login-and-claim"
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-3 bg-[#155BCB] hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              {isLoading ? (
-                <span>Autenticando e Vinculando Caso...</span>
-              ) : (
-                <>
-                  <span>Entrar & Vincular Defesa à Minha Conta</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </form>
-        )}
-
-        {/* Security & LGPD Guarantee */}
-        <div className="pt-3 border-t border-slate-100 flex items-center justify-center gap-4 text-[10px] text-slate-400 font-mono">
-          <span className="flex items-center gap-1">
-            <Lock className="w-3 h-3 text-emerald-600" />
-            Criptografia de Ponta a Ponta
-          </span>
-          <span>•</span>
-          <span className="flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-            Conformidade LGPD
-          </span>
-        </div>
+        {/* Shared Auth Form */}
+        <SharedAuthForm
+          mode={mode}
+          onModeChange={setMode}
+          variant="modal"
+          theme="blue"
+          showPhone={true}
+          phoneRequired={true}
+          showPasswordConfirm={false}
+          showTerms={false}
+          initialName={leadName || 'Carlos Eduardo Silveira'}
+          initialPhone={leadPhone || '(11) 98765-4321'}
+          onLogin={handleLogin}
+          onRegister={handleRegister}
+          onAuthSuccess={() => {}} // Already handled in handleLogin/handleRegister
+          onEmailChange={handleEmailChange}
+        />
       </div>
     </div>
   );

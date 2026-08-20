@@ -1,0 +1,181 @@
+- generic [ref=f6e3]:
+  - generic [ref=f6e5]:
+    - generic [ref=f6e6]:
+      - link "Ir para o conteúdo 1" [ref=f6e7] [cursor=pointer]:
+        - /url: "#main-content"
+        - generic [ref=f6e8]: Ir para o conteúdo
+        - generic [ref=f6e9]: "1"
+      - link "Ir para o menu 2" [ref=f6e10] [cursor=pointer]:
+        - /url: "#main-menu"
+        - generic [ref=f6e11]: Ir para o menu
+        - generic [ref=f6e12]: "2"
+      - link "Ir para a busca 3" [ref=f6e13] [cursor=pointer]:
+        - /url: "#main-search"
+        - generic [ref=f6e14]: Ir para a busca
+        - generic [ref=f6e15]: "3"
+      - link "Ir para o rodapé 4" [ref=f6e16] [cursor=pointer]:
+        - /url: "#footer"
+        - generic [ref=f6e17]: Ir para o rodapé
+        - generic [ref=f6e18]: "4"
+    - generic [ref=f6e19]:
+      - generic [ref=f6e20]:
+        - button "Diminuir tamanho da fonte" [ref=f6e21] [cursor=pointer]: A-
+        - button "Redefinir tamanho da fonte" [ref=f6e22] [cursor=pointer]: A
+        - button "Aumentar tamanho da fonte" [ref=f6e23] [cursor=pointer]: A+
+      - button "Alternar modo de alto contraste" [ref=f6e24] [cursor=pointer]:
+        - generic [ref=f6e31]: Alto Contraste
+  - banner [ref=f6e32]:
+    - generic [ref=f6e34]:
+      - generic [ref=f6e35]:
+        - generic [ref=f6e36]: DEFESAI
+        - generic [ref=f6e38]: Sistema de Defesa Autônoma
+      - generic [ref=f6e39]:
+        - link "Página Inicial" [ref=f6e40] [cursor=pointer]:
+          - /url: /
+        - link "Análise Gratuita" [ref=f6e41] [cursor=pointer]:
+          - /url: /novo-caso
+        - link "Base Jurídica" [ref=f6e42] [cursor=pointer]:
+          - /url: /knowledge
+    - generic [ref=f6e44]:
+      - generic [ref=f6e45]:
+        - button "Abrir menu de navegação" [ref=f6e46] [cursor=pointer]
+        - generic [ref=f6e48] [cursor=pointer]:
+          - generic [ref=f6e49]:
+            - generic [ref=f6e50]: Defe
+            - generic [ref=f6e51]: s
+            - generic [ref=f6e52]: Ai
+          - generic [ref=f6e54]:
+            - heading "Adeus Multa CTB • CONTRAN" [level=1] [ref=f6e55]:
+              - generic [ref=f6e56]: Adeus
+              - generic [ref=f6e57]: Multa
+              - generic [ref=f6e58]: CTB • CONTRAN
+            - paragraph [ref=f6e59]: Plataforma de Defesa Autônoma para Multas de Trânsito
+      - generic [ref=f6e60]:
+        - generic [ref=f6e61]:
+          - textbox "Buscar serviços ou infrações..." [ref=f6e62]
+          - button "Executar busca" [ref=f6e63] [cursor=pointer]
+        - button "Análise Gratuita" [ref=f6e67] [cursor=pointer]
+        - button "D Acessar Conta" [ref=f6e72] [cursor=pointer]:
+          - generic [ref=f6e73]: D
+          - generic [ref=f6e74]: Acessar Conta
+  - main [ref=f6e75]:
+    - generic [ref=f6e77]:
+      - generic [ref=f6e78]:
+        - generic [ref=f6e79]:
+          - generic [ref=f6e80]: F1
+          - generic [ref=f6e81]:
+            - generic [ref=f6e82]:
+              - generic [ref=f6e83]: Fase 1 • Diagnóstico Preliminar
+              - generic [ref=f6e84]: •
+              - generic [ref=f6e85]: 100% Gratuito
+            - heading "2. Fase do Processo" [level=2] [ref=f6e263]
+        - generic [ref=f6e87]:
+          - generic "Etapa 1" [ref=f6e88]
+          - generic "Etapa 2" [ref=f6e89]
+          - generic "Etapa 3" [ref=f6e90]
+          - generic "Etapa 4" [ref=f6e91]
+          - generic "Etapa 5" [ref=f6e92]
+          - generic "Etapa 6" [ref=f6e93]
+          - generic "Etapa 7" [ref=f6e94]
+          - generic "Etapa 8" [ref=f6e95]
+          - generic "Etapa 9" [ref=f6e96]
+      - generic [ref=f6e264]:
+        - generic [ref=f6e265]:
+          - generic [ref=f6e266]: Passo 2 de 4 • Fase do Processo
+          - heading "Em que situação está sua multa?" [level=1] [ref=f6e270]
+          - paragraph [ref=f6e271]: A fase define se o recurso será direcionado à Autoridade de Trânsito, JARI ou CETRAN.
+        - generic [ref=f6e272]:
+          - button "Recebi a primeira notificação (Sem boleto) Notificação de Autuação (NA). Prazo aberto para Defesa Prévia antes da aplicação de penalidade. Fase Inicial • Defesa Prévia Selecionar" [ref=f6e273] [cursor=pointer]:
+            - generic [ref=f6e279]:
+              - heading "Recebi a primeira notificação (Sem boleto)" [level=3] [ref=f6e281]
+              - paragraph [ref=f6e282]: Notificação de Autuação (NA). Prazo aberto para Defesa Prévia antes da aplicação de penalidade.
+            - generic [ref=f6e283]:
+              - generic [ref=f6e284]: Fase Inicial • Defesa Prévia
+              - generic [ref=f6e285]: Selecionar
+          - button "Recebi a penalidade (Com código de barras / boleto) Notificação de Imposição de Penalidade (NIP). Recurso cabível perante a JARI em 1ª instância. 1ª Instância • JARI Selecionar" [ref=f6e288] [cursor=pointer]:
+            - generic [ref=f6e295]:
+              - heading "Recebi a penalidade (Com código de barras / boleto)" [level=3] [ref=f6e297]
+              - paragraph [ref=f6e298]: Notificação de Imposição de Penalidade (NIP). Recurso cabível perante a JARI em 1ª instância.
+            - generic [ref=f6e299]:
+              - generic [ref=f6e300]: 1ª Instância • JARI
+              - generic [ref=f6e301]: Selecionar
+          - button "Minha Defesa Prévia foi indeferida O órgão manteve o auto e agora é necessário interpor recurso formal à JARI com efeito suspensivo. Efeito Suspensivo • JARI Selecionar" [ref=f6e304] [cursor=pointer]:
+            - generic [ref=f6e311]:
+              - heading "Minha Defesa Prévia foi indeferida" [level=3] [ref=f6e313]
+              - paragraph [ref=f6e314]: O órgão manteve o auto e agora é necessário interpor recurso formal à JARI com efeito suspensivo.
+            - generic [ref=f6e315]:
+              - generic [ref=f6e316]: Efeito Suspensivo • JARI
+              - generic [ref=f6e317]: Selecionar
+          - button "Já recorri à JARI e foi negado Recurso de 2ª instância perante o Conselho Estadual de Trânsito (CETRAN) ou CONTRAN. 2ª Instância Final • CETRAN Selecionar" [ref=f6e320] [cursor=pointer]:
+            - generic [ref=f6e326]:
+              - heading "Já recorri à JARI e foi negado" [level=3] [ref=f6e328]
+              - paragraph [ref=f6e329]: Recurso de 2ª instância perante o Conselho Estadual de Trânsito (CETRAN) ou CONTRAN.
+            - generic [ref=f6e330]:
+              - generic [ref=f6e331]: 2ª Instância Final • CETRAN
+              - generic [ref=f6e332]: Selecionar
+          - button "Quero converter em Advertência por Escrito Direito subjetivo para condutores sem reincidência no último ano (Art. 267 CTB). Art. 267 CTB Selecionar" [ref=f6e335] [cursor=pointer]:
+            - generic [ref=f6e342]:
+              - heading "Quero converter em Advertência por Escrito" [level=3] [ref=f6e344]
+              - paragraph [ref=f6e345]: Direito subjetivo para condutores sem reincidência no último ano (Art. 267 CTB).
+            - generic [ref=f6e346]:
+              - generic [ref=f6e347]: Art. 267 CTB
+              - generic [ref=f6e348]: Selecionar
+          - button "Não tenho certeza da fase Vamos identificar a melhor estratégia jurídica pelo número do auto e pelo órgão autuador. Diagnóstico Automático Selecionar" [ref=f6e351] [cursor=pointer]:
+            - generic [ref=f6e357]:
+              - heading "Não tenho certeza da fase" [level=3] [ref=f6e359]
+              - paragraph [ref=f6e360]: Vamos identificar a melhor estratégia jurídica pelo número do auto e pelo órgão autuador.
+            - generic [ref=f6e361]:
+              - generic [ref=f6e362]: Diagnóstico Automático
+              - generic [ref=f6e363]: Selecionar
+        - button "Voltar à situação" [ref=f6e367] [cursor=pointer]
+  - contentinfo [ref=f6e196]:
+    - generic [ref=f6e197]:
+      - generic [ref=f6e198]:
+        - generic [ref=f6e199]:
+          - generic [ref=f6e200]:
+            - generic [ref=f6e201]:
+              - generic [ref=f6e202]: Defe
+              - generic [ref=f6e203]: s
+              - generic [ref=f6e204]: Ai
+            - generic [ref=f6e205]: "| Adeus Multa"
+          - paragraph [ref=f6e206]: Plataforma de inteligência jurídica para geração determinística de defesas e recursos de trânsito em conformidade com o Código de Trânsito Brasileiro (CTB) e Resoluções do CONTRAN.
+          - generic [ref=f6e207]: Sistema de Defesa Autônoma
+        - generic [ref=f6e211]:
+          - heading "Serviços ao Usuário" [level=3] [ref=f6e212]
+          - list [ref=f6e213]:
+            - listitem [ref=f6e214]:
+              - button "Análise Preliminar Gratuita de Multa" [ref=f6e215] [cursor=pointer]
+            - listitem [ref=f6e216]:
+              - button "Defesa Prévia (Notificação de Autuação)" [ref=f6e217] [cursor=pointer]
+            - listitem [ref=f6e218]:
+              - button "Recurso à JARI (1ª Instância)" [ref=f6e219] [cursor=pointer]
+            - listitem [ref=f6e220]:
+              - button "Recurso ao CETRAN (2ª Instância)" [ref=f6e221] [cursor=pointer]
+            - listitem [ref=f6e222]:
+              - button "Conversão em Advertência (Art. 267 CTB)" [ref=f6e223] [cursor=pointer]
+        - generic [ref=f6e224]:
+          - heading "Legislação & Normas" [level=3] [ref=f6e225]
+          - list [ref=f6e226]:
+            - listitem [ref=f6e227]:
+              - link "Lei nº 9.503/1997 (CTB)" [ref=f6e228] [cursor=pointer]:
+                - /url: https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm
+            - listitem [ref=f6e234]: Resoluções CONTRAN (798, 909, 918)
+            - listitem [ref=f6e235]: Súmula 312 do STJ (Notificação Dupla)
+            - listitem [ref=f6e236]: Tema 1.097 do STJ
+            - listitem [ref=f6e237]:
+              - link "SENATRAN — Secretaria Nacional" [ref=f6e238] [cursor=pointer]:
+                - /url: https://www.gov.br/transportes/pt-br/assuntos/transito/senatran
+        - generic [ref=f6e244]:
+          - heading "Acessibilidade & LGPD" [level=3] [ref=f6e245]
+          - paragraph [ref=f6e246]: Tratamento de dados realizado estritamente segundo as diretrizes da Lei nº 13.709/2018 (LGPD), garantindo sigilo e minimização de coleta.
+          - generic [ref=f6e247]:
+            - generic [ref=f6e248]: Criptografia de Ponta a Ponta
+            - paragraph [ref=f6e253]: Em conformidade com o eMAG e WCAG 2.1 / 2.2 AA.
+      - generic [ref=f6e254]:
+        - generic [ref=f6e255]:
+          - generic [ref=f6e256]: BRASIL
+          - paragraph [ref=f6e258]: © 2026 DefesAi • Tecnologia Jurídica Autônoma • Todos os direitos reservados.
+        - generic [ref=f6e259]:
+          - generic [ref=f6e260]: Padrão DefesAi
+          - generic [ref=f6e261]: •
+          - generic [ref=f6e262]: Versão 1.0.0

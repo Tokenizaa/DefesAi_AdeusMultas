@@ -26,6 +26,7 @@
 
 import { SupabaseClient } from '@supabase/supabase-js';
 import {
+  CommissionCalculationBase,
   ServicePricing,
   PromotionCampaign,
   Coupon,
@@ -36,13 +37,21 @@ import {
 } from '../../types/commercial';
 import { Database, Json } from '../../types/supabase';
 import { logger } from '../observability/logger';
-import { getSupabaseServerClient } from './supabase-server';
+import { getSupabaseServerClient } from '../db/supabase-server';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export class CommercialRepository {
   private client: SupabaseClient<Database> | null = getSupabaseServerClient();
 
+  private _pricings: ServicePricing[] = [];
+  private _promotions: PromotionCampaign[] = [];
+  private _coupons: Coupon[] = [];
+  private _bonusLedger: BonusLedgerEntry[] = [];
+  private _commissionLedger: CommissionLedgerEntry[] = [];
+  private _referralRelations: { referredId: string; referrerId: string; level: number }[] = [];
+  private _referralConfig: ReferralRuleConfig | null = null;
+  private _commercialAuditLogs: CommercialAuditLogEntry[] = [];
   // ==========================================
   // Helpers
   // ==========================================
@@ -101,6 +110,11 @@ export class CommercialRepository {
       this.client.from('service_pricings').upsert(payload, { onConflict: 'service_type' }),
       { serviceType: pricing.serviceType }
     );
+
+    // Update local cache
+    const idx = this._pricings.findIndex(p => p.serviceType === pricing.serviceType);
+    if (idx >= 0) this._pricings[idx] = pricing;
+    else this._pricings.push(pricing);
   }
 
   // ==========================================
@@ -260,6 +274,11 @@ export class CommercialRepository {
       this.client.from('referral_relations').upsert(payload, { onConflict: 'referrer_id,referred_id,level' }),
       { referredId, referrerId }
     );
+
+    // Update local cache
+    const idx = this._referralRelations.findIndex(r => r.referredId === referredId && r.referrerId === referrerId && r.level === level);
+    if (idx >= 0) this._referralRelations[idx] = { referredId, referrerId, level };
+    else this._referralRelations.push({ referredId, referrerId, level });
   }
 
   // ==========================================
@@ -310,6 +329,47 @@ export class CommercialRepository {
   // ==========================================
   // Warm-up (opcional, não utilizado no boot)
   // ==========================================
+  // Getter methods for service consumption
+  // ==========================================
+
+  public getPricings(): ServicePricing[] {
+    return [...this._pricings];
+  }
+
+  public getPromotions(): PromotionCampaign[] {
+    return [...this._promotions];
+  }
+
+  public getCoupons(): Coupon[] {
+    return [...this._coupons];
+  }
+
+  public getBonusLedger(): BonusLedgerEntry[] {
+    return [...this._bonusLedger];
+  }
+
+  public getCommissionLedger(): CommissionLedgerEntry[] {
+    return [...this._commissionLedger];
+  }
+
+  public getCommercialAuditLogs(): CommercialAuditLogEntry[] {
+    return [...this._commercialAuditLogs];
+  }
+
+  public getReferralRelations(): { referredId: string; referrerId: string; level: number }[] {
+    return [...this._referralRelations];
+  }
+
+  public getReferralConfig(): ReferralRuleConfig | null {
+    return this._referralConfig ? { ...this._referralConfig } : null;
+  }
+  // ==========================================
+
+  /**
+   * Carrega do Supabase as entidades com chave natural estável
+   * (pricings, promotions, coupons, referral config). Reservado para warm-up
+   * futuro; hoje o boot segue 100% em memória para preservar o comportamento.
+   */
 
   /**
    * Carrega do Supabase as entidades com chave natural estável
@@ -326,8 +386,22 @@ export class CommercialRepository {
     if (pricingsError) {
       this.warn('pricings', 'loadAll', pricingsError.message);
     } else if (pricings) {
-      logger.info('supabase', 'commercial_repository', 'loadAll', `Pricings carregados: ${pricings.length}`, {
-        count: pricings.length,
+      this._pricings = pricings.map((p: any) => ({
+        id: p.id,
+        serviceType: p.service_type,
+        serviceName: p.service_name,
+        description: p.description,
+        standardPrice: p.standard_price,
+        promotionalPrice: p.promotional_price,
+        isActive: p.is_active,
+        validFrom: p.valid_from,
+        validUntil: p.valid_until,
+        history: p.history ?? [],
+        updatedAt: p.updated_at,
+        updatedBy: p.updated_by,
+      }));
+      logger.info('supabase', 'commercial_repository', 'loadAll', `Pricings carregados: ${this._pricings.length}`, {
+        count: this._pricings.length,
       });
     }
 
@@ -338,8 +412,25 @@ export class CommercialRepository {
     if (promotionsError) {
       this.warn('promotions', 'loadAll', promotionsError.message);
     } else if (promotions) {
-      logger.info('supabase', 'commercial_repository', 'loadAll', `Promotions carregadas: ${promotions.length}`, {
-        count: promotions.length,
+      this._promotions = promotions.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        discountType: p.discount_type,
+        discountValue: p.discount_value,
+        applicableServices: p.applicable_services,
+        startDate: p.start_date,
+        endDate: p.end_date,
+        usageLimit: p.usage_limit,
+        usageCount: p.usage_count,
+        userUsageLimit: p.user_usage_limit,
+        promoCode: p.promo_code,
+        status: p.status,
+        createdAt: p.created_at,
+        updatedAt: p.updated_at,
+      }));
+      logger.info('supabase', 'commercial_repository', 'loadAll', `Promotions carregadas: ${this._promotions.length}`, {
+        count: this._promotions.length,
       });
     }
 
@@ -350,8 +441,25 @@ export class CommercialRepository {
     if (couponsError) {
       this.warn('coupons', 'loadAll', couponsError.message);
     } else if (coupons) {
-      logger.info('supabase', 'commercial_repository', 'loadAll', `Coupons carregados: ${coupons.length}`, {
-        count: coupons.length,
+      this._coupons = coupons.map((c: any) => ({
+        id: c.id,
+        code: c.code,
+        discountType: c.discount_type,
+        discountValue: c.discount_value,
+        minOrderValue: c.min_order_value,
+        maxDiscountAmount: c.max_discount_amount,
+        applicableServices: c.applicable_services,
+        totalLimit: c.total_limit,
+        usedCount: c.used_count,
+        userLimit: c.user_limit,
+        validFrom: c.valid_from,
+        validUntil: c.valid_until,
+        isActive: c.is_active,
+        createdAt: c.created_at,
+        usageHistory: c.usage_history ?? [],
+      }));
+      logger.info('supabase', 'commercial_repository', 'loadAll', `Coupons carregados: ${this._coupons.length}`, {
+        count: this._coupons.length,
       });
     }
 
@@ -363,11 +471,123 @@ export class CommercialRepository {
     if (configError) {
       this.warn('referral_config', 'loadAll', configError.message);
     } else if (config) {
+      this._referralConfig = {
+        isReferralProgramActive: config.is_program_active,
+        level1Percent: config.level1_percent,
+        level2Percent: config.level2_percent,
+        level3Percent: config.level3_percent,
+        calculationBase: config.calculation_base as CommissionCalculationBase,
+        payoutDelayDays: config.payout_delay_days,
+        minWithdrawalAmount: config.min_withdrawal_amount,
+        signupBonusAmount: config.signup_bonus_amount,
+        referrerBonusAmount: config.referrer_bonus_amount,
+        updatedAt: config.updated_at,
+        updatedBy: config.updated_by,
+      };
       logger.info('supabase', 'commercial_repository', 'loadAll', 'Referral config carregada do Supabase.', {
         updatedAt: config.updated_at,
       });
     }
+
+    // Load bonus ledger (only for valid UUID users)
+    const { data: bonusLedger, error: bonusError } = await this.client
+      .from('bonus_ledger')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (bonusError) {
+      this.warn('bonus_ledger', 'loadAll', bonusError.message);
+    } else if (bonusLedger) {
+      this._bonusLedger = bonusLedger.map((b: any) => ({
+        id: b.id,
+        userId: b.user_id,
+        userName: b.user_name,
+        type: b.type,
+        amount: b.amount,
+        origin: b.origin,
+        reason: b.reason,
+        referenceId: b.reference_id,
+        adminAuthor: b.admin_author,
+        balanceAfter: b.balance_after,
+        createdAt: b.created_at,
+        expiresAt: b.expires_at,
+      }));
+      logger.info('supabase', 'commercial_repository', 'loadAll', `Bonus ledger carregado: ${this._bonusLedger.length}`, {
+        count: this._bonusLedger.length,
+      });
+    }
+
+    // Load commission ledger (only for valid UUID users)
+    const { data: commissionLedger, error: commissionError } = await this.client
+      .from('commission_ledger')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (commissionError) {
+      this.warn('commission_ledger', 'loadAll', commissionError.message);
+    } else if (commissionLedger) {
+      this._commissionLedger = commissionLedger.map((c: any) => ({
+        id: c.id,
+        beneficiaryId: c.beneficiary_id,
+        beneficiaryName: c.beneficiary_name,
+        buyerUserId: c.buyer_user_id,
+        buyerUserName: c.buyer_user_name,
+        level: c.level,
+        appliedPercent: c.applied_percent,
+        baseAmount: c.base_amount,
+        commissionAmount: c.commission_amount,
+        paymentId: c.payment_id,
+        caseId: c.case_id,
+        status: c.status,
+        createdAt: c.created_at,
+        availableAt: c.available_at,
+        paidAt: c.paid_at,
+        reversedAt: c.reversed_at,
+        reversalReason: c.reversal_reason,
+      }));
+      logger.info('supabase', 'commercial_repository', 'loadAll', `Commission ledger carregado: ${this._commissionLedger.length}`, {
+        count: this._commissionLedger.length,
+      });
+    }
+
+    // Load referral relations
+    const { data: referralRelations, error: referralError } = await this.client
+      .from('referral_relations')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (referralError) {
+      this.warn('referral_relations', 'loadAll', referralError.message);
+    } else if (referralRelations) {
+      this._referralRelations = referralRelations.map((r: any) => ({
+        referredId: r.referred_id,
+        referrerId: r.referrer_id,
+        level: r.level,
+      }));
+      logger.info('supabase', 'commercial_repository', 'loadAll', `Referral relations carregadas: ${this._referralRelations.length}`, {
+        count: this._referralRelations.length,
+      });
+    }
+
+    // Load commercial audit logs
+    const { data: auditLogs, error: auditError } = await this.client
+      .from('commercial_audit_log')
+      .select('*')
+      .order('timestamp', { ascending: false });
+    if (auditError) {
+      this.warn('commercial_audit_log', 'loadAll', auditError.message);
+    } else if (auditLogs) {
+      this._commercialAuditLogs = auditLogs.map((a: any) => ({
+        id: a.id,
+        action: a.action,
+        changedBy: a.changed_by,
+        target: a.target,
+        previousState: a.previous_state,
+        newState: a.new_state,
+        reason: a.reason,
+        timestamp: a.timestamp,
+      }));
+      logger.info('supabase', 'commercial_repository', 'loadAll', `Commercial audit logs carregados: ${this._commercialAuditLogs.length}`, {
+        count: this._commercialAuditLogs.length,
+      });
+    }
   }
 }
-
 export const commercialRepository = new CommercialRepository();

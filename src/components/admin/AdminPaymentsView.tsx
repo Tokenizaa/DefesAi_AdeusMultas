@@ -18,6 +18,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useRouter } from '../../core/router/RouterContext';
+import { PRICING } from '../../config/pricing';
 
 interface PaymentOrder {
   id: string;
@@ -82,7 +83,7 @@ export const AdminPaymentsView: React.FC = () => {
       const res = await fetch('/api/admin/payments/simulate-webhook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ caseId, status: 'PAID', amount: 89.90 }),
+        body: JSON.stringify({ caseId, status: 'PAID', amount: PRICING.DEFAULT_PRICE }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Erro ao simular');
@@ -178,9 +179,9 @@ export const AdminPaymentsView: React.FC = () => {
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
           <span className="text-[10px] text-slate-400 uppercase font-bold">Ticket Médio</span>
           <p className="text-xl font-bold text-white">
-            R$ 89,90
+            R$ {PRICING.DEFAULT_PRICE.toFixed(2).replace('.', ',')}
           </p>
-          <p className="text-[10px] text-slate-500">Valor fixo por minuta ABNT</p>
+          <p className="text-[10px] text-slate-500">Ticket médio por minuta</p>
         </div>
       </div>
 
