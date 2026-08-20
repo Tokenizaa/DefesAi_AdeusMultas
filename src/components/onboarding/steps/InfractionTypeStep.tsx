@@ -34,47 +34,47 @@ export const InfractionTypeStep: React.FC<InfractionTypeStepProps> = ({
   ];
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-2xs space-y-6">
-      <div className="text-center max-w-xl mx-auto space-y-2">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wider bg-orange-50 text-orange-700 border border-orange-200 font-mono">
-          <Sparkles className="w-3 h-3 text-orange-500" />
-          Passo 3 de 4 • Tipo
+    <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-lg space-y-6">
+      <div className="text-center max-w-xl mx-auto space-y-4">
+        <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider bg-orange-50 text-orange-700 border border-orange-200 font-mono">
+          <Sparkles className="w-4 h-4 text-orange-500" />
+          Passo 3 de 10 • Qual foi o motivo da autuação?
         </span>
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight leading-snug mb-2">
           Qual foi o motivo da autuação?
         </h1>
-        <p className="text-slate-500 text-sm leading-relaxed">
+        <p className="text-base text-sm leading-relaxed max-w-lg mx-auto mb-4">
           Selecione o tipo de infração para começar a análise.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2">
         {options.map(option => (
           <button
             key={option.value}
             onClick={() => onSelectType(option.value)}
-            className={`group flex flex-col items-start p-4 border rounded-xl shadow-sm transition-all cursor-pointer hover:shadow-md hover:border-orange-200/50 ${
+            className={`group flex flex-col items-start p-5 sm:p-6 border rounded-xl shadow hover:shadow-md transition-all cursor-pointer ${
               selectedType === option.value
                 ? 'border-orange-50 bg-orange-50/50'
                 : 'border-slate-200'
             }`}
           >
-            <div className="flex w-full items-start gap-3 mb-2">
+            <div className="flex w-full items-start gap-4 mb-3">
               <div className="flex-shrink-0">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${selectedType === option.value ? 'bg-orange-50' : 'bg-slate-100 text-slate-700'}`}>
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedType === option.value ? 'bg-orange-50' : 'bg-slate-100 text-slate-700'}`}>
                   {option.icon}
                 </div>
               </div>
-              <div className="flex-1 space-y-1">
+              <div className="flex-1 space-y-2">
                 <h3 className="font-semibold text-slate-900">{option.title}</h3>
-                <p className="text-slate-600 text-sm">{option.description}</p>
+                <p className="text-base text-sm">{option.description}</p>
               </div>
             </div>
           </button>
         ))}
       </div>
 
-      <div className="pt-3 flex justify-start">
+      <div className="pt-5 flex justify-start">
         <button
           onClick={onBack}
           className="text-sm font-medium text-slate-500 hover:text-slate-900 flex items-center gap-1"
