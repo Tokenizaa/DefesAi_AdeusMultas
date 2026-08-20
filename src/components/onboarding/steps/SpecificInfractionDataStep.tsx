@@ -179,8 +179,8 @@ export const SpecificInfractionDataStep: React.FC<SpecificInfractionDataStepProp
                 notes: `estacionamento_${tipo}`,
               });
               return;
-            }
-
+}
+            
             // conversao_advertencia / outro — just fill base
             onUpdateInfraction({ ...infractionData, ...base });
           }}
@@ -446,7 +446,7 @@ export const SpecificInfractionDataStep: React.FC<SpecificInfractionDataStepProp
                 <option value="emergencia">Ceder passagem para ambulância / viatura policial (Art. 29, VII)</option>
                 <option value="noturno_seguranca">Madrugada / horário noturno por motivo de segurança pública</option>
                 <option value="cruzamento_travado">Veículo já havia iniciado a travessia antes do sinal vermelho</option>
-              </select
+              </select>
             </div>
           </div>
         )}
@@ -519,34 +519,35 @@ export const SpecificInfractionDataStep: React.FC<SpecificInfractionDataStepProp
               <span>Outras Infrações do Código de Trânsito Brasileiro</span>
             </div>
 
-            <div>
-              <label className="text-sm font-bold text-slate-700 uppercase font-mono block mb-1">
-                Selecione a infração no Catálogo Oficial ou descreva abaixo:
-              </label>
-              <select
-                id="select-catalog-infraction"
-                className="w-full text-sm bg-white border border-slate-300 rounded-lg px-2.5 py-2 focus:ring-2 focus:ring-[#155BCB] outline-none"
-                onChange={(e) => {
-                  const item = INFRACTION_CATALOG.find((x) => x.code === e.target.value);
-                  if (item) {
-                    onUpdateInfraction({
-                      ...infractionData,
-                      infractionCode: item.code,
-                      ctbArticle: item.article,
-                      fineAmount: item.fineAmount,
-                      points: item.points,
-                      severity: item.severity,
-                    });
-                  }
-                }}
-                <option value="">Selecione a infração...</option>
-                {INFRACTION_CATALOG.map((item) => (
-                  <option key={item.code} value={item.code}>
-                    {item.code} — {item.article} — {item.description.slice(0, 60)}...
-                  </option>
-                ))}
-              </select>
-            </div>
+<div>
+               <label className="text-sm font-bold text-slate-700 uppercase font-mono block mb-1">
+                 Selecione a infração no Catálogo Oficial ou descreva abaixo:
+               </label>
+               <select
+                 id="select-catalog-infraction"
+                 className="w-full text-sm bg-white border border-slate-300 rounded-lg px-2.5 py-2 focus:ring-2 focus:ring-[#155BCB] outline-none"
+onChange={(e) => {
+                    const item = INFRACTION_CATALOG.find(x => x.code === e.target.value);
+                    if (item) {
+                      onUpdateInfraction(prev => ({
+                        ...prev,
+                        infractionCode: item.code,
+                        ctbArticle: item.article,
+                        fineAmount: item.fineAmount,
+                        points: item.points,
+                        severity: item.severity,
+                      }));
+                    }
+                  }}
+                >
+                 <option value="">Selecione a infração...</option>
+                 {INFRACTION_CATALOG.map(item => (
+                   <option key={item.code} value={item.code}>
+                     {item.code} — {item.article} — {item.description.slice(0, 60)}...
+                   </option>
+                 ))}
+               </select>
+             </div>
 
             <div className="mt-3">
               <label className="text-sm font-bold text-slate-700 uppercase font-mono block mb-1">

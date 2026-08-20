@@ -32,25 +32,25 @@ const govBrExplanationsVariations: Record<string, Array<{
 }>> = {
   'ARG-001': [
     {
-      title: 'Validação do radar que mediu sua velocidade',
-      lawExplanation: 'Segundo a Resolução CONTRAN nº 798/2020, Art. 4º, III, todo equipamento de medição de velocidade deve passar por verificação anual obrigatória no INMETRO ou IPEM delegado. Sem laudo válido (máximo 12 meses na data da infração), a medição perde fé pública.',
+      title: 'Verificação do radar de velocidade',
+      lawExplanation: 'Todo equipamento de medição de velocidade precisa ser verificado anualmente para garantir que está funcionando corretamente.',
       evidenceCheck: (data) => {
         if (data.infraction.radarCalibrationDate) {
           const calibDate = new Date(data.infraction.radarCalibrationDate);
           const infDate = new Date(data.infraction.dateTime);
           const diffMonths = (infDate.getTime() - calibDate.getTime()) / (1000 * 60 * 60 * 24 * 30.44);
           return diffMonths > 12 
-            ? `Última averificação há ${Math.round(diffMonths)} meses (fora da validade de 12 meses)`
-            : `Última averificação há ${Math.round(diffMonths)} meses (dentro da validade)`;
+            ? `Última verificação há ${Math.round(diffMonths)} meses (fora do prazo de 12 meses)`
+            : `Última verificação há ${Math.round(diffMonths)} meses (dentro do prazo)`;
         }
-        return 'Não há registro de data de averificação disponível para validação';
+        return 'Não há informação sobre a última verificação do radar disponível nos documentos.';
       },
-      userImpact: 'Se confirmado que o radar estava com calibração vencida, este é fundamento sólido para solicitar anulação da multa',
+      userImpact: 'Se o radar não foi verificado recentemente, a medição da velocidade pode estar incorreta, o que pode ser usado para questionar a multa.',
       confidenceBase: 'Res. CONTRAN 798/2020'
     },
     {
-      title: 'Verificação do equipamento de medição de velocidade',
-      lawExplanation: 'Conforme Resolução CONTRAN 798/2020, artigo 4º, incisos III, os aparelhos de medição de velocidade necessitam de calibração periódica anual junto a instituições acreditadas como INMETRO ou IPEM. A ausência de comprovação dessa averificação dentro do período de validade implica nulidade da prova de velocidade.',
+      title: 'Verificação do equipamento de medição',
+      lawExplanation: 'Os aparelhos de medição de velocidade precisam de calibração periódica anual junto a instituições acreditadas.',
       evidenceCheck: (data) => {
         if (data.infraction.radarCalibrationDate) {
           const calibDate = new Date(data.infraction.radarCalibrationDate);
@@ -60,14 +60,14 @@ const govBrExplanationsVariations: Record<string, Array<{
             ? `Calibração vencida há ${Math.round(diffMonths)} meses (limite: 12 meses)`
             : `Calibração válida há ${Math.round(diffMonths)} meses`;
         }
-        return 'Dados de averificação do radar não informados nos autos';
+        return 'Não há informações sobre a calibração do radar nos autos.';
       },
-      userImpact: 'Comprovada a falta de averificação atual, há forte fundamento para questionar a validade da medição de velocidade e buscar a anulação da multa',
+      userImpact: 'Se houver comprovação de que o radar não estava calibrado corretamente, isso pode invalidar a prova de velocidade.',
       confidenceBase: 'Res. CONTRAN 798/2020'
     },
     {
-      title: 'Análise da validade técnica do radar utilizado',
-      lawExplanation: 'A Resolução CONTRAN nº 798/2020 estabelece que equipamentos de fiscalização de velocidade devem passar por verificações metrológicas anuais. O não cumprimento desse requisito acarreta a perda da presunção de veracidade da medição.',
+      title: 'Validade técnica do radar utilizado',
+      lawExplanation: 'Equipamentos de fiscalização de velocidade devem passar por verificações anuais conforme a Resolução CONTRAN 798/2020.',
       evidenceCheck: (data) => {
         if (data.infraction.radarCalibrationDate) {
           const calibDate = new Date(data.infraction.radarCalibrationDate);
@@ -77,92 +77,92 @@ const govBrExplanationsVariations: Record<string, Array<{
             ? `Última verificação realizada há ${Math.round(diffMonths)} meses (excede o prazo de 12 meses)`
             : `Verificação dentro do prazo de validade (há ${Math.round(diffMonths)} meses)`;
         }
-        return 'Não consta nos autos a data da última averificação do equipamento';
+        return 'Não há registro da data da última averificação do equipamento nos autos.';
       },
-      userImpact: 'Se o radar não passou pela averição anual obrigatória, a prova de velocidade pode ser considerada inválida, possibilitando a anulação da multa',
+      userImpact: 'Se o radar não passou pela verificação anual obrigatória, a prova de velocidade pode ser questionada.',
       confidenceBase: 'Res. CONTRAN 798/2020'
     }
   ],
   'ARG-051': [
     {
       title: 'Direito à advertência por escrito (Art. 267 do CTB)',
-      lawExplanation: 'A Lei nº 14.071/2020 alterou o Art. 267 do CTB para determinar que, quando a infração é leve ou média e o condutor não cometeu infrações nos últimos 12 meses, a autoridade é OBRIGADA a converter a multa em advertência por escrito, sem pagamento nem pontos na CNH.',
+      lawExplanation: 'Quando a infração é leve ou média e você não cometeu infrações nos últimos 12 meses, a lei exige que a multa seja convertida em advertência por escrito.',
       evidenceCheck: (data) => {
         const infractionCode = data.infraction.infractionCode;
         // Simplificação para demonstração - na prática usaria o catálogo completo
         const isLightOrMedium = ['745-50', '735-80', '736-62', '735-80'].includes(infractionCode); 
         const hasRecentInfractions = data.infraction.hasPreviousInfractionsLast12Months === true;
         
-        if (!isLightOrMedium) return 'Infração classificada como grave/gravíssima (não se aplica Art. 267)';
-        if (hasRecentInfractions) return 'Constam infrações nos últimos 12 meses (não se aplica Art. 267)';
-        return 'Infração leve/média constatada e não há infrações recentes nos últimos 12 meses';
+        if (!isLightOrMedium) return 'Infração classificada como grave/gravíssima (não se aplica ao Art. 267)';
+        if (hasRecentInfractions) return 'Você teve infrações nos últimos 12 meses, então o direito à advertência não se aplica.';
+        return 'Infração leve/média identificada e nenhuma infração recente nos últimos 12 meses.';
       },
-      userImpact: 'Você tem DIREITO SUBJETIVO de converter esta multa em advertência por escrito - não pagará valor e não perderá pontos na CNH',
+      userImpact: 'Você tem direito de converter esta multa em advertência por escrito, o que significa não pagar valor e não perder pontos na CNH.',
       confidenceBase: 'Lei 14.071/2020, art. 267 do CTB'
     },
     {
       title: 'Conversão automática em advertência por lei recente',
-      lawExplanation: 'Pela Lei 14.071/2020, que modificou o artigo 267 do Código de Trânsito Brasileiro, quando se trata de infração leve ou média e o condutor não possui outras infrações nos últimos 12 meses, a transformação da multa em advertência se torna obrigatória, eliminando o pagamento e a pontuação na carteira de habilitação.',
+      lawExplanation: 'A Lei 14.071/2020 determina que, para infrações leves ou médias sem reincidência recente, a transformação da multa em advertência é obrigatória.',
       evidenceCheck: (data) => {
         const infractionCode = data.infraction.infractionCode;
         const isLightOrMedium = ['745-50', '735-80', '736-62', '735-80'].includes(infractionCode); 
         const hasRecentInfractions = data.infraction.hasPreviousInfractionsLast12Months === true;
         
-        if (!isLightOrMedium) return 'Infração de natureza grave ou gravíssima - não enquadrada no Art. 267';
-        if (hasRecentInfractions) return 'Existem infrações nos últimos 12 meses - direito à advertência não se aplica';
-        return 'Condições atendidas: infração leve/média e ausência de infrações nos últimos 12 meses';
+        if (!isLightOrMedium) return 'Infração de natureza grave ou gravíssima - não se aplica ao Art. 267';
+        if (hasRecentInfractions) return 'Existem infrações nos últimos 12 meses - direito à advertência não se aplica.';
+        return 'Infração leve/média identificada e nenhuma infração recente nos últimos 12 meses.';
       },
-      userImpact: 'Nesse caso, você tem direito adquirente de não pagar a multa e não ter pontos adicionados à sua CNH, pois a lei determina a advertência por escrito',
+      userImpact: 'Você tem direito adquirente de não pagar a multa e não ter pontos adicionados à sua CNH, conforme determina a lei.',
       confidenceBase: 'Lei 14.071/2020, art. 267 do CTB'
     },
     {
       title: 'Benefício da não reincidência recente (Art. 267 CTB)',
-      lawExplanation: 'A redação atual do artigo 267 do CTB, após a Lei 14.071/2020, determina que a autoridade de trânsito deve converter a multa em advertência quando a infração for leve ou média e o condutor não houver cometido qualquer outra infração no período de 12 meses anteriores.',
+      lawExplanation: 'Se você não cometeu outras infrações nos últimos 12 meses, pode ter direito à advertência por escrito por não reincidência.',
       evidenceCheck: (data) => {
         const infractionCode = data.infraction.infractionCode;
         const isLightOrMedium = ['745-50', '735-80', '736-62', '735-80'].includes(infractionCode); 
         const hasRecentInfractions = data.infraction.hasPreviousInfractionsLast12Months === true;
         
-        if (!isLightOrMedium) return 'A infração não é considerada leve ou média segundo o código de trânsito';
-        if (hasRecentInfractions) return 'Foi constatada a existência de infrações nos últimos 12 meses';
-        return 'Infração enquadrada como leve ou média e ausência de infrações nos últimos 12 meses confirmada';
+        if (!isLightOrMedium) return 'A infração não é considerada leve ou média segundo o código de trânsito.';
+        if (hasRecentInfractions) return 'Foi constatada a existência de infrações nos últimos 12 meses.';
+        return 'Infração enquadrada como leve ou média e nenhuma infração recente nos últimos 12 meses confirmada.';
       },
-      userImpact: 'Ao comprovar que não cometeu outras infrações no último ano, você consegue evitar tanto o pagamento da multa quanto a perda de pontos na sua habilitação',
+      userImpact: 'Comprovando que não cometeu outras infrações no último ano, você pode evitar tanto o pagamento quanto a perda de pontos na CNH.',
       confidenceBase: 'Lei 14.071/2020, art. 267 do CTB'
     }
   ],
   'ARG-002': [
     {
       title: 'Sinalização de velocidade adequada no local',
-      lawExplanation: 'O Art. 90, caput e §1º do CTB estabelece que nenhuma sanção pode ser aplicada por inobservância de sinalização quando esta for insuficiente, incorreta ou ausente. Para validade da medição por radar, é obrigatória placa R-19 visível na distância técnica mínima (Res. CONTRAN 798/2020).',
+      lawExplanation: 'Nenhuma multa pode ser aplicada se a sinalização de velocidade estiver inadequada ou ausente no local.',
       evidenceCheck: (data) => {
-        if (data.infraction.hasR19SignageProof === false) return 'Ausência de comprovação de sinalização regulatória nos documentos';
-        if (data.infraction.hasR19SignageProof === true) return 'Comprovação de sinalização regulatória presente nos documentos';
-        return 'Não há comprovação fotográfica de sinalização regulatória disponível';
+        if (data.infraction.hasR19SignageProof === false) return 'Não há comprovação de sinalização regulatória nos documentos.';
+        if (data.infraction.hasR19SignageProof === true) return 'Há comprovação de sinalização regulatória nos documentos.';
+        return 'Não há informação disponível sobre a sinalização de velocidade no local.';
       },
-      userImpact: 'Se constatada ausência ou inadequação da sinalização, isso pode invalidar a medição de velocidade como prova da infração',
+      userImpact: 'Se houver problemas com a sinalização, isso pode invalidar a multa por velocidade.',
       confidenceBase: 'Art. 90 do CTB, Res. CONTRAN 798/2020'
     },
     {
       title: 'Verificação da placa de limite de velocidade (R-19)',
-      lawExplanation: 'Para que a medição de velocidade por radar seja considerada válida, é necessário que haja sinalização prévia e adequada. A ausência da placa R-19, que indica o limite máximo permitido, configura vício que pode anular a autuação.',
+      lawExplanation: 'Para validar uma medição de velocidade por radar, é necessária a presença da placa R-19 (limite máximo) no local.',
       evidenceCheck: (data) => {
-        if (data.infraction.hasR19SignageProof === false) return 'Não há registro da presença da placa R-19 no local da medição';
-        if (data.infraction.hasR19SignageProof === true) return 'Placa R-19 constatada nos documentos fiscais';
-        return 'Informação sobre a placa de velocidade não fornecida nos autos';
+        if (data.infraction.hasR19SignageProof === false) return 'Não há registro da presença da placa R-19 no local da medição.';
+        if (data.infraction.hasR19SignageProof === true) return 'A placa R-19 foi constatada nos documentos fiscais.';
+        return 'Informação sobre a placa de velocidade não foi fornecida nos autos.';
       },
-      userImpact: 'Se não houver comprovação da placa de limite de velocidade no trecho onde ocorreu a medição, a autuação pode ser anulada devido à sinalização insuficiente ou inadequada',
+      userImpact: 'Se não houver a placa de limite de velocidade no trecho da medição, a autuação pode ser anulada por sinalização inadequada.',
       confidenceBase: 'Art. 90 do CTB, Res. CONTRAN 798/2020'
     },
     {
       title: 'Análise da sinalização no local da infração',
-      lawExplanation: 'A lei exige que a sinalização de trânsito esteja visível, em bom estado e posicionada corretamente para que o condutor possa obedecer. Quando faltam esses elementos, principalmente em relação ao limite de velocidade, a multa pode ser considerada nula.',
+      lawExplanation: 'A sinalização de trânsito precisa estar visível, em bom estado e posicionada corretamente para ser válida.',
       evidenceCheck: (data) => {
-        if (data.infraction.hasR19SignageProof === false) return 'Ausência de evidência fotográfica ou documental da placa R-19';
-        if (data.infraction.hasR19SignageProof === true) return 'Placa R-19 identificada no material probatório';
-        return 'Não consta nos autos informação sobre a sinalização de velocidade no local';
+        if (data.infraction.hasR19SignageProof === false) return 'Não há registro fotográfico ou documental da placa R-19.';
+        if (data.infraction.hasR19SignageProof === true) return 'A placa R-19 foi identificada no material probatório.';
+        return 'Não há informações sobre a sinalização de velocidade no local nos autos.';
       },
-      userImpact: 'Se a placa indicando o limite máximo de velocidade não estiver presente ou não estiver em condições adequadas, isso pode ser utilizado como argumento para anular a multa',
+      userImpact: 'Se a placa de limite máximo de velocidade não estiver adequada, isso pode ser usado para questionar a multa.',
       confidenceBase: 'Art. 90 do CTB, Res. CONTRAN 798/2020'
     }
   ]
@@ -290,6 +290,14 @@ export const FreeAnalysisResultStep: React.FC<FreeAnalysisResultStepProps> = ({
           Placa <span className="font-mono font-bold text-slate-800">{vehicleData.plate || 'N/A'}</span>
           {leadPhone && <span className="ml-2 text-slate-400 font-mono">• WhatsApp: {leadPhone}</span>}
         </p>
+        
+        {/* Explicação sobre o resultado */}
+        <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+          <p className="text-sm text-blue-800">
+            Este é um diagnóstico preliminar gratuito que identifica pontos fortes e fracos na sua autuação. 
+            Para uma defesa formal completa com todas as argumentos jurídicos, proceeda para a próxima etapa.
+          </p>
+        </div>
       </div>
 
       {/* Probabilidade de Êxito */}
@@ -436,12 +444,18 @@ export const FreeAnalysisResultStep: React.FC<FreeAnalysisResultStepProps> = ({
             Salvar e Ver no Painel
           </button>
 
+          <div className="space-y-3">
+            <p className="text-sm text-slate-600 text-center">
+              O próximo passo é criar sua defesa formal com base nesta análise preliminar.
+            </p>
+          </div>
+          
           <button
             id="btn-proceed-to-document-generation"
             onClick={onProceedToDocumentGeneration}
             className="w-full sm:w-auto px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-lg font-bold shadow-lg shadow-orange-500/20 transition-all flex items-center justify-center gap-3 cursor-pointer uppercase tracking-tight"
           >
-            <span>Gerar Minha Defesa</span>
+            <span>Gerar Minha Defesa Completa</span>
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
