@@ -13,6 +13,7 @@
  */
 
 import { configService } from '../config/config-service';
+import { nvidiaKeyRotator } from '../knowledge/nvidia-key-rotator';
 import { logger } from './logger';
 import { metricsService } from './metrics-service';
 import { analyzeTicketWithGemini } from '../gemini';
@@ -59,7 +60,7 @@ class AiProviderManager {
     const startTime = Date.now();
     const stages: AiPipelineStage[] = [];
 
-    const nvidiaKey = configService.get('NVIDIA_API_KEY');
+    const nvidiaKey = nvidiaKeyRotator.getNextKey();
     const nvidiaBaseUrl = configService.get('NVIDIA_BASE_URL', 'https://integrate.api.nvidia.com/v1');
     const nvidiaModel = configService.get('NVIDIA_CHAT_MODEL', 'meta/llama-3.3-70b-instruct');
     const nineRouterKey = configService.get('NINEROUTER_KEY');

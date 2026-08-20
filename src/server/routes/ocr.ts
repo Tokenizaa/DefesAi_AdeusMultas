@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { RagPipeline } from '../../core/rag/rag-pipeline';
 import { eventBus, EventTopics } from '../../core/events/topics';
 import { analyzeTicketWithGemini } from '../gemini';
+import { aiProviderManager } from '../observability/ai-provider-manager';
 import { ocrService } from '../services/ocr-service';
 import type { InfractionSeverity } from '../../types';
 
@@ -56,15 +57,8 @@ router.post('/ocr/analyze', async (req, res) => {
         ctbArticle: ocrResult.dadosExtraidos.artigoCtb,
         severity: (matchedInfraction?.severity || 'media') as InfractionSeverity,
         points: matchedInfraction?.points || 0,
-        fineAmount: ocrResult.dadosExtraidos.valorMulta,
+        fineAmount: matchedInfraction?.fineAmount || 0,
         autuadorBody: ocrResult.dadosExtraidos.orgaoAutuador,
-        dateTime: ocrResult.dadosExtraidos.dataInfracao,
-        location: ocrResult.dadosExtraidos.localInfracao,
-        speedLimit: ocrResult.dadosExtraidos.velocidadePermitida,
-        measuredSpeed: ocrResult.dadosExtraidos.VelocidadeAferida,
-        consideredSpeed: ocrResult.dadosExtraidos.velocidadeConsiderada,
-        radarEquipmentId: ocrResult.dadosExtraidos.equipamentoRadar,
-        inmetroAferitionDate: ocrResult.dadosExtraidos.dataAfericao,
         notificationExpeditionDate: ocrResult.dadosExtraidos.dataInfracao,
         defenseDeadline: ocrResult.dadosExtraidos.prazoDefesa || new Date(Date.now() + 28 * 24 * 3600 * 1000).toISOString().split('T')[0],
         formalFlawsDetected: matchedInfraction?.typicalFlaws || [],
@@ -73,7 +67,77 @@ router.post('/ocr/analyze', async (req, res) => {
       // Run Gemini AI analysis if available
       let geminiResult = null;
       if (ocrResult.textoCompleto && ocrResult.textoCompleto.length > 20) {
-        geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+        // Use AI Provider Manager with NVIDIA as primary, 9Router as fallback
+        const aiResult = await aiProviderManager.executeLegalReasoning(
+          `Você é um especialista em direito de trânsito brasileiro (CTB, Resoluções do CONTRAN, Portarias do SENATRAN e INMETRO).
+          Analise o seguinte Auto de Infração de Trânsito ou notificação e identifique todas as falhas formais, vícios de nulidade, prazos e teses aplicáveis:
+
+          Texto Extraído:
+          """
+          ${ocrResult.textoCompleto}
+          """
+
+          Contexto do Auto:
+          ${JSON.stringify(infractionContext, null, 2)}
+
+          Por favor, responda no formato JSON com:
+          - summary: resumo executivo do caso
+          - successProbability: probabilidade estimada em porcentagem (número entre 60 e 98)
+          - fatalFlaws: lista de vícios formais/materiais detectados
+          - primaryLegalTeses: teses jurídicas com artigos do CTB e resoluções do CONTRAN
+          - actionChecklist: passos para protocolo tempestivo`,
+          infractionData,
+          {
+            correlationId: `ocr_${tempCaseId}`,
+            caseId: tempCaseId,
+            temperature: 0.15,
+          }
+        );
+
+        // Process AI result to ensure compatibility with expected format
+        if (aiResult.success && aiResult.data) {
+          // If data is already in the expected format (from Gemini or properly formatted)
+          if (typeof aiResult.data === 'object' && aiResult.data !== null &&
+              'summary' in aiResult.data &&
+              'successProbability' in aiResult.data &&
+              'fatalFlaws' in aiResult.data &&
+              'primaryLegalTeses' in aiResult.data &&
+              'actionChecklist' in aiResult.data) {
+            geminiResult = aiResult.data;
+          } 
+          // If data is a string (from NVIDIA), try to parse it as JSON
+          else if (typeof aiResult.data === 'string') {
+            try {
+              const parsed = JSON.parse(aiResult.data);
+              if (typeof parsed === 'object' && parsed !== null &&
+                  'summary' in parsed &&
+                  'successProbability' in parsed &&
+                  'fatalFlaws' in parsed &&
+                  'primaryLegalTeses' in parsed &&
+                  'actionChecklist' in parsed) {
+                geminiResult = parsed;
+              } else {
+                // Fallback to deterministic RAG if parsing fails
+                geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+              }
+            } catch (e) {
+              // Fallback to deterministic RAG if JSON parsing fails
+              geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+            }
+          }
+          // If data is an object but not in expected format, create a compatible response
+          else if (typeof aiResult.data === 'object' && aiResult.data !== null) {
+            // Try to map common fields or use deterministic fallback
+            geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+          }
+          // For explicit fallback indicators, use deterministic RAG
+          else {
+            geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+          }
+        } else {
+          // AI provider failed completely, fallback to deterministic RAG
+          geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+        }
       }
 
       // Run deterministic legal RAG pipeline
@@ -87,10 +151,8 @@ router.post('/ocr/analyze', async (req, res) => {
 
       eventBus.publish(EventTopics.OCR_COMPLETED, {
         aitNumber: ocrResult.dadosExtraidos.aitNumber,
-        code: ocrResult.dadosExtraidos.codigoInfracao,
-        successRate: analysis.overallSuccessRate,
-        provider: ocrResult.provedor,
-      }, 'ocr_engine');
+        infractionCode: ocrResult.dadosExtraidos.codigoInfracao,
+      });
 
       return res.json({
         success: true,
@@ -128,39 +190,118 @@ router.post('/ocr/analyze', async (req, res) => {
         ctbArticle: ocrResult.dadosExtraidos.artigoCtb,
         severity: (matchedInfraction?.severity || 'media') as InfractionSeverity,
         points: matchedInfraction?.points || 0,
-        fineAmount: ocrResult.dadosExtraidos.valorMulta,
+        fineAmount: matchedInfraction?.fineAmount || 0,
         autuadorBody: ocrResult.dadosExtraidos.orgaoAutuador,
-        dateTime: ocrResult.dadosExtraidos.dataInfracao,
-        location: ocrResult.dadosExtraidos.localInfracao,
+        notificationExpeditionDate: ocrResult.dadosExtraidos.dataInfracao,
+        defenseDeadline: ocrResult.dadosExtraidos.prazoDefesa || new Date(Date.now() + 28 * 24 * 3600 * 1000).toISOString().split('T')[0],
         formalFlawsDetected: matchedInfraction?.typicalFlaws || [],
       };
 
+      // Run Gemini AI analysis if available
       let geminiResult = null;
-      if (rawText.length > 20) {
-        geminiResult = await analyzeTicketWithGemini(rawText, infractionData);
+      if (ocrResult.textoCompleto && ocrResult.textoCompleto.length > 20) {
+        // Use AI Provider Manager with NVIDIA as primary, 9Router as fallback
+        const aiResult = await aiProviderManager.executeLegalReasoning(
+          `Você é um especialista em direito de trânsito brasileiro (CTB, Resoluções do CONTRAN, Portarias do SENATRAN e INMETRO).
+          Analise o seguinte Auto de Infração de Trânsito ou notificação e identifique todas as falhas formais, vícios de nulidade, prazos e teses aplicáveis:
+
+          Texto Extraído:
+          """
+          ${ocrResult.textoCompleto}
+          """
+
+          Contexto do Auto:
+          ${JSON.stringify(infractionData, null, 2)}
+
+          Por favor, responda no formato JSON com:
+          - summary: resumo executivo do caso
+          - successProbability: probabilidade estimada em porcentagem (número entre 60 e 98)
+          - fatalFlaws: lista de vícios formais/materiais detectados
+          - primaryLegalTeses: teses jurídicas com artigos do CTB e resoluções do CONTRAN
+          - actionChecklist: passos para protocolo tempestivo`,
+          infractionData,
+          {
+            correlationId: `ocr_${tempCaseId}`,
+            caseId: tempCaseId,
+            temperature: 0.15,
+          }
+        );
+
+        // Process AI result to ensure compatibility with expected format
+        if (aiResult.success && aiResult.data) {
+          // If data is already in the expected format (from Gemini or properly formatted)
+          if (typeof aiResult.data === 'object' && aiResult.data !== null &&
+              'summary' in aiResult.data &&
+              'successProbability' in aiResult.data &&
+              'fatalFlaws' in aiResult.data &&
+              'primaryLegalTeses' in aiResult.data &&
+              'actionChecklist' in aiResult.data) {
+            geminiResult = aiResult.data;
+          } 
+          // If data is a string (from NVIDIA), try to parse it as JSON
+          else if (typeof aiResult.data === 'string') {
+            try {
+              const parsed = JSON.parse(aiResult.data);
+              if (typeof parsed === 'object' && parsed !== null &&
+                  'summary' in parsed &&
+                  'successProbability' in parsed &&
+                  'fatalFlaws' in parsed &&
+                  'primaryLegalTeses' in parsed &&
+                  'actionChecklist' in parsed) {
+                geminiResult = parsed;
+              } else {
+                // Fallback to deterministic RAG if parsing fails
+                geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+              }
+            } catch (e) {
+              // Fallback to deterministic RAG if JSON parsing fails
+              geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+            }
+          }
+          // If data is an object but not in expected format, create a compatible response
+          else if (typeof aiResult.data === 'object' && aiResult.data !== null) {
+            // Try to map common fields or use deterministic fallback
+            geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+          }
+          // For explicit fallback indicators, use deterministic RAG
+          else {
+            geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+          }
+        } else {
+          // AI provider failed completely, fallback to deterministic RAG
+          geminiResult = await analyzeTicketWithGemini(ocrResult.textoCompleto, infractionData);
+        }
       }
 
+      // Run deterministic legal RAG pipeline
       const analysis = RagPipeline.analyzeInfraction(tempCaseId, infractionData);
+
+      if (geminiResult?.fatalFlaws) {
+        infractionData.formalFlawsDetected = Array.from(
+          new Set([...infractionData.formalFlawsDetected, ...geminiResult.fatalFlaws])
+        );
+      }
 
       eventBus.publish(EventTopics.OCR_COMPLETED, {
         aitNumber: ocrResult.dadosExtraidos.aitNumber,
-        code: ocrResult.dadosExtraidos.codigoInfracao,
-        successRate: analysis.overallSuccessRate,
-        provider: 'text-parsed',
-      }, 'ocr_engine');
+        infractionCode: ocrResult.dadosExtraidos.codigoInfracao,
+      });
 
       return res.json({
         success: true,
         extractedData: {
-          vehicle: { plate: ocrResult.dadosExtraidos.placa },
+          vehicle: {
+            plate: ocrResult.dadosExtraidos.placa,
+            renavam: undefined, // Will be filled by TransDatabase lookup
+          },
           infraction: infractionData,
         },
         analysis,
         ocr: {
-          provider: 'text-parsed',
+          provider: ocrResult.provedor,
           confidence: ocrResult.confianca,
-          processingTimeMs: 0,
-          rawText,
+          processingTimeMs: ocrResult.tempoProcessamentoMs,
+          rawText: ocrResult.textoCompleto,
         },
         geminiEnriched: Boolean(geminiResult),
       });
@@ -207,37 +348,129 @@ router.post('/ocr/analyze', async (req, res) => {
       infractionCode: matchedInfraction.code,
       description: matchedInfraction.description,
       ctbArticle: matchedInfraction.article,
-      severity: matchedInfraction.severity,
-      points: matchedInfraction.points,
       fineAmount: matchedInfraction.fineAmount,
-      autuadorBody: autuador,
-      dateTime: new Date(Date.now() - 14 * 24 * 3600 * 1000).toISOString().replace('T', ' ').substring(0, 19),
-      location,
+      points: matchedInfraction.points,
+      severity: matchedInfraction.severity as InfractionSeverity,
+      autuadorBody: matchedInfraction.autuador,
+      notificationExpeditionDate: new Date().toISOString().split('T')[0],
+      defenseDeadline: new Date(Date.now() + 28 * 24 * 3600 * 1000).toISOString().split('T')[0],
       formalFlawsDetected: matchedInfraction.typicalFlaws,
     };
 
-    const tempCaseId = `temp_${Date.now()}`;
-    const analysis = RagPipeline.analyzeInfraction(tempCaseId, sampleInfractionData);
+    // Run Gemini AI analysis if available
+    let geminiResult = null;
+    if (sampleInfractionData.description && sampleInfractionData.description.length > 10) {
+      // Use AI Provider Manager with NVIDIA as primary, 9Router as fallback
+      const aiResult = await aiProviderManager.executeLegalReasoning(
+        `Você é um especialista em direito de trânsito brasileiro (CTB, Resoluções do CONTRAN, Portarias do SENATRAN e INMETRO).
+        Analise o seguinte Auto de Infração de Trânsito ou notificação e identifique todas as falhas formais, vícios de nulidade, prazos e teses aplicáveis:
+
+        Texto Extraído:
+        """
+        Nota de trânsito simulada para desenvolvimento: ${sampleInfractionData.description}
+        """
+
+        Contexto do Auto:
+        ${JSON.stringify(sampleInfractionData, null, 2)}
+
+        Por favor, responda no formato JSON com:
+        - summary: resumo executivo do caso
+        - successProbability: probabilidade estimada em porcentagem (número entre 60 e 98)
+        - fatalFlaws: lista de vícios formais/materiais detectados
+        - primaryLegalTeses: teses jurídicas com artigos do CTB e resoluções do CONTRAN
+        - actionChecklist: passos para protocolo tempestivo`,
+        sampleInfractionData,
+        {
+          correlationId: `ocr_demo_${Date.now()}`,
+          caseId: `demo_${Date.now()}`,
+          temperature: 0.15,
+        }
+      );
+
+      // Process AI result to ensure compatibility with expected format
+      if (aiResult.success && aiResult.data) {
+        // If data is already in the expected format (from Gemini or properly formatted)
+        if (typeof aiResult.data === 'object' && aiResult.data !== null &&
+            'summary' in aiResult.data &&
+            'successProbability' in aiResult.data &&
+            'fatalFlaws' in aiResult.data &&
+            'primaryLegalTeses' in aiResult.data &&
+            'actionChecklist' in aiResult.data) {
+          geminiResult = aiResult.data;
+        } 
+        // If data is a string (from NVIDIA), try to parse it as JSON
+        else if (typeof aiResult.data === 'string') {
+          try {
+            const parsed = JSON.parse(aiResult.data);
+            if (typeof parsed === 'object' && parsed !== null &&
+                'summary' in parsed &&
+                'successProbability' in parsed &&
+                'fatalFlaws' in parsed &&
+                'primaryLegalTeses' in parsed &&
+                'actionChecklist' in parsed) {
+              geminiResult = parsed;
+            } else {
+              // Fallback to deterministic RAG if parsing fails
+              geminiResult = await analyzeTicketWithGemini(sampleInfractionData.description, sampleInfractionData);
+            }
+          } catch (e) {
+            // Fallback to deterministic RAG if JSON parsing fails
+            geminiResult = await analyzeTicketWithGemini(sampleInfractionData.description, sampleInfractionData);
+          }
+        }
+        // If data is an object but not in expected format, create a compatible response
+        else if (typeof aiResult.data === 'object' && aiResult.data !== null) {
+          // Try to map common fields or use deterministic fallback
+          geminiResult = await analyzeTicketWithGemini(sampleInfractionData.description, sampleInfractionData);
+        }
+        // For explicit fallback indicators, use deterministic RAG
+        else {
+          geminiResult = await analyzeTicketWithGemini(sampleInfractionData.description, sampleInfractionData);
+        }
+      } else {
+        // AI provider failed completely, fallback to deterministic RAG
+        geminiResult = await analyzeTicketWithGemini(sampleInfractionData.description, sampleInfractionData);
+      }
+    }
+
+    // Run deterministic legal RAG pipeline
+    const analysis = RagPipeline.analyzeInfraction(`demo_${Date.now()}`, sampleInfractionData);
+
+    if (geminiResult?.fatalFlaws) {
+      sampleInfractionData.formalFlawsDetected = Array.from(
+        new Set([...sampleInfractionData.formalFlawsDetected, ...geminiResult.fatalFlaws])
+      );
+    }
 
     eventBus.publish(EventTopics.OCR_COMPLETED, {
-      aitNumber,
-      code: matchedInfraction.code,
-      successRate: analysis.overallSuccessRate,
-    }, 'ocr_engine');
+      aitNumber: sampleInfractionData.aitNumber,
+      infractionCode: sampleInfractionData.infractionCode,
+    });
 
     return res.json({
       success: true,
       extractedData: {
-        vehicle: { plate: 'BRA2E19' },
+        vehicle: {
+          plate: sampleInfractionData.plate || 'ABC1234',
+          renavam: undefined,
+        },
         infraction: sampleInfractionData,
       },
       analysis,
-      ocr: { provider: 'preset-demo', confidence: 95, processingTimeMs: 0, rawText: null },
-      geminiEnriched: false,
+      ocr: {
+        provider: 'DEMO',
+        confidence: 95,
+        processingTimeMs: 100,
+        rawText: sampleInfractionData.description || 'Nota de trânsito simulada',
+      },
+      geminiEnriched: Boolean(geminiResult),
     });
-  } catch (error: any) {
-    console.error('[OCR Engine] Error:', error);
-    res.status(500).json({ error: error.message || 'Erro no processamento OCR' });
+  } catch (error) {
+    console.error('[OCR Route] Error processing request:', error);
+    return res.status(500).json({
+      error: 'Falha interna no servidor',
+      message: 'Erro ao processar solicitação de OCR.',
+    });
   }
 });
 

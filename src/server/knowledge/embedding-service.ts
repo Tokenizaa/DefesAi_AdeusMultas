@@ -16,6 +16,7 @@
 
 import crypto from 'crypto';
 import { configService } from '../config/config-service';
+import { nvidiaKeyRotator } from './nvidia-key-rotator';
 import { logger } from '../observability/logger';
 import { metricsService } from '../observability/metrics-service';
 import { EmbeddingProvider, EmbeddingResult } from './types';
@@ -75,7 +76,7 @@ export class EmbeddingService {
       };
     }
 
-    const nvidiaKey = configService.get('NVIDIA_API_KEY');
+    const nvidiaKey = nvidiaKeyRotator.getNextKey();
     const nvidiaBaseUrl = configService.get('NVIDIA_BASE_URL', 'https://integrate.api.nvidia.com/v1');
     const nvidiaEmbeddingModel = configService.get('NVIDIA_EMBEDDING_MODEL', 'nvidia/nv-embedqa-e5-v5');
     const nineRouterKey = configService.get('NINEROUTER_KEY');
