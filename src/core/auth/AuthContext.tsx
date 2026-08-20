@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (isSupabaseConfigured && supabase) {
         try {
           const { data: { session } } = await supabase.auth.getSession();
-if (session?.user) {
+          if (session?.user) {
              // Get role from user_profiles table for accuracy, fallback to user_metadata
              let roleFromProfile: UserRole | undefined;
              if (isSupabaseConfigured && supabase) {
@@ -47,10 +47,10 @@ if (session?.user) {
                } catch (profileErr) {
                  // Ignore profile fetch errors, fall back to user_metadata
                  console.warn('Failed to fetch user profile for role:', profileErr);
-               }
-             }
-             
-             const role = (roleFromProfile ?? (session.user.user_metadata?.role as UserRole)) ?? 'citizen';
+}
+}
+                
+                const role = (roleFromProfile ?? (session.user.user_metadata?.role as UserRole)) ?? 'citizen';
              const authUser: AuthUser = {
                id: session.user.id,
                name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'Usuário',
@@ -70,7 +70,7 @@ if (session?.user) {
 
           // Subscribe to Supabase auth events
           const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-if (session?.user) {
+          if (session?.user) {
                // Get role from user_profiles table for accuracy, fallback to user_metadata
                let roleFromProfile: UserRole | undefined;
                if (isSupabaseConfigured && supabase) {
@@ -148,7 +148,7 @@ const role = (roleFromProfile ?? (session.user.user_metadata?.role as UserRole))
           return { success: false, error: error.message || 'Credenciais inválidas.' };
         }
 
-if (data.user) {
+        if (data.user) {
            // Get role from user_profiles table for accuracy, fallback to user_metadata
            let roleFromProfile: UserRole | undefined;
            if (isSupabaseConfigured && supabase) {
@@ -194,7 +194,7 @@ if (data.user) {
 
     if (!found) {
       setIsLoading(false);
-      return { success: false, error: 'Serviço de autenticação não configurado.' };
+      return { success: false, error: 'Credenciais inválidas.' };
     }
 
     if (found.passwordHash !== password) {

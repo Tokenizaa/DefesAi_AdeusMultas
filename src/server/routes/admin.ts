@@ -9,7 +9,7 @@ import { configService } from '../config/config-service';
 import { commercialService } from '../commercial/commercial-service';
 import { logger } from '../observability/logger';
 import { caseRepository } from '../db/case-repository';
-import { CaseDomain } from '../../types';
+import { CaseDomain, DefenseDraft } from '../../types';
 import { metaIntegration } from '../integrations/meta';
 import { requireAdmin } from '../middleware/auth-middleware';
 import { PRICING } from '../config/pricing';
@@ -60,10 +60,7 @@ router.get('/admin/overview', async (req, res) => {
       c.analysis.recommendedArguments.forEach((arg) => thesesSet.add(arg.id));
     }
     if (c.defenseDraft) {
-      const dd = c.defenseDraft as any;
-      if (dd.selectedArguments) {
-        dd.selectedArguments.forEach((arg: string) => thesesSet.add(arg));
-      }
+      const dd = c.defenseDraft as DefenseDraft;
       if (dd.selectedArgumentIds) {
         dd.selectedArgumentIds.forEach((id: string | number) => thesesSet.add(String(id)));
       }
@@ -230,7 +227,7 @@ router.get('/admin/documents', (req, res) => {
       procedureLabel: c.serviceType === 'conversao_advertencia' ? 'Conversão em Advertência (Art. 267 CTB)' : (c.serviceType === 'recurso_jari' ? 'Recurso JARI (1ª Instância)' : 'Defesa Prévia (Autuação)'),
       status: hasDraft ? (c.isPaid ? 'LIBERADO_PAGO' : 'GERADO_PREVIEW') : 'PENDENTE_DADOS',
       version: '2.1.0',
-      thesesCount: c.analysis?.recommendedArguments?.length || ((c.defenseDraft as any)?.selectedArguments?.length || c.defenseDraft?.selectedArgumentIds?.length || 2),
+      thesesCount: c.analysis?.recommendedArguments?.length || (c.defenseDraft?.selectedArgumentIds?.length || 2),
       engine: 'Determinístico CTB + IA Reasoning',
       generatedAt: c.updatedAt || c.createdAt,
       draftText: c.defenseDraft?.fullDraftText || c.defenseDraft?.factsNarrative || 'Minuta jurídica fundamentada perante a autoridade de trânsito...',
