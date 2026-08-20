@@ -110,13 +110,13 @@ const THEME = {
 } as const;
 
 const INPUT_STYLE = {
-  orange: 'w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white focus:border-transparent transition-all',
-  blue: 'w-full bg-slate-50 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs font-medium bg-slate-50 border border-slate-300 focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none',
+  orange: 'w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-3.5 py-3 text-base text-slate-900 outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white focus:border-transparent transition-all',
+  blue: 'w-full bg-slate-50 border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-base font-medium bg-slate-50 border border-slate-300 focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none',
 } as const;
 
 const LABEL_STYLE = {
-  orange: 'block font-semibold text-slate-700 mb-1.5',
-  blue: 'text-[11px] font-bold text-slate-700 uppercase font-mono mb-1 block',
+  orange: 'block font-semibold text-slate-700 mb-1.5 text-sm',
+  blue: 'text-sm font-bold text-slate-700 uppercase font-mono mb-1 block tracking-wider',
 } as const;
 
 // ============================================================================
@@ -314,13 +314,13 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
   const renderAlerts = () => (
     <>
       {errorMessage && (
-        <div className={`p-3 ${isModal ? '' : 'p-3.5'} bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-2.5 text-rose-800 text-xs animate-fade-in`}>
+        <div className={`p-3 ${isModal ? '' : 'p-3.5'} bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-2.5 text-rose-800 text-sm animate-fade-in`}>
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
           <span>{errorMessage}</span>
         </div>
       )}
       {successMessage && (
-        <div className={`p-3 ${isModal ? '' : 'p-3.5'} bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-2.5 text-emerald-800 text-xs animate-fade-in`}>
+        <div className={`p-3 ${isModal ? '' : 'p-3.5'} bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-2.5 text-emerald-800 text-sm animate-fade-in`}>
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
           <span>{successMessage}</span>
         </div>
@@ -339,8 +339,8 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
           role="tab"
           onClick={() => onModeChange('register')}
           className={isModal
-            ? `py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'register' ? t.activeTab : t.inactiveTab}`
-            : `flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'register' ? t.activeTab : t.inactiveTab}`
+            ? `py-2 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'register' ? t.activeTab : t.inactiveTab}`
+            : `flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'register' ? t.activeTab : t.inactiveTab}`
           }
         >
           <UserPlus className="w-3.5 h-3.5" />
@@ -351,8 +351,8 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
           role="tab"
           onClick={() => onModeChange('login')}
           className={isModal
-            ? `py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'login' ? t.activeTab : t.inactiveTab}`
-            : `flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'login' ? t.activeTab : t.inactiveTab}`
+            ? `py-2 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'login' ? t.activeTab : t.inactiveTab}`
+            : `flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'login' ? t.activeTab : t.inactiveTab}`
           }
         >
           <LogIn className="w-3.5 h-3.5" />
@@ -366,7 +366,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
   // Render: Login Form
   // ==========================================================================
   const renderLoginForm = () => (
-    <form onSubmit={handleLoginSubmit} className="space-y-4 text-xs">
+    <form onSubmit={handleLoginSubmit} className="space-y-4 text-sm">
       <div>
         <label className={LABEL_STYLE[theme]}>
           {isModal ? 'E-mail Cadastrado *' : 'E-mail do Condutor ou Administrador'}
@@ -400,7 +400,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
                 setResetStatus({ type: 'idle' });
                 setResetModalOpen(true);
               }}
-              className="text-[11px] font-semibold text-orange-600 hover:text-orange-700 hover:underline cursor-pointer"
+              className="text-sm font-semibold text-orange-600 hover:text-orange-700 hover:underline cursor-pointer"
             >
               Esqueceu a senha?
             </button>
@@ -444,7 +444,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
       <button
         type="submit"
         disabled={isLoading}
-        className={`w-full py-3 ${t.primary} text-white rounded-xl text-xs font-bold transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-2 mt-2 disabled:opacity-50`}
+        className={`w-full py-3 ${t.primary} text-white rounded-xl text-sm font-bold transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-2 mt-2 disabled:opacity-50`}
       >
         {isLoading ? (
           <>
@@ -461,7 +461,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
 
       {/* Bottom switcher (page variant) */}
       {!isModal && (
-        <div className="text-center text-xs text-slate-600 pt-4 border-t border-slate-100">
+        <div className="text-center text-sm text-slate-600 pt-4 border-t border-slate-100">
           Ainda não possui uma conta?{' '}
           <button
             type="button"
@@ -479,7 +479,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
   // Render: Register Form
   // ==========================================================================
   const renderRegisterForm = () => (
-    <form onSubmit={handleRegisterSubmit} className="space-y-4 text-xs">
+    <form onSubmit={handleRegisterSubmit} className="space-y-4 text-sm">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className={LABEL_STYLE[theme]}>Nome Completo *</label>
@@ -612,7 +612,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
       {/* Password Strength Meter (page variant) */}
       {!isModal && password.length > 0 && (
         <div className="space-y-1 pt-0.5">
-          <div className="flex items-center justify-between text-[10px]">
+          <div className="flex items-center justify-between text-sm">
             <span className="text-slate-500">Segurança da senha:</span>
             <span className={`font-bold ${pwdScore <= 1 ? 'text-rose-600' : pwdScore === 2 ? 'text-amber-600' : 'text-emerald-600'}`}>
               {pwdScore <= 1 ? 'Fraca' : pwdScore === 2 ? 'Média' : 'Forte'}
@@ -636,7 +636,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
       {/* LGPD Terms (page variant) */}
       {showTerms && (
         <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
-          <label className="flex items-start gap-2.5 cursor-pointer text-[11px] text-slate-700 select-none">
+          <label className="flex items-start gap-2.5 cursor-pointer text-sm text-slate-700 select-none">
             <input
               type="checkbox"
               checked={acceptTerms}
@@ -653,7 +653,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
       <button
         type="submit"
         disabled={isLoading}
-        className={`w-full py-3 ${t.primary} text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50`}
+        className={`w-full py-3 ${t.primary} text-white rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50`}
       >
         {isLoading ? (
           <>
@@ -670,7 +670,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
 
       {/* Trust Guarantees (page variant) */}
       {!isModal && (
-        <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-100 text-[10px] text-slate-500 font-medium text-center">
+        <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-100 text-sm text-slate-500 font-medium text-center">
           <div className="flex flex-col items-center gap-1">
             <Sparkles className="w-3.5 h-3.5 text-orange-500" />
             <span>Análise Rápida</span>
@@ -688,7 +688,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
 
       {/* Bottom switcher (page variant) */}
       {!isModal && (
-        <div className="text-center text-xs text-slate-600 pt-4 border-t border-slate-100">
+        <div className="text-center text-sm text-slate-600 pt-4 border-t border-slate-100">
           Já possui cadastro no DefesAi?{' '}
           <button
             type="button"
@@ -720,7 +720,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
       {mode === 'login' ? renderLoginForm() : renderRegisterForm()}
 
       {/* Footer (both variants) */}
-      <div className={`pt-3 ${isModal ? 'border-t border-slate-100' : ''} flex items-center justify-center gap-4 text-[10px] text-slate-400 font-mono`}>
+      <div className={`pt-3 ${isModal ? 'border-t border-slate-100' : ''} flex items-center justify-center gap-4 text-sm text-slate-400 font-mono`}>
         <span className="flex items-center gap-1">
           <Lock className="w-3 h-3 text-emerald-600" />
           Criptografia de Ponta a Ponta
@@ -752,25 +752,25 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
               </button>
             </div>
 
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed">
               Informe o e-mail cadastrado na plataforma. Enviaremos as instruções para você redefinir sua senha com segurança.
             </p>
 
             {resetStatus.type === 'error' && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2">
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-sm text-rose-800 flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
                 <span>{resetStatus.message}</span>
               </div>
             )}
 
             {resetStatus.type === 'success' && (
-              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center gap-2">
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-sm text-emerald-800 flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
                 <span>{resetStatus.message}</span>
               </div>
             )}
 
-            <form onSubmit={handleResetPasswordSubmit} className="space-y-3 text-xs">
+            <form onSubmit={handleResetPasswordSubmit} className="space-y-3 text-sm">
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">E-mail Cadastrado</label>
                 <div className="relative">
@@ -781,7 +781,7 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
                     placeholder="seu.email@exemplo.com"
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white"
                   />
                 </div>
               </div>

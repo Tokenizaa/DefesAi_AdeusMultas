@@ -396,20 +396,20 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
         <div className="flex items-center gap-3">
           <div
-            className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
+            className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${
               isPhase1 ? 'bg-[#155BCB] text-white' : 'bg-emerald-600 text-white'
             }`}
           >
             {isPhase1 ? 'F1' : 'F2'}
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-bold uppercase font-mono tracking-wider text-slate-500">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-sm font-bold uppercase font-mono tracking-wider text-slate-600">
                 {isPhase1 ? 'Fase 1 • Diagnóstico Preliminar' : 'Fase 2 • Petição Formal'}
               </span>
               <span className="text-slate-300">•</span>
               <span
-                className={`text-[10px] font-bold font-mono px-1.5 py-0.2 rounded ${
+                className={`text-sm font-bold font-mono px-2 py-0.5 rounded ${
                   isPhase1
                     ? 'bg-blue-50 text-[#155BCB] border border-blue-200'
                     : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
@@ -418,7 +418,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                 {isPhase1 ? '100% Gratuito' : 'Minuta Jurídica Oficial'}
               </span>
             </div>
-            <h2 className="text-xs font-bold text-slate-900 mt-0.5">
+            <h2 className="text-sm font-bold text-slate-900 mt-1 leading-snug">
               {step === 1 && '1. Situação que deseja resolver'}
               {step === 2 && '2. Fase do Processo'}
               {step === 3 && '3. Identificação da Autuação & Veículo'}

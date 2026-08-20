@@ -160,7 +160,7 @@ export const FreeAnalysisResultStep: React.FC<FreeAnalysisResultStepProps> = ({
       return (confidenceOrder[b.confidenceLevel] || 0) - (confidenceOrder[a.confidenceLevel] || 0);
     })
     .slice(0, 3) // Mostra apenas os top 3 argumentos mais relevantes
-    : [];
+    ?? [];
 
   return (
     <div className="space-y-6">

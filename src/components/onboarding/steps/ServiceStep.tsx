@@ -40,22 +40,22 @@ export const ServiceStep: React.FC<ServiceStepProps> = ({
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-2xs space-y-6">
-      {/* Header com chamada humana */}
-      <div className="text-center max-w-xl mx-auto space-y-2">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-[#155BCB] border border-blue-200 font-mono">
-          <Sparkles className="w-3 h-3 text-[#155BCB]" />
-          Passo 1 de 4 • Diagnóstico Preliminar Gratuito
+      {/* Header com chamada humana - simplificada */}
+      <div className="text-center max-w-xl mx-auto space-y-3">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-blue-50 text-[#155BCB] border border-blue-200 font-mono">
+          <Sparkles className="w-4 h-4 text-[#155BCB]" />
+          Passo 1 de 4 • Situação
         </span>
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight leading-snug">
           Qual situação você quer resolver?
         </h1>
-        <p className="text-slate-500 text-xs sm:text-sm">
-          Selecione o objetivo da sua defesa para aplicarmos as teses exatas do Código de Trânsito Brasileiro.
+        <p className="text-slate-600 text-sm leading-relaxed max-w-lg mx-auto">
+          Escolha o tipo de infração para aplicarmos as defesas adequadas.
         </p>
       </div>
 
-      {/* Grid de opções simplificadas */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+      {/* Grid de opções - layout otimizado para melhor escaneabilidade */}
+      <div className="grid gap-4 sm:grid-cols-2">
         {USER_SITUATIONS.map((sit) => {
           const isSelected = selectedSituation === sit.id;
           return (
@@ -63,38 +63,30 @@ export const ServiceStep: React.FC<ServiceStepProps> = ({
               key={sit.id}
               id={`service-option-${sit.id}`}
               onClick={() => onSelectSituation(sit.id)}
-              className={`p-4 border rounded-xl text-left transition-all flex flex-col justify-between group cursor-pointer shadow-2xs ${
+              className={`group flex flex-col items-start p-4 sm:p-5 border rounded-xl shadow-sm transition-all cursor-pointer hover:shadow-md hover:border-[#155BCB]/20 ${
                 isSelected
-                  ? 'border-[#155BCB] bg-blue-50/40 ring-2 ring-[#155BCB]/20'
-                  : 'border-slate-200 hover:border-blue-300 hover:bg-slate-50/60'
+                  ? 'border-[#155BCB] bg-blue-50'
+                  : 'border-slate-200'
               }`}
             >
-              <div className="flex items-start gap-3.5">
-                <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                    isSelected
-                      ? 'bg-[#155BCB] text-white'
-                      : 'bg-slate-100 text-slate-700 group-hover:bg-[#155BCB] group-hover:text-white'
-                  }`}
-                >
-                  {getIcon(sit.id)}
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-slate-900 text-sm">{sit.title}</h3>
+              <div className="flex w-full items-start gap-3 mb-2">
+                <div className="flex-shrink-0">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isSelected ? 'bg-[#155BCB] text-white' : 'bg-slate-100 text-slate-700'}`}>
+                    {getIcon(sit.id)}
                   </div>
-                  <p className="text-[11px] text-slate-500 leading-snug">
-                    {sit.subtitle}
-                  </p>
+                </div>
+                <div className="flex-1 space-y-1">
+                  <h3 className="font-semibold text-slate-900">{sit.title}</h3>
+                  <p className="text-slate-600">{sit.subtitle}</p>
                 </div>
               </div>
 
-              <div className="mt-3.5 pt-2.5 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-[10px] font-bold font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+              <div className="mt-auto w-full flex items-center justify-between pt-3 border-t border-slate-100">
+                <span className="inline-flex items-center gap-1.5 text-xs font-mono">
                   {sit.badge}
                 </span>
-                <span className="text-xs text-[#155BCB] font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
-                  Continuar <ArrowRight className="w-3.5 h-3.5" />
+                <span className="text-sm font-medium text-[#155BCB] group-hover:underline">
+                  Continuar
                 </span>
               </div>
             </button>
@@ -102,16 +94,19 @@ export const ServiceStep: React.FC<ServiceStepProps> = ({
         })}
       </div>
 
-      {/* Trust Micro-Footer */}
-      <div className="flex flex-wrap items-center justify-center gap-4 pt-2 text-[11px] text-slate-500 border-t border-slate-100">
-        <span className="flex items-center gap-1">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Sem necessidade de cadastro prévio
+      {/* Trust Micro-Footer - mantido para confiança */}
+      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-4 text-sm text-slate-600 border-t border-slate-100">
+        <span className="flex items-center gap-1.5">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          Sem necessidade de cadastro prévio
         </span>
-        <span className="flex items-center gap-1">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Cálculo determinístico de prazos
+        <span className="flex items-center gap-1.5">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          Cálculo determinístico de prazos
         </span>
-        <span className="flex items-center gap-1">
-          <Database className="w-3.5 h-3.5 text-blue-600" /> Base jurídica atualizada com a Lei 14.071/20
+        <span className="flex items-center gap-1.5">
+          <Database className="w-4 h-4 text-blue-600 shrink-0" />
+          Base jurídica atualizada com a Lei 14.071/20
         </span>
       </div>
     </div>

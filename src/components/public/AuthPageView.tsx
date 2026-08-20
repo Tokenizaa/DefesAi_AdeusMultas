@@ -77,7 +77,7 @@ export const AuthPageView: React.FC<AuthPageViewProps> = ({ initialTab = 'login'
             <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
               {mode === 'login' ? 'Acesse sua Conta' : 'Criar Nova Conta'}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto mt-1">
+            <p className="text-sm sm:text-sm text-slate-600 max-w-sm mx-auto mt-1">
               {mode === 'login'
                 ? 'Entre para acompanhar seus recursos, prazos e laudos periciais.'
                 : 'Cadastre-se para gerar defesas técnicas de trânsito em conformidade com o CTB.'}

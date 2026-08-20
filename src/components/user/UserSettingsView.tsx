@@ -96,7 +96,7 @@ export const UserSettingsView: React.FC = () => {
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-slate-900">Minhas Configurações</h2>
-        <p className="text-xs text-slate-500 mt-0.5">
+        <p className="text-sm text-slate-500 mt-0.5">
           Gerencie seus dados pessoais, preferências de notificação e segurança da conta.
         </p>
       </div>
@@ -145,7 +145,7 @@ export const UserSettingsView: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-bold text-slate-900">Meus Dados Pessoais</h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-sm text-slate-500 mt-0.5">
                 Estes dados são utilizados para preencher automaticamente o cabeçalho e qualificação das suas petições.
               </p>
             </div>
@@ -153,7 +153,7 @@ export const UserSettingsView: React.FC = () => {
           </div>
 
           {profileSavedSuccess && (
-            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-emerald-800 text-xs font-medium animate-fadeIn">
+            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-emerald-800 text-sm font-medium animate-fadeIn">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>Perfil atualizado com sucesso! Suas futuras defesas serão geradas com estes dados.</span>
             </div>
@@ -166,14 +166,14 @@ export const UserSettingsView: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-slate-900">{name || 'Condutor'}</h3>
-                <p className="text-xs text-slate-500 font-mono">{user?.email}</p>
-                <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-orange-700 border border-orange-200">
+                <p className="text-sm text-slate-500 font-mono">{user?.email}</p>
+                <span className="inline-block mt-1 text-sm font-bold px-2 py-0.5 rounded bg-orange-50 text-orange-700 border border-orange-200">
                   Conta Verificada
                 </span>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">
                   Nome Completo do Titular
@@ -259,7 +259,7 @@ export const UserSettingsView: React.FC = () => {
             <div className="pt-4 border-t border-slate-100 flex justify-end">
               <button
                 type="submit"
-                className="px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+                className="px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-sm shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Salvar Alterações</span>
@@ -276,7 +276,7 @@ export const UserSettingsView: React.FC = () => {
               <span>Alertas de Prazos & Notificações</span>
             </div>
 
-            <div className="space-y-3 text-xs">
+            <div className="space-y-3 text-sm">
               {/* Web & Mobile Push Notification Feature Card */}
               <div className="p-4 rounded-xl bg-gradient-to-br from-[#071D41] to-[#0C326F] text-white border border-[#155BCB]/40 shadow-sm space-y-3">
                 <div className="flex items-start justify-between gap-3">
@@ -288,7 +288,7 @@ export const UserSettingsView: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-sm text-white">Notificações Push no Dispositivo</span>
                         <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          className={`text-sm font-bold px-2 py-0.5 rounded-full ${
                             permission === 'granted'
                               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                               : permission === 'denied'
@@ -299,7 +299,7 @@ export const UserSettingsView: React.FC = () => {
                           {permission === 'granted' ? 'ATIVO' : permission === 'denied' ? 'BLOQUEADO' : 'PENDENTE'}
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-300 mt-0.5">
+                      <p className="text-sm text-slate-300 mt-0.5">
                         Alertas em segundo plano via Service Worker quando o status de qualquer recurso for alterado.
                       </p>
                     </div>
@@ -312,13 +312,13 @@ export const UserSettingsView: React.FC = () => {
                       type="button"
                       onClick={requestPermissionAndSubscribe}
                       disabled={pushLoading}
-                      className="px-3.5 py-1.5 bg-[#FFCD07] hover:bg-[#F5A623] text-[#071D41] font-bold text-xs rounded-lg transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"
+                      className="px-3.5 py-1.5 bg-[#FFCD07] hover:bg-[#F5A623] text-[#071D41] font-bold text-sm rounded-lg transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"
                     >
                       <Bell className="w-3.5 h-3.5" />
                       {pushLoading ? 'Solicitando...' : 'Habilitar Notificações no Navegador'}
                     </button>
                   ) : (
-                    <span className="text-[11px] text-emerald-300 flex items-center gap-1 font-medium">
+                    <span className="text-sm text-emerald-300 flex items-center gap-1 font-medium">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Dispositivo conectado para receber alertas de julgamento
                     </span>
@@ -328,7 +328,7 @@ export const UserSettingsView: React.FC = () => {
                     type="button"
                     onClick={sendTestNotification}
                     disabled={pushLoading}
-                    className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-lg transition-colors border border-white/15 flex items-center gap-1.5 cursor-pointer"
+                    className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm rounded-lg transition-colors border border-white/15 flex items-center gap-1.5 cursor-pointer"
                   >
                     <Send className="w-3 h-3 text-[#FFCD07]" />
                     Enviar Teste Push
@@ -339,7 +339,7 @@ export const UserSettingsView: React.FC = () => {
               <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
                 <div>
                   <p className="font-bold text-slate-800">Alertas de Vencimento de Defesa Prévia e JARI</p>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-sm text-slate-500">
                     Receba lembretes automáticos 7 dias e 48 horas antes do término do prazo de protocolo.
                   </p>
                 </div>
@@ -354,7 +354,7 @@ export const UserSettingsView: React.FC = () => {
               <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
                 <div>
                   <p className="font-bold text-slate-800">Notificações por E-mail</p>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-sm text-slate-500">
                     Envio da minuta em PDF e confirmações de pagamento via e-mail.
                   </p>
                 </div>
@@ -369,7 +369,7 @@ export const UserSettingsView: React.FC = () => {
               <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
                 <div>
                   <p className="font-bold text-slate-800">Atualizações Rápidas via WhatsApp</p>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-sm text-slate-500">
                     Notificações instantâneas quando sua peça jurídica estiver diagramada.
                   </p>
                 </div>
@@ -391,12 +391,12 @@ export const UserSettingsView: React.FC = () => {
             </div>
 
             {passwordStatus && (
-              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 font-medium">
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-sm text-emerald-800 font-medium">
                 {passwordStatus}
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">
                   Senha Atual
@@ -427,7 +427,7 @@ export const UserSettingsView: React.FC = () => {
             <div className="flex justify-end pt-2">
               <button
                 type="submit"
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-colors cursor-pointer"
+                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition-colors cursor-pointer"
               >
                 Atualizar Senha
               </button>
@@ -443,7 +443,7 @@ export const UserSettingsView: React.FC = () => {
               <span>Privacidade & LGPD</span>
             </div>
 
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed">
               Seus dados de condutor, placas e autos de infração são armazenados com criptografia de ponta a ponta e jamais são compartilhados com terceiros.
             </p>
 
@@ -451,7 +451,7 @@ export const UserSettingsView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => alert('Para exclusão total dos dados conforme o Art. 18 da LGPD, entre em contato com dpo@defesai.com.br')}
-                className="text-xs font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer"
+                className="text-sm font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Solicitar exclusão definitiva de dados (Art. 18 LGPD)</span>
