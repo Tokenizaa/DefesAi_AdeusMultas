@@ -7,14 +7,11 @@ import {
   setStoredSession,
   getStoredUsers,
   saveStoredUser,
-  DEMO_USERS,
 } from '../../lib/supabase';
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signUp: (name: string, email: string, password: string, phone?: string) => Promise<{ success: boolean; error?: string }>;
-  loginAsDemoUser: () => Promise<void>;
-  loginAsDemoAdmin: () => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (data: Partial<AuthUser>) => Promise<void>;
   resetPassword: (email: string) => Promise<{ success: boolean; message: string }>;
@@ -34,45 +31,81 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (isSupabaseConfigured && supabase) {
         try {
           const { data: { session } } = await supabase.auth.getSession();
-          if (session?.user) {
-            const role = (session.user.user_metadata?.role as UserRole) || 'citizen';
-            const authUser: AuthUser = {
-              id: session.user.id,
-              name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'Usuário',
-              email: session.user.email || '',
-              role: role,
-              cpf: session.user.user_metadata?.cpf,
-              phone: session.user.user_metadata?.phone,
-              cnh: session.user.user_metadata?.cnh,
-              createdAt: session.user.created_at,
-            };
-            setUser(authUser);
-            setStoredSession(authUser);
-          } else {
-            const cached = getStoredSession();
-            if (cached) setUser(cached);
-          }
+if (session?.user) {
+             // Get role from user_profiles table for accuracy, fallback to user_metadata
+             let roleFromProfile: UserRole | undefined;
+             if (isSupabaseConfigured && supabase) {
+               try {
+                 const { data: profileData, error: profileError } = await supabase
+                   .from('user_profiles')
+                   .select('role')
+                   .eq('user_id', session.user.id)
+                   .single();
+                 if (!profileError && profileData?.role) {
+                   roleFromProfile = profileData.role as UserRole;
+                 }
+               } catch (profileErr) {
+                 // Ignore profile fetch errors, fall back to user_metadata
+                 console.warn('Failed to fetch user profile for role:', profileErr);
+               }
+             }
+             
+             const role = (roleFromProfile ?? (session.user.user_metadata?.role as UserRole)) ?? 'citizen';
+             const authUser: AuthUser = {
+               id: session.user.id,
+               name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'Usuário',
+               email: session.user.email || '',
+               role: role,
+               cpf: session.user.user_metadata?.cpf,
+               phone: session.user.user_metadata?.phone,
+               cnh: session.user.user_metadata?.cnh,
+               createdAt: session.user.created_at,
+             };
+             setUser(authUser);
+             setStoredSession(authUser);
+           } else {
+             const cached = getStoredSession();
+             if (cached) setUser(cached);
+           }
 
           // Subscribe to Supabase auth events
           const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            if (session?.user) {
-              const role = (session.user.user_metadata?.role as UserRole) || 'citizen';
-              const authUser: AuthUser = {
-                id: session.user.id,
-                name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'Usuário',
-                email: session.user.email || '',
-                role: role,
-                cpf: session.user.user_metadata?.cpf,
-                phone: session.user.user_metadata?.phone,
-                cnh: session.user.user_metadata?.cnh,
-                createdAt: session.user.created_at,
-              };
-              setUser(authUser);
-              setStoredSession(authUser);
-            } else {
-              setUser(null);
-              setStoredSession(null);
-            }
+if (session?.user) {
+               // Get role from user_profiles table for accuracy, fallback to user_metadata
+               let roleFromProfile: UserRole | undefined;
+               if (isSupabaseConfigured && supabase) {
+                 try {
+                   const { data: profileData, error: profileError } = await supabase
+                     .from('user_profiles')
+                     .select('role')
+                     .eq('user_id', session.user.id)
+                     .single();
+                 if (!profileError && profileData?.role) {
+                   roleFromProfile = profileData.role as UserRole;
+                 }
+                 } catch (profileErr) {
+                   // Ignore profile fetch errors, fall back to user_metadata
+                   console.warn('Failed to fetch user profile for role:', profileErr);
+                 }
+               }
+               
+const role = (roleFromProfile ?? (session.user.user_metadata?.role as UserRole)) ?? 'citizen';
+               const authUser: AuthUser = {
+                 id: session.user.id,
+                 name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'Usuário',
+                 email: session.user.email || '',
+                 role: role,
+                 cpf: session.user.user_metadata?.cpf,
+                 phone: session.user.user_metadata?.phone,
+                 cnh: session.user.user_metadata?.cnh,
+                 createdAt: session.user.created_at,
+               };
+               setUser(authUser);
+               setStoredSession(authUser);
+             } else {
+               setUser(null);
+               setStoredSession(null);
+             }
           });
 
           return () => {
@@ -111,45 +144,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
 
         if (error) {
-          // Check if it's one of our built-in demo credentials
-          const demo = DEMO_USERS[cleanEmail];
-          if (demo && demo.passwordHash === password) {
-            setUser(demo.user);
-            setStoredSession(demo.user);
-            setIsLoading(false);
-            return { success: true };
-          }
           setIsLoading(false);
           return { success: false, error: error.message || 'Credenciais inválidas.' };
         }
 
-        if (data.user) {
-          const role = (data.user.user_metadata?.role as UserRole) || 'citizen';
-          const authUser: AuthUser = {
-            id: data.user.id,
-            name: data.user.user_metadata?.name || data.user.email?.split('@')[0] || 'Usuário',
-            email: data.user.email || '',
-            role: role,
-            createdAt: data.user.created_at,
-          };
-          setUser(authUser);
-          setStoredSession(authUser);
-          setIsLoading(false);
-          return { success: true };
-        }
+if (data.user) {
+           // Get role from user_profiles table for accuracy, fallback to user_metadata
+           let roleFromProfile: UserRole | undefined;
+           if (isSupabaseConfigured && supabase) {
+             try {
+               const { data: profileData, error: profileError } = await supabase
+                 .from('user_profiles')
+                 .select('role')
+                 .eq('user_id', data.user.id)
+                 .single();
+               if (!profileError && profileData?.role) {
+                 roleFromProfile = profileData.role as UserRole;
+               }
+             } catch (profileErr) {
+               // Ignore profile fetch errors, fall back to user_metadata
+               console.warn('Failed to fetch user profile for role:', profileErr);
+             }
+           }
+           
+           const role = (roleFromProfile ?? (data.user.user_metadata?.role as UserRole)) ?? 'citizen';
+           const authUser: AuthUser = {
+             id: data.user.id,
+             name: data.user.user_metadata?.name || data.user.email?.split('@')[0] || 'Usuário',
+             email: data.user.email || '',
+             role: role,
+             createdAt: data.user.created_at,
+           };
+           setUser(authUser);
+           setStoredSession(authUser);
+           setIsLoading(false);
+           return { success: true };
+         }
       } catch (err: any) {
         console.error('Supabase signIn error:', err);
+        setIsLoading(false);
+        return { success: false, error: 'Serviço de autenticação não configurado.' };
       }
     }
 
-    // 2. Local Demo / Fallback Authentication
+    // 2. Local Fallback Authentication
     await new Promise((r) => setTimeout(r, 400));
     const allUsers = getStoredUsers();
     const found = allUsers[cleanEmail];
 
     if (!found) {
       setIsLoading(false);
-      return { success: false, error: 'E-mail não encontrado. Verifique os dados ou crie uma conta.' };
+      return { success: false, error: 'Serviço de autenticação não configurado.' };
     }
 
     if (found.passwordHash !== password) {
@@ -248,24 +293,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true };
   };
 
-  const loginAsDemoUser = async () => {
-    setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 200));
-    const demo = DEMO_USERS['motorista@defesai.com.br'];
-    setUser(demo.user);
-    setStoredSession(demo.user);
-    setIsLoading(false);
-  };
-
-  const loginAsDemoAdmin = async () => {
-    setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 200));
-    const demo = DEMO_USERS['admin@defesai.com.br'];
-    setUser(demo.user);
-    setStoredSession(demo.user);
-    setIsLoading(false);
-  };
-
   const logout = async () => {
     setIsLoading(true);
     if (isSupabaseConfigured && supabase) {
@@ -295,6 +322,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             phone: updated.phone,
             cnh: updated.cnh,
             cityState: updated.cityState,
+            role: updated.role,
           },
         });
       } catch (err) {
@@ -346,8 +374,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         login,
         signUp,
-        loginAsDemoUser,
-        loginAsDemoAdmin,
         logout,
         updateProfile,
         resetPassword,

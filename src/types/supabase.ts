@@ -380,7 +380,7 @@ export type Database = {
           status: string
         }
         Insert: {
-          applied_percent: number
+          applied_percent?: number
           available_at?: string | null
           base_amount: number
           beneficiary_id: string
@@ -987,6 +987,44 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          idempotency_key: string
+          payload: Json
+          payment_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          idempotency_key: string
+          payload: Json
+          payment_id: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          idempotency_key?: string
+          payload?: Json
+          payment_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_events_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payment_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payment_orders: {
         Row: {
           amount: number
@@ -1330,7 +1368,7 @@ export type Database = {
           name: string
           phone: string | null
           referral_code: string | null
-          role: string
+          role: Database["public"]["Enums"]["user_role"]
           updated_at: string
           user_id: string
         }
@@ -1345,7 +1383,7 @@ export type Database = {
           name: string
           phone?: string | null
           referral_code?: string | null
-          role?: string
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           user_id: string
         }
@@ -1360,7 +1398,7 @@ export type Database = {
           name?: string
           phone?: string | null
           referral_code?: string | null
-          role?: string
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           user_id?: string
         }
@@ -1412,7 +1450,7 @@ export type Database = {
       show_trgm: { Args: { "": string }; Returns: string[] }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "citizen" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1517,28 +1555,15 @@ export type Enums<
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    ? DefaultSchema["Enums"][EnumName]
     : never
 
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+export type CompositeTypes = never
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["citizen", "admin"],
+    },
   },
 } as const
