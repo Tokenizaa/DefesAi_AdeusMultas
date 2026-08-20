@@ -196,6 +196,27 @@ loop:escalate --reason "Bloqueio arquitetural"
 
 ---
 
+## Legacy Pipeline Agents (agents/)
+
+> **⚠️ NÃO USADOS PELO RUNTIME.** Decisão arquitetural: [ADR-008](docs/adr/ADR-008-Agent-Topology-Unification.md).
+
+O diretório `agents/` na raiz contém o **scaffold morto do antigo pipeline de agents** (sistema A):
+- Definições `.md` + implementações `.ts` parciais: `base-agent`, `case-agent`, `ai-analysis-agent`, `document-agent`, `communication-agent`, `crm-agent`, `knowledge-agent`, `automation-agent`, `admin-agent`, `infrastructure-agent`, `marketing-agent`, `payment-agent` e subdiretórios (`legal/`, `document/`, `ocr/`, `quality/`, `product/`, `marketing-platform/`, `pipeline/`).
+
+**Por que é legacy:**
+- Excluído do `tsconfig.json` (commit `57253b9`)
+- Zero imports de `src/` (`rg "agents/" src/` → 0 matches)
+- 31 erros TypeScript; depende de `CaseContext` que nunca existiu ([ADR-005](docs/adr/ADR-005-Missing-Agent-Implementations.md))
+
+**Regras:**
+1. Nenhum código novo importa de `agents/`.
+2. Nenhum recurso novo é criado lá.
+3. Deletar, migrar ou ressuscitar conteúdo de `agents/` exige um ADR novo.
+
+**Fonte canônica da topologia de agents = este AGENTS.md** (sistema B, orquestrado por `@agent-loop`).
+
+---
+
 ## Próximos Passos Recomendados
 
 1. **Validar funcionamento**: Rodar um ciclo de teste simples
