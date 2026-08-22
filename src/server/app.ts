@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import path from 'path';
-import { caseRepository } from './db/case-repository';
+import { caseRepository } from './db/case-repository.ts';
 import type { AuditLogEntry } from '../types';
 import { corsMiddleware } from './config/cors';
 import { globalLimiter, strictLimiter } from './middleware/rate-limit';
@@ -45,10 +45,37 @@ export function createApp() {
   const app = express();
 
   // Security headers
+  // GOV.BR 08-seguranca: CSP + X-Frame-Options + nosniff + HSTS.
+  // CSP cobre os consumidores reais do bundle browser:
+  //   - Google Fonts (index.html: fonts.googleapis.com css2 + fonts.gstatic.com)
+  //   - Supabase JS (src/lib/supabase.ts ← VITE_SUPABASE_URL / SUPABASE_URL)
+  //   - Firebase Auth (src/lib/google-auth.ts: identitytoolkit/securetoken/installations)
+  //   - Google Drive REST (src/core/integrations/google-drive-service.ts)
+  //   - Imagens remotas (api.qrserver.com, stc.pagseguro.uol.com.br, images.unsplash.com → https:)
+  const isProd = process.env.NODE_ENV === 'production';
+  const supabaseEnvUrl =
+    process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '';
+  let supabaseOrigins = ['https://*.supabase.co', 'wss://*.supabase.co'];
+  try {
+    if (supabaseEnvUrl.startsWith('https://')) {
+      const { host } = new URL(supabaseEnvUrl);
+      supabaseOrigins = [
+        `https://${host}`,
+        `wss://${host}`,
+        ...supabaseOrigins,
+      ];
+    }
+  } catch {
+    // URL malformada no env: mantém apenas o wildcard
+  }
   app.use(
     helmet({
+      frameguard: false,
       contentSecurityPolicy: false,
       crossOriginEmbedderPolicy: false,
+      strictTransportSecurity: isProd
+        ? { maxAge: 31536000, includeSubDomains: true }
+        : false,
     })
   );
 

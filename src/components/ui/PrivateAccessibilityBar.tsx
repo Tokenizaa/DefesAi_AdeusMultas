@@ -12,7 +12,7 @@ export const PrivateAccessibilityBar: React.FC = () => {
   } = useAccessibility();
 
   return (
-    <div className="bg-[#071D41] text-white text-[11px] py-1.5 px-4 sm:px-6 lg:px-8 border-b border-[#0C326F]">
+    <div className="bg-[#071D41] text-white text-sm py-1.5 px-4 sm:px-6 lg:px-8 border-b border-[#0C326F]">
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
         {/* Atalhos de Teclado (eMAG) */}
         <div className="flex items-center gap-3 font-medium overflow-x-auto py-0.5">
@@ -66,7 +66,7 @@ export const PrivateAccessibilityBar: React.FC = () => {
           <div className="flex items-center gap-1 bg-[#0C326F] rounded px-1.5 py-0.5 border border-orange-500">
             <button
               onClick={decreaseFontSize}
-              className="px-1.5 py-0.5 hover:text-[#FF6B35] font-bold text-xs cursor-pointer transition-colors"
+              className="px-1.5 py-0.5 hover:text-[#FF6B35] font-bold text-sm cursor-pointer transition-colors"
               title="Diminuir tamanho do texto"
               aria-label="Diminuir tamanho da fonte"
             >
@@ -74,7 +74,7 @@ export const PrivateAccessibilityBar: React.FC = () => {
             </button>
             <button
               onClick={resetFontSize}
-              className="px-1.5 py-0.5 hover:text-[#FF6B35] font-bold text-xs cursor-pointer transition-colors"
+              className="px-1.5 py-0.5 hover:text-[#FF6B35] font-bold text-sm cursor-pointer transition-colors"
               title="Tamanho normal do texto"
               aria-label="Redefinir tamanho da fonte"
             >
@@ -82,7 +82,7 @@ export const PrivateAccessibilityBar: React.FC = () => {
             </button>
             <button
               onClick={increaseFontSize}
-              className="px-1.5 py-0.5 hover:text-[#FF6B35] font-bold text-xs cursor-pointer transition-colors"
+              className="px-1.5 py-0.5 hover:text-[#FF6B35] font-bold text-sm cursor-pointer transition-colors"
               title="Aumentar tamanho do texto"
               aria-label="Aumentar tamanho da fonte"
             >
@@ -101,7 +101,7 @@ export const PrivateAccessibilityBar: React.FC = () => {
             aria-label="Alternar modo de alto contraste"
           >
             <Sun className="w-3 h-3" />
-            <span className="font-semibold text-[10px] uppercase">Alto Contraste</span>
+            <span className="font-semibold text-sm uppercase">Alto Contraste</span>
           </button>
         </div>
       </div>

@@ -64,7 +64,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         {onToggleMobileMenu && (
           <button
             onClick={onToggleMobileMenu}
-            className="md:hidden p-1.5 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 cursor-pointer"
+            className="md:hidden p-2 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 cursor-pointer"
             aria-label="Abrir menu"
           >
             <Menu className="w-4 h-4" />
@@ -73,7 +73,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
 
         <div>
           {/* Breadcrumbs */}
-          <nav className="flex items-center gap-1 text-[10px] text-slate-500 font-mono mb-0.5">
+          <nav className="flex items-center gap-1 text-sm text-slate-500 font-mono mb-0.5">
             {breadcrumbs.map((crumb, idx) => {
               const isLast = idx === breadcrumbs.length - 1;
               return (
@@ -102,14 +102,14 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
               Admin
             </span>
           </div>
-          <p className="text-[10px] text-slate-400 font-medium hidden md:block">
+          <p className="text-sm text-slate-400 font-medium hidden md:block">
             {pageSubtitle}
           </p>
         </div>
       </div>
 
       <div className="flex items-center gap-2.5">
-        <div className="hidden lg:flex items-center gap-2 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg text-[10px] font-mono text-slate-300">
+        <div className="hidden lg:flex items-center gap-2 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg text-sm font-mono text-slate-300">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span>API 200 OK</span>
           <span className="text-slate-600">•</span>
@@ -121,7 +121,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
 
         <button
           onClick={() => navigate('/dashboard')}
-          className="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-800"
+          className="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg text-sm font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-800"
           title="Alternar para o fluxo do motorista"
         >
           <ExternalLink className="w-3.5 h-3.5 text-orange-400" />

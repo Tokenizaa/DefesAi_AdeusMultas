@@ -554,6 +554,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           vehicleData={vehicleData}
           analysis={caseAnalysis}
           serviceType={mappedProcedure}
+          isAdmin={isAdmin}
           onPaymentSuccess={handlePaymentSuccess}
           onBack={() => setStep(8)}
         />

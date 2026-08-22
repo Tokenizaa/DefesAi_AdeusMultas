@@ -63,12 +63,12 @@ export const ProceduresView: React.FC<{
             <ListChecks className="w-5 h-5 text-amber-400" />
             Procedimentos Administrativos & Prazos Legais
             {procedures.length > 0 && (
-              <span className="text-xs text-slate-400 font-mono font-normal">
+              <span className="text-sm text-slate-400 font-mono font-normal">
                 ({procedures.length} procedimentos)
               </span>
             )}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             Fluxos processuais perante órgãos autuadores (JARI, CETRAN, CONTRAN) e prazos decadenciais do CTB.
           </p>
         </div>
@@ -80,7 +80,7 @@ export const ProceduresView: React.FC<{
             placeholder="Buscar por fase, prazo ou órgão..."
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
           />
         </div>
       </div>
@@ -88,7 +88,7 @@ export const ProceduresView: React.FC<{
       {loading ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
           <div className="inline-block animate-spin rounded-full border-2 border-amber-500 border-t-transparent w-8 h-8"></div>
-          <p className="mt-3 text-xs text-slate-400">Carregando procedimentos processuais...</p>
+          <p className="mt-3 text-sm text-slate-400">Carregando procedimentos processuais...</p>
         </div>
       ) : procedures.length === 0 ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
@@ -104,10 +104,10 @@ export const ProceduresView: React.FC<{
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md font-mono font-bold text-xs">
+                  <span className="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md font-mono font-bold text-sm">
                     {proc.id || proc.code || 'PROC'}
                   </span>
-                  <span className="text-xs font-mono font-bold text-slate-300 flex items-center gap-1">
+                  <span className="text-sm font-mono font-bold text-slate-300 flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5 text-amber-400" />
                     {proc.legalDeadlineDays ? `${proc.legalDeadlineDays} dias úteis` : (proc.deadline || '30 dias')}
                   </span>
@@ -117,13 +117,13 @@ export const ProceduresView: React.FC<{
                   {proc.name || proc.title || proc.label}
                 </h3>
 
-                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
                   {proc.description || 'Rito procedimental com fundamentação legal e prazos perante a autoridade julgadora.'}
                 </p>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-slate-900 text-xs">
-                <span className="text-slate-400 text-[11px] font-mono">
+              <div className="flex items-center justify-between pt-3 border-t border-slate-900 text-sm">
+                <span className="text-slate-400 text-sm font-mono">
                   Instância: {proc.instance || 'Administrativa'}
                 </span>
                 <span className="text-amber-400 font-bold group-hover:underline inline-flex items-center gap-0.5">
@@ -148,7 +148,7 @@ export const ProceduresView: React.FC<{
                   <h3 className="text-base font-bold text-white">
                     {selectedProcedure.name || selectedProcedure.title}
                   </h3>
-                  <p className="text-xs font-mono text-amber-400">{selectedProcedure.id || selectedProcedure.code}</p>
+                  <p className="text-sm font-mono text-amber-400">{selectedProcedure.id || selectedProcedure.code}</p>
                 </div>
               </div>
               <button
@@ -159,7 +159,7 @@ export const ProceduresView: React.FC<{
               </button>
             </div>
 
-            <div className="space-y-4 text-xs text-slate-300">
+            <div className="space-y-4 text-sm text-slate-300">
               <div>
                 <label className="text-slate-400 font-medium block mb-1">Descrição do Rito:</label>
                 <p className="p-3 bg-slate-950 border border-slate-800 rounded-lg text-slate-200">
@@ -169,13 +169,13 @@ export const ProceduresView: React.FC<{
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg">
-                  <span className="text-[10px] text-slate-400 uppercase font-mono block">Prazo Legal de Interposição</span>
+                  <span className="text-sm text-slate-400 uppercase font-mono block">Prazo Legal de Interposição</span>
                   <span className="font-bold text-amber-400 text-sm font-mono mt-0.5 block">
                     {selectedProcedure.legalDeadlineDays ? `${selectedProcedure.legalDeadlineDays} dias` : (selectedProcedure.deadline || '30 dias da notificação')}
                   </span>
                 </div>
                 <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg">
-                  <span className="text-[10px] text-slate-400 uppercase font-mono block">Órgão Julgador / Instância</span>
+                  <span className="text-sm text-slate-400 uppercase font-mono block">Órgão Julgador / Instância</span>
                   <span className="font-bold text-white text-sm mt-0.5 block">
                     {selectedProcedure.targetOrgan || selectedProcedure.instance || 'JARI / CETRAN'}
                   </span>
@@ -200,7 +200,7 @@ export const ProceduresView: React.FC<{
             <div className="flex justify-end pt-3 border-t border-slate-800">
               <button
                 onClick={() => setSelectedProcedure(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold cursor-pointer"
+                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm font-semibold cursor-pointer"
               >
                 Fechar
               </button>

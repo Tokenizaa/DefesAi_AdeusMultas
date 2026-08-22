@@ -85,11 +85,11 @@ export const AdminUserDetailView: React.FC = () => {
               <h1 className="text-base sm:text-lg font-bold text-white font-mono">
                 {user?.name}
               </h1>
-              <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase font-mono bg-slate-800 text-slate-300 border border-slate-700">
+              <span className="px-2 py-0.5 rounded text-sm font-bold uppercase font-mono bg-slate-800 text-slate-300 border border-slate-700">
                 {user?.role === 'admin' ? 'Administrador' : 'Cidadão / Condutor'}
               </span>
             </div>
-            <p className="text-xs text-slate-400 font-mono mt-0.5">
+            <p className="text-sm text-slate-400 font-mono mt-0.5">
               Cadastrado em {new Date(user?.createdAt).toLocaleDateString('pt-BR')} • CPF: {user?.cpf}
             </p>
           </div>
@@ -99,27 +99,27 @@ export const AdminUserDetailView: React.FC = () => {
       {/* Profile & KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono">
         {/* User Account Info */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 text-xs">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 text-sm">
           <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
             <User className="w-4 h-4 text-orange-400" />
             <h2 className="text-sm font-bold text-white uppercase">Dados da Conta</h2>
           </div>
 
           <div>
-            <span className="text-slate-500 text-[10px] uppercase">E-mail</span>
+            <span className="text-slate-500 text-sm uppercase">E-mail</span>
             <p className="text-slate-200">{user?.email}</p>
           </div>
           <div>
-            <span className="text-slate-500 text-[10px] uppercase">Telefone</span>
+            <span className="text-slate-500 text-sm uppercase">Telefone</span>
             <p className="text-slate-200">{user?.phone}</p>
           </div>
           <div>
-            <span className="text-slate-500 text-[10px] uppercase">CPF</span>
+            <span className="text-slate-500 text-sm uppercase">CPF</span>
             <p className="text-slate-200">{user?.cpf}</p>
           </div>
           <div>
-            <span className="text-slate-500 text-[10px] uppercase">Status da Conta</span>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 w-fit block mt-1">
+            <span className="text-slate-500 text-sm uppercase">Status da Conta</span>
+            <span className="px-2 py-0.5 rounded text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 w-fit block mt-1">
               ATIVO & VERIFICADO
             </span>
           </div>
@@ -134,7 +134,7 @@ export const AdminUserDetailView: React.FC = () => {
           <p className="text-2xl font-bold text-emerald-400">
             R$ {user?.totalSpent?.toFixed(2) || PRICING.DEFAULT_PRICE.toFixed(2)}
           </p>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-sm text-slate-500">
             Pagamentos via PIX PagBank conciliados com sucesso
           </p>
         </div>
@@ -148,14 +148,14 @@ export const AdminUserDetailView: React.FC = () => {
           <p className="text-2xl font-bold text-white">
             {userCases.length} Casos
           </p>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-sm text-slate-500">
             Recursos gerados e acompanhados na plataforma
           </p>
         </div>
       </div>
 
       {/* User Cases List */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 font-mono text-xs">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 font-mono text-sm">
         <h3 className="text-sm font-bold text-white uppercase">Histórico de Casos do Condutor</h3>
 
         <div className="space-y-3">
@@ -171,22 +171,22 @@ export const AdminUserDetailView: React.FC = () => {
                     {c.title || `Caso #${c.id}`}
                   </h4>
                   {c.isPaid ? (
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    <span className="px-2 py-0.5 rounded text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                       PAGO
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                    <span className="px-2 py-0.5 rounded text-sm font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
                       AGUARDANDO
                     </span>
                   )}
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1">
+                <p className="text-sm text-slate-400 mt-1">
                   Auto {c.infraction?.aitNumber || 'N/A'} • Placa {c.vehicle?.plate || 'N/A'} • {c.infraction?.autuadorBody || 'DETRAN'}
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="text-[11px] text-slate-500">
+                <span className="text-sm text-slate-500">
                   {new Date(c.createdAt).toLocaleDateString('pt-BR')}
                 </span>
                 <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white transition-colors" />

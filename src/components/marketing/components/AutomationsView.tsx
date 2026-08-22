@@ -103,7 +103,7 @@ export const AutomationsView: React.FC<{
         ].map(({ label, value, icon: Icon, cls }) => (
           <div key={label} className="p-3 bg-white border border-slate-200 rounded-xl shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] text-slate-500 font-medium">{label}</span>
+              <span className="text-sm text-slate-500 font-medium">{label}</span>
               <span className={`w-7 h-7 rounded-lg flex items-center justify-center ${cls}`}>
                 <Icon className="w-3.5 h-3.5" />
               </span>
@@ -115,7 +115,7 @@ export const AutomationsView: React.FC<{
 
       {/* Canais conectados */}
       <div>
-        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono mb-2.5">Canais de Publicação</h3>
+        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono mb-2.5">Canais de Publicação</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {channels.map(({ channel, status, detail, icon: Icon }) => (
             <div key={channel} className="p-3 bg-white border border-slate-200 rounded-xl shadow-xs flex items-center gap-3">
@@ -123,11 +123,11 @@ export const AutomationsView: React.FC<{
                 <Icon className="w-4 h-4" />
               </span>
               <div className="min-w-0">
-                <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                <p className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
                   {channel}
                   <span className={`w-1.5 h-1.5 rounded-full ${status === 'connected' ? 'bg-emerald-500' : 'bg-slate-300'}`} />
                 </p>
-                <p className="text-[10px] text-slate-500 font-mono truncate">{detail}</p>
+                <p className="text-sm text-slate-500 font-mono truncate">{detail}</p>
               </div>
             </div>
           ))}
@@ -136,14 +136,14 @@ export const AutomationsView: React.FC<{
 
       {/* Jobs recentes */}
       <div>
-        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono mb-2.5">Execuções Recentes</h3>
+        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono mb-2.5">Execuções Recentes</h3>
         <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
           {recentJobs.length === 0 ? (
-            <p className="p-6 text-center text-[11px] text-slate-400">Nenhuma execução ainda — o ciclo autônomo vai preencher.</p>
+            <p className="p-6 text-center text-sm text-slate-400">Nenhuma execução ainda — o ciclo autônomo vai preencher.</p>
           ) : (
-            <table className="w-full text-xs">
+            <table className="w-full text-sm">
               <thead>
-                <tr className="text-left border-b border-slate-200 bg-slate-50 text-[10px] uppercase font-mono text-slate-500">
+                <tr className="text-left border-b border-slate-200 bg-slate-50 text-sm uppercase font-mono text-slate-500">
                   <th className="px-3 py-2.5">Execução</th>
                   <th className="px-3 py-2.5">Canal</th>
                   <th className="px-3 py-2.5">Status</th>
@@ -159,14 +159,14 @@ export const AutomationsView: React.FC<{
                       <td className="px-3 py-2.5 font-semibold text-slate-900">{job.title}</td>
                       <td className="px-3 py-2.5 text-slate-600 font-mono">{job.channel}</td>
                       <td className="px-3 py-2.5">
-                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold">
+                        <span className="inline-flex items-center gap-1.5 text-sm font-bold">
                           <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
                           {job.status === 'retrying' && <RefreshCw className="w-3 h-3 text-amber-500" />}
                           <Icon className="w-3 h-3" />
                           {st.label}
                         </span>
                       </td>
-                      <td className="px-3 py-2.5 text-slate-500 font-mono text-[10px]">
+                      <td className="px-3 py-2.5 text-slate-500 font-mono text-sm">
                         {new Date(job.scheduledAt).toLocaleString('pt-BR')}
                       </td>
                     </tr>
@@ -180,12 +180,12 @@ export const AutomationsView: React.FC<{
 
       {/* Insights reais */}
       <div>
-        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono mb-2.5 flex items-center gap-1.5">
+        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono mb-2.5 flex items-center gap-1.5">
           <Lightbulb className="w-3.5 h-3.5 text-amber-500" /> Insights Automáticos
         </h3>
         <div className="space-y-2">
           {insights.map((line) => (
-            <p key={line} className="p-3 bg-white border border-slate-200 rounded-xl text-[11px] text-slate-700 font-mono">
+            <p key={line} className="p-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 font-mono">
               {line}
             </p>
           ))}

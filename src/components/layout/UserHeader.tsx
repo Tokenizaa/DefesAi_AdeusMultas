@@ -35,7 +35,7 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
           <h1 className="text-sm sm:text-base font-bold text-[#071D41] leading-tight">
             {pageTitle}
           </h1>
-          <p className="text-[11px] text-slate-600 font-medium hidden sm:block">
+          <p className="text-sm text-slate-600 font-medium hidden sm:block">
             {pageSubtitle}
           </p>
         </div>
@@ -45,7 +45,7 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
         <button
           id="user-header-new-case"
           onClick={() => navigate('/novo-caso')}
-          className="px-3.5 py-1.5 text-xs font-bold text-white bg-[#155BCB] hover:bg-[#0C326F] rounded-lg shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+          className="px-3.5 py-1.5 text-sm font-bold text-white bg-[#155BCB] hover:bg-[#0C326F] rounded-lg shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
         >
           <PlusCircle className="w-3.5 h-3.5" />
           <span>Nova Análise Gratuita</span>
@@ -60,10 +60,10 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
           onClick={() => navigate('/perfil')}
           className="flex items-center gap-2 cursor-pointer p-1 rounded-lg hover:bg-slate-50 transition-colors"
         >
-          <div className="w-7 h-7 rounded-full bg-[#071D41] text-white flex items-center justify-center font-bold text-xs">
+          <div className="w-7 h-7 rounded-full bg-[#071D41] text-white flex items-center justify-center font-bold text-sm">
             {user?.name ? user.name.charAt(0).toUpperCase() : 'C'}
           </div>
-          <span className="text-xs font-semibold text-slate-700 hidden sm:inline truncate max-w-[120px]">
+          <span className="text-sm font-semibold text-slate-700 hidden sm:inline truncate max-w-[120px]">
             {user?.name || 'Condutor'}
           </span>
         </div>

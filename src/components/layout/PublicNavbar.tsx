@@ -28,18 +28,18 @@ export const PublicNavbar: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-slate-900 tracking-tight text-lg">DefesAi</span>
-                <span className="text-[10px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-orange-50 text-orange-700 border border-orange-200 font-mono">
+                <span className="text-sm font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-orange-50 text-orange-700 border border-orange-200 font-mono">
                   CTB & CONTRAN
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 font-medium hidden sm:block">
+              <p className="text-sm text-slate-500 font-medium hidden sm:block">
                 Recursos de trânsito 100% determinísticos
               </p>
             </div>
           </div>
 
           {/* Simple Public Navigation Links */}
-          <nav className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-600">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
             <button
               onClick={() => navigate('/')}
               className={`hover:text-slate-900 transition-colors cursor-pointer ${
@@ -89,7 +89,7 @@ export const PublicNavbar: React.FC = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => navigate(isAdmin ? '/admin' : '/dashboard')}
-                  className="px-3.5 py-2 text-xs font-bold text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-2 text-sm font-bold text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <LayoutDashboard className="w-3.5 h-3.5 text-orange-500" />
                   <span>{isAdmin ? 'Painel Admin' : 'Meu Dashboard'}</span>
@@ -97,7 +97,7 @@ export const PublicNavbar: React.FC = () => {
 
                 <button
                   onClick={() => logout()}
-                  className="px-3 py-2 text-xs font-medium text-slate-500 hover:text-rose-600 rounded-lg transition-colors cursor-pointer"
+                  className="px-3 py-2 text-sm font-medium text-slate-500 hover:text-rose-600 rounded-lg transition-colors cursor-pointer"
                 >
                   Sair
                 </button>
@@ -107,7 +107,7 @@ export const PublicNavbar: React.FC = () => {
                 <button
                   id="nav-login-btn"
                   onClick={() => navigate('/login')}
-                  className="px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-2 text-sm font-bold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <LogIn className="w-3.5 h-3.5 text-slate-500" />
                   <span>Entrar</span>
@@ -116,7 +116,7 @@ export const PublicNavbar: React.FC = () => {
                 <button
                   id="nav-register-btn"
                   onClick={() => navigate('/cadastro')}
-                  className="px-3.5 py-2 text-xs font-bold text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-2 text-sm font-bold text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <UserPlus className="w-3.5 h-3.5 text-slate-600" />
                   <span>Cadastrar</span>
@@ -128,7 +128,7 @@ export const PublicNavbar: React.FC = () => {
             <button
               id="public-cta-analisar-multa"
               onClick={handleStartAnalysis}
-              className="px-4 py-2 text-xs font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-lg shadow-xs shadow-orange-200 transition-all flex items-center gap-1.5 cursor-pointer uppercase tracking-tight"
+              className="px-4 py-2 text-sm font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-lg shadow-xs shadow-orange-200 transition-all flex items-center gap-1.5 cursor-pointer uppercase tracking-tight"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Analisar Minha Multa</span>
@@ -139,7 +139,7 @@ export const PublicNavbar: React.FC = () => {
           <div className="flex sm:hidden items-center gap-2">
             <button
               onClick={handleStartAnalysis}
-              className="px-3 py-1.5 text-xs font-bold text-white bg-orange-500 rounded-lg flex items-center gap-1"
+              className="px-3 py-1.5 text-sm font-bold text-white bg-orange-500 rounded-lg flex items-center gap-1"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Analisar</span>
@@ -213,7 +213,7 @@ export const PublicNavbar: React.FC = () => {
                     navigate(isAdmin ? '/admin' : '/dashboard');
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full py-2 bg-slate-900 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5"
+                  className="w-full py-2 bg-slate-900 text-white rounded-lg text-sm font-bold flex items-center justify-center gap-1.5"
                 >
                   <LayoutDashboard className="w-4 h-4 text-orange-400" />
                   <span>{isAdmin ? 'Painel Administrativo' : 'Meu Dashboard'}</span>
@@ -223,7 +223,7 @@ export const PublicNavbar: React.FC = () => {
                     logout();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full py-2 bg-slate-100 text-rose-600 rounded-lg text-xs font-bold"
+                  className="w-full py-2 bg-slate-100 text-rose-600 rounded-lg text-sm font-bold"
                 >
                   Sair da Conta
                 </button>
@@ -235,7 +235,7 @@ export const PublicNavbar: React.FC = () => {
                     navigate('/login');
                     setMobileMenuOpen(false);
                   }}
-                  className="py-2 bg-slate-100 text-slate-800 rounded-lg text-xs font-bold text-center"
+                  className="py-2 bg-slate-100 text-slate-800 rounded-lg text-sm font-bold text-center"
                 >
                   Entrar
                 </button>
@@ -244,7 +244,7 @@ export const PublicNavbar: React.FC = () => {
                     navigate('/cadastro');
                     setMobileMenuOpen(false);
                   }}
-                  className="py-2 bg-slate-900 text-white rounded-lg text-xs font-bold text-center"
+                  className="py-2 bg-slate-900 text-white rounded-lg text-sm font-bold text-center"
                 >
                   Cadastrar
                 </button>

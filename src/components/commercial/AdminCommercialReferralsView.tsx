@@ -115,11 +115,11 @@ export const AdminCommercialReferralsView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30 font-mono">
+            <span className="px-2 py-0.5 rounded text-sm font-bold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30 font-mono">
               Programa de Indicação em 3 Níveis
             </span>
-            <span className="text-slate-500 text-xs font-mono">•</span>
-            <span className="text-slate-400 text-xs">Estrutura Determinística Multinível</span>
+            <span className="text-slate-500 text-sm font-mono">•</span>
+            <span className="text-slate-400 text-sm">Estrutura Determinística Multinível</span>
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight mt-1">
             Gestão da Árvore de Indicações & Comissões
@@ -127,7 +127,7 @@ export const AdminCommercialReferralsView: React.FC = () => {
         </div>
 
         {feedback && (
-          <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-medium flex items-center gap-2">
+          <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-sm font-medium flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" />
             {feedback}
           </div>
@@ -144,15 +144,15 @@ export const AdminCommercialReferralsView: React.FC = () => {
                 N1
               </div>
               <div>
-                <h3 className="text-xs font-bold text-white uppercase">Indicação Direta</h3>
-                <span className="text-[10px] text-slate-500 font-mono">1º Nível (Filho)</span>
+                <h3 className="text-sm font-bold text-white uppercase">Indicação Direta</h3>
+                <span className="text-sm text-slate-500 font-mono">1º Nível (Filho)</span>
               </div>
             </div>
             <span className="text-2xl font-black text-blue-400 font-mono">
               {config?.level1Percent || 10}%
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-2">
+          <p className="text-sm text-slate-400 mt-2">
             Comissão paga ao usuário que compartilhou o link direto com o comprador.
           </p>
         </div>
@@ -165,15 +165,15 @@ export const AdminCommercialReferralsView: React.FC = () => {
                 N2
               </div>
               <div>
-                <h3 className="text-xs font-bold text-white uppercase">Indicação Indireta</h3>
-                <span className="text-[10px] text-slate-500 font-mono">2º Nível (Neto)</span>
+                <h3 className="text-sm font-bold text-white uppercase">Indicação Indireta</h3>
+                <span className="text-sm text-slate-500 font-mono">2º Nível (Neto)</span>
               </div>
             </div>
             <span className="text-2xl font-black text-indigo-400 font-mono">
               {config?.level2Percent || 5}%
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-2">
+          <p className="text-sm text-slate-400 mt-2">
             Comissão para quem indicou o indicador direto da compra efetuada.
           </p>
         </div>
@@ -186,15 +186,15 @@ export const AdminCommercialReferralsView: React.FC = () => {
                 N3
               </div>
               <div>
-                <h3 className="text-xs font-bold text-white uppercase">Indicação Ancestral</h3>
-                <span className="text-[10px] text-slate-500 font-mono">3º Nível (Bisneto)</span>
+                <h3 className="text-sm font-bold text-white uppercase">Indicação Ancestral</h3>
+                <span className="text-sm text-slate-500 font-mono">3º Nível (Bisneto)</span>
               </div>
             </div>
             <span className="text-2xl font-black text-violet-400 font-mono">
               {config?.level3Percent || 2}%
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-2">
+          <p className="text-sm text-slate-400 mt-2">
             Comissão para o indicador originário no topo da cadeia de 3 gerações.
           </p>
         </div>
@@ -207,7 +207,7 @@ export const AdminCommercialReferralsView: React.FC = () => {
           <h2 className="text-sm font-bold text-white">Configuração Global de Taxas & Políticas</h2>
         </div>
 
-        <form onSubmit={handleSaveConfig} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+        <form onSubmit={handleSaveConfig} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
           <div>
             <label className="block text-slate-400 font-medium mb-1">
               Comissão Nível 1 (%) *
@@ -263,7 +263,7 @@ export const AdminCommercialReferralsView: React.FC = () => {
             <select
               value={formBase}
               onChange={(e) => setFormBase(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-hidden focus:border-orange-500"
+              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-hidden focus:border-orange-500"
             >
               <option value="effectively_paid">Valor Efetivamente Pago (Pós-Desconto)</option>
               <option value="gross_amount">Valor Bruto do Serviço</option>
@@ -303,7 +303,7 @@ export const AdminCommercialReferralsView: React.FC = () => {
             <button
               type="submit"
               disabled={saveLoading}
-              className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg flex items-center gap-1.5 shadow-lg shadow-orange-500/20 cursor-pointer text-xs"
+              className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg flex items-center gap-1.5 shadow-lg shadow-orange-500/20 cursor-pointer text-sm"
             >
               <Save className="w-4 h-4" />
               {saveLoading ? 'Salvando...' : 'Salvar Novas Taxas'}
@@ -328,7 +328,7 @@ export const AdminCommercialReferralsView: React.FC = () => {
                   setSelectedUserId(uid);
                   fetchUserTree(uid);
                 }}
-                className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded text-sm font-mono font-bold transition-colors cursor-pointer ${
                   selectedUserId === uid
                     ? 'bg-blue-500 text-white'
                     : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
@@ -341,7 +341,7 @@ export const AdminCommercialReferralsView: React.FC = () => {
         </div>
 
         {treeLoading ? (
-          <div className="text-center py-8 text-slate-500 text-xs">Carregando árvore genealógica...</div>
+          <div className="text-center py-8 text-slate-500 text-sm">Carregando árvore genealógica...</div>
         ) : userTree ? (
           <div className="space-y-4">
             {/* Top Referrer Summary */}
@@ -352,21 +352,21 @@ export const AdminCommercialReferralsView: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-white">{userTree.userName}</h3>
-                  <span className="text-xs text-slate-500 font-mono">{userTree.referrerId}</span>
+                  <span className="text-sm text-slate-500 font-mono">{userTree.referrerId}</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-6 font-mono text-xs">
+              <div className="flex items-center gap-6 font-mono text-sm">
                 <div>
-                  <span className="text-slate-500 text-[10px] block uppercase">Total Indicados</span>
+                  <span className="text-slate-500 text-sm block uppercase">Total Indicados</span>
                   <span className="text-white font-bold">{userTree.totalReferralsCount} condutores</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 text-[10px] block uppercase">Volume Gerado</span>
+                  <span className="text-slate-500 text-sm block uppercase">Volume Gerado</span>
                   <span className="text-emerald-400 font-bold">R$ {userTree.totalRevenueGenerated.toFixed(2)}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 text-[10px] block uppercase">Comissões Acumuladas</span>
+                  <span className="text-slate-500 text-sm block uppercase">Comissões Acumuladas</span>
                   <span className="text-blue-400 font-bold">R$ {userTree.totalCommissionsEarned.toFixed(2)}</span>
                 </div>
               </div>
@@ -376,17 +376,17 @@ export const AdminCommercialReferralsView: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {/* Level 1 Direct */}
               <div className="bg-slate-950 p-4 rounded-xl border border-blue-500/30 space-y-2">
-                <div className="flex items-center justify-between text-xs font-bold text-blue-400 pb-2 border-b border-slate-800">
+                <div className="flex items-center justify-between text-sm font-bold text-blue-400 pb-2 border-b border-slate-800">
                   <span>Nível 1 • Diretos ({(userTree.level1 || []).length})</span>
                   <span className="font-mono">{config?.level1Percent}%</span>
                 </div>
                 {(userTree.level1 || []).length === 0 ? (
-                  <p className="text-[11px] text-slate-600 py-3 text-center">Nenhum indicado direto</p>
+                  <p className="text-sm text-slate-600 py-3 text-center">Nenhum indicado direto</p>
                 ) : (
                   (userTree.level1 || []).map((child) => (
-                    <div key={child.childUserId} className="p-2 bg-slate-900/80 rounded border border-slate-800 text-xs">
+                    <div key={child.childUserId} className="p-2 bg-slate-900/80 rounded border border-slate-800 text-sm">
                       <div className="font-bold text-white">{child.childUserName}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">
+                      <div className="text-sm text-slate-500 font-mono">
                         Desde {new Date(child.joinedAt).toLocaleDateString('pt-BR')}
                       </div>
                     </div>
@@ -396,17 +396,17 @@ export const AdminCommercialReferralsView: React.FC = () => {
 
               {/* Level 2 Indirect */}
               <div className="bg-slate-950 p-4 rounded-xl border border-indigo-500/30 space-y-2">
-                <div className="flex items-center justify-between text-xs font-bold text-indigo-400 pb-2 border-b border-slate-800">
+                <div className="flex items-center justify-between text-sm font-bold text-indigo-400 pb-2 border-b border-slate-800">
                   <span>Nível 2 • Indiretos ({(userTree.level2 || []).length})</span>
                   <span className="font-mono">{config?.level2Percent}%</span>
                 </div>
                 {(userTree.level2 || []).length === 0 ? (
-                  <p className="text-[11px] text-slate-600 py-3 text-center">Nenhum indicado no 2º nível</p>
+                  <p className="text-sm text-slate-600 py-3 text-center">Nenhum indicado no 2º nível</p>
                 ) : (
                   (userTree.level2 || []).map((child) => (
-                    <div key={child.childUserId} className="p-2 bg-slate-900/80 rounded border border-slate-800 text-xs">
+                    <div key={child.childUserId} className="p-2 bg-slate-900/80 rounded border border-slate-800 text-sm">
                       <div className="font-bold text-white">{child.childUserName}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">
+                      <div className="text-sm text-slate-500 font-mono">
                         Indicado por {child.parentUserId}
                       </div>
                     </div>
@@ -416,17 +416,17 @@ export const AdminCommercialReferralsView: React.FC = () => {
 
               {/* Level 3 Ancestral */}
               <div className="bg-slate-950 p-4 rounded-xl border border-violet-500/30 space-y-2">
-                <div className="flex items-center justify-between text-xs font-bold text-violet-400 pb-2 border-b border-slate-800">
+                <div className="flex items-center justify-between text-sm font-bold text-violet-400 pb-2 border-b border-slate-800">
                   <span>Nível 3 • Ancestrais ({(userTree.level3 || []).length})</span>
                   <span className="font-mono">{config?.level3Percent}%</span>
                 </div>
                 {(userTree.level3 || []).length === 0 ? (
-                  <p className="text-[11px] text-slate-600 py-3 text-center">Nenhum indicado no 3º nível</p>
+                  <p className="text-sm text-slate-600 py-3 text-center">Nenhum indicado no 3º nível</p>
                 ) : (
                   (userTree.level3 || []).map((child) => (
-                    <div key={child.childUserId} className="p-2 bg-slate-900/80 rounded border border-slate-800 text-xs">
+                    <div key={child.childUserId} className="p-2 bg-slate-900/80 rounded border border-slate-800 text-sm">
                       <div className="font-bold text-white">{child.childUserName}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">
+                      <div className="text-sm text-slate-500 font-mono">
                         Indicado por {child.parentUserId}
                       </div>
                     </div>

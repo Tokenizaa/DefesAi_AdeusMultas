@@ -272,9 +272,9 @@ function AppContent() {
           />
         )}
 
-        {currentPath.startsWith('/cases/') && activeCase && (
+        {currentPath.startsWith('/cases/') && (
           <CaseDetailView
-            currentCase={activeCase}
+            currentCase={activeCase || ({ id: params.id } as any)}
             onUpdateCase={handleUpdateCase}
             onBackToList={() => navigate('/cases')}
             onOpenWhatsAppModal={handleOpenWhatsAppModal}

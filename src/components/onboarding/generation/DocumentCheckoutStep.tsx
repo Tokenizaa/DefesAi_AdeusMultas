@@ -26,9 +26,12 @@ interface DocumentCheckoutStepProps {
   vehicleData: VehicleData;
   analysis: CaseAnalysis;
   serviceType: ProcedureType;
+  isAdmin?: boolean;
   onPaymentSuccess: (finalCase: CaseDomain) => void;
   onBack: () => void;
 }
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
   currentCaseId,
@@ -37,6 +40,7 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
   vehicleData,
   analysis,
   serviceType,
+  isAdmin = false,
   onPaymentSuccess,
   onBack,
 }) => {
@@ -47,7 +51,11 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
     pixCopyPasteString: string;
     txId: string;
     amount: number;
+    gateway?: string;
   } | null>(null);
+  const [pixError, setPixError] = useState<string | null>(null);
+  const [pixReloadKey, setPixReloadKey] = useState<number>(0);
+  const [payError, setPayError] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'pix' | 'credit_card'>('pix');
   const [creditCardResult, setCreditCardResult] = useState<{
     orderId: string;
@@ -55,14 +63,33 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
     threeDsChallengeRequired?: boolean;
   } | null>(null);
   const [creditCardError, setCreditCardError] = useState<string | null>(null);
+  // Modo de teste anunciado pelo servidor (/gateway/status → testMode).
+  // Não dependemos de import.meta.env.DEV: funciona também rodando o build
+  // localmente enquanto o backend estiver fora de produção.
+  const [testMode, setTestMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/payments/gateway/status')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (active && data && typeof data.testMode === 'boolean') setTestMode(data.testMode);
+      })
+      .catch(() => {/* status é best-effort */});
+    return () => { active = false; };
+  }, []);
+
+  // Simulação só aparece para admin E quando o servidor confirma modo de teste
+  const canSimulate = isAdmin && testMode;
 
   const price = PRICING.DEFAULT_PRICE;
 
   // Load PIX when payment method is PIX
   useEffect(() => {
     if (paymentMethod !== 'pix') return;
-    
+
     async function loadPix() {
+      setPixError(null);
       try {
         const res = await fetch('/api/payments/pix/create', {
           method: 'POST',
@@ -70,19 +97,25 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
           body: JSON.stringify({
             caseId: currentCaseId || `case_${Date.now()}`,
             amount: price,
+            customerName: documentData.applicantName,
+            customerEmail: documentData.applicantEmail,
             customerCpf: documentData.applicantCpf,
           }),
         });
         const data = await res.json();
         if (data.success) {
           setPixData(data);
+        } else {
+          setPixError(data.error || 'Não foi possível gerar o QR Code PIX. Tente novamente.');
         }
-      } catch (err) {
-        console.error('Error loading PIX:', err);
+      } catch {
+        setPixError('Falha de conexão ao gerar o QR Code PIX. Verifique sua internet e tente novamente.');
       }
     }
     loadPix();
-  }, [currentCaseId, documentData.applicantCpf, paymentMethod]);
+  }, [currentCaseId, documentData.applicantCpf, documentData.applicantName, documentData.applicantEmail, paymentMethod, pixReloadKey]);
+
+  const gatewayLabel = pixData?.gateway === 'ggpixapi' ? 'GGPIXAPI' : 'PagBank';
 
   const handleCopyPix = () => {
     if (pixData?.pixCopyPasteString) {
@@ -95,11 +128,11 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
   const handleCreditCardSuccess = (result: { orderId: string; status: string; threeDsUrl?: string; threeDsChallengeRequired?: boolean }) => {
     setCreditCardResult(result);
     setCreditCardError(null);
-    
+
     if (result.threeDsChallengeRequired && result.threeDsUrl) {
       window.location.href = result.threeDsUrl;
     } else if (result.status === 'AUTHORIZED' || result.status === 'PAID') {
-      handleConfirmPayment();
+      finalizeAfterPayment();
     }
   };
 
@@ -107,71 +140,134 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
     setCreditCardError(error);
   };
 
-  const handleConfirmPayment = async () => {
+  const buildCasePayload = (): CaseDomain => {
+    return {
+      id: currentCaseId || `case_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      title: `Recurso Auto ${infractionData.aitNumber || 'N/A'} — ${infractionData.ctbArticle || 'Art. 218 CTB'}`,
+      clientName: documentData.applicantName,
+      clientEmail: documentData.applicantEmail,
+      clientPhone: documentData.applicantPhone,
+      clientCpf: documentData.applicantCpf,
+      status: 'defesa_pronta',
+      currentStage: 3,
+      serviceType,
+      vehicle: vehicleData,
+      infraction: infractionData,
+      analysis,
+      isAnonymous: false,
+      isPaid: true,
+      paidAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      timeline: [
+        {
+          id: `tl_${Date.now()}_1`,
+          title: 'Diagnóstico Gratuito Realizado',
+          description: `Análise técnica com ${analysis?.overallSuccessRate != null ? analysis.overallSuccessRate : 0}% de probabilidade de êxito.`,
+          timestamp: new Date(Date.now() - 300000).toISOString(),
+          type: 'analysis',
+        },
+        {
+          id: `tl_${Date.now()}_2`,
+          title: `Pagamento ${paymentMethod === 'credit_card' ? 'Cartão' : 'PIX'} Confirmado`,
+          description: `Valor de R$ ${price.toFixed(2)} recebido com sucesso.`,
+          timestamp: new Date().toISOString(),
+          type: 'payment',
+        },
+        {
+          id: `tl_${Date.now()}_3`,
+          title: 'Petição Formal Gerada',
+          description: 'Minuta jurídica diagramada pronta para protocolo no órgão autuador.',
+          timestamp: new Date().toISOString(),
+          type: 'defense',
+        },
+      ],
+    };
+  };
+
+  const persistCase = async (): Promise<CaseDomain> => {
+    // 1. Create / Persist Case if not existing
+    const casePayload = buildCasePayload();
+
+    const saveRes = await fetch('/api/cases', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(casePayload),
+    });
+    const savedCase = await saveRes.json();
+    return savedCase.id ? savedCase : casePayload;
+  };
+
+  const finalizeAfterPayment = async () => {
     setIsProcessing(true);
     try {
-      // 1. Create / Persist Case if not existing
-      const casePayload: CaseDomain = {
-        id: currentCaseId || `case_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-        title: `Recurso Auto ${infractionData.aitNumber || 'N/A'} — ${infractionData.ctbArticle || 'Art. 218 CTB'}`,
-        clientName: documentData.applicantName,
-        clientEmail: documentData.applicantEmail,
-        clientPhone: documentData.applicantPhone,
-        clientCpf: documentData.applicantCpf,
-        status: 'defesa_pronta',
-        currentStage: 3,
-        serviceType,
-        vehicle: vehicleData,
-        infraction: infractionData,
-        analysis,
-        isAnonymous: false,
-        isPaid: true,
-        paidAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        timeline: [
-          {
-            id: `tl_${Date.now()}_1`,
-            title: 'Diagnóstico Gratuito Realizado',
-            description: `Análise técnica com ${analysis?.overallSuccessRate != null ? analysis.overallSuccessRate : 0}% de probabilidade de êxito.`,
-            timestamp: new Date(Date.now() - 300000).toISOString(),
-            type: 'analysis',
-          },
-          {
-            id: `tl_${Date.now()}_2`,
-            title: `Pagamento ${paymentMethod === 'credit_card' ? 'Cartão' : 'PIX'} Confirmado`,
-            description: `Valor de R$ ${price.toFixed(2)} recebido com sucesso.`,
-            timestamp: new Date().toISOString(),
-            type: 'payment',
-          },
-          {
-            id: `tl_${Date.now()}_3`,
-            title: 'Petição Formal Gerada',
-            description: 'Minuta jurídica diagramada pronta para protocolo no órgão autuador.',
-            timestamp: new Date().toISOString(),
-            type: 'defense',
-          },
-        ],
-      };
-
-      // Save case to server
-      const saveRes = await fetch('/api/cases', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(casePayload),
-      });
-      const savedCase = await saveRes.json();
-
-      // Simulate payment confirmation on server
-      await fetch('/api/payments/pix/simulate-confirm', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ caseId: savedCase.id || casePayload.id }),
-      });
-
-      onPaymentSuccess(savedCase.id ? savedCase : casePayload);
+      const finalCase = await persistCase();
+      onPaymentSuccess(finalCase);
     } catch (err) {
       console.error('Error generating document:', err);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleVerifyPayment = async () => {
+    if (!pixData) return;
+    setIsProcessing(true);
+    setPayError(null);
+    try {
+      const deadline = Date.now() + 90_000;
+      let paid = false;
+      while (Date.now() < deadline) {
+        await sleep(3000);
+        try {
+          const res = await fetch(`/api/payments/pix/status/${encodeURIComponent(pixData.txId)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && data.status === 'PAID') {
+              paid = true;
+              break;
+            }
+            if (data.success && (data.status === 'CANCELED' || data.status === 'DECLINED')) {
+              break;
+            }
+          }
+        } catch {
+          // Erro transitório — continua tentando até o deadline
+        }
+      }
+
+      if (!paid) {
+        setPayError('Não conseguimos confirmar o pagamento ainda. Aguarde alguns instantes e tente verificar novamente — a confirmação bancária pode levar até 1 minuto.');
+        return;
+      }
+      await finalizeAfterPayment();
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleSimulatePayment = async () => {
+    setIsProcessing(true);
+    setPayError(null);
+    try {
+      // Envia o payload canônico completo: o simulate-confirm faz upsert
+      // server-side caso /api/cases não tenha conseguido persistir (auth em dev).
+      const casePayload = buildCasePayload();
+      try { await persistCase(); } catch { /* upsert cobre no servidor */ }
+
+      const res = await fetch('/api/payments/pix/simulate-confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ caseId: casePayload.id, case: casePayload }),
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Falha ao simular pagamento (HTTP ${res.status})`);
+      }
+      onPaymentSuccess(casePayload);
+    } catch (err: any) {
+      console.error('Error simulating payment:', err);
+      setPayError(err?.message || 'Não foi possível simular o pagamento. Tente novamente.');
     } finally {
       setIsProcessing(false);
     }
@@ -291,8 +387,8 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
               </button>
             </div>
             <p className="text-[10px] text-slate-500 text-center mt-2 font-mono">
-              {paymentMethod === 'pix' 
-                ? 'Pagamento instantâneo via Banco Central / PagBank' 
+              {paymentMethod === 'pix'
+                ? `Pagamento instantâneo via PIX — ${pixData?.gateway ? gatewayLabel : 'processadora segura'}`
                 : 'Parcelamento em até 12x — Tokenização segura PagBank'}
             </p>
           </div>
@@ -318,11 +414,27 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
 
               {/* QR Code Container */}
               <div className="my-4 text-center">
-                {pixData?.qrCodeDataUrl ? (
+                {pixError ? (
+                  <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl">
+                    <div className="flex items-start gap-2 text-rose-700 text-xs text-left">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                      <span>{pixError}</span>
+                    </div>
+                    <button
+                      type="button"
+                      id="btn-retry-pix"
+                      onClick={() => setPixReloadKey((k) => k + 1)}
+                      disabled={isProcessing}
+                      className="mt-2 px-3 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-700 transition-colors cursor-pointer"
+                    >
+                      Tentar novamente
+                    </button>
+                  </div>
+                ) : pixData?.qrCodeDataUrl ? (
                   <div className="inline-block p-2.5 bg-white border border-slate-200 rounded-xl shadow-2xs">
                     <img
                       src={pixData.qrCodeDataUrl}
-                      alt="QR Code PIX PagBank"
+                      alt={`QR Code PIX ${gatewayLabel}`}
                       className="w-40 h-40 mx-auto object-contain"
                     />
                   </div>
@@ -331,56 +443,91 @@ export const DocumentCheckoutStep: React.FC<DocumentCheckoutStepProps> = ({
                     <Clock className="w-5 h-5 animate-spin" />
                   </div>
                 )}
-                <p className="text-[10px] text-slate-500 mt-1.5 font-mono">
-                  Abra o app do seu banco e aponte a câmera para o QR Code
-                </p>
+                {!pixError && (
+                  <p className="text-[10px] text-slate-500 mt-1.5 font-mono">
+                    Abra o app do seu banco e aponte a câmera para o QR Code
+                  </p>
+                )}
               </div>
 
               {/* Copy and Paste PIX */}
-              <div className="space-y-1.5 mb-4">
-                <label className="text-[10px] font-bold text-slate-700 uppercase block font-mono">
-                  Ou Copie o Código PIX Copia e Cola:
-                </label>
-                <div className="flex gap-1.5">
-                  <input
-                    type="text"
-                    readOnly
-                    value={pixData?.pixCopyPasteString || 'Carregando código PIX...'}
-                    className="w-full text-[11px] font-mono bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-slate-700 truncate outline-none"
-                  />
-                  <button
-                    type="button"
-                    id="copy-pix-button"
-                    onClick={handleCopyPix}
-                    className="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-colors flex items-center gap-1 shrink-0 cursor-pointer"
-                  >
-                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{copied ? 'OK' : 'Copiar'}</span>
-                  </button>
+              {!pixError && (
+                <div className="space-y-1.5 mb-4">
+                  <label className="text-[10px] font-bold text-slate-700 uppercase block font-mono">
+                    Ou Copie o Código PIX Copia e Cola:
+                  </label>
+                  <div className="flex gap-1.5">
+                    <input
+                      type="text"
+                      readOnly
+                      value={pixData?.pixCopyPasteString || 'Carregando código PIX...'}
+                      className="w-full text-[11px] font-mono bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-slate-700 truncate outline-none"
+                    />
+                    <button
+                      type="button"
+                      id="copy-pix-button"
+                      onClick={handleCopyPix}
+                      className="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-colors flex items-center gap-1 shrink-0 cursor-pointer"
+                    >
+                      {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copied ? 'OK' : 'Copiar'}</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Action Buttons: Confirm / Simulate */}
               <div className="space-y-2 pt-2 border-t border-slate-200">
-                <button
-                  type="button"
-                  id="btn-confirm-payment-pix"
-                  onClick={handleConfirmPayment}
-                  disabled={isProcessing}
-                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-emerald-200"
-                >
-                  {isProcessing ? (
-                    <>
-                      <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                      <span>Emitindo Petição Jurídica...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="w-4 h-4" />
-                      <span>Confirmar Pagamento & Emitir Defesa</span>
-                    </>
-                  )}
-                </button>
+                {payError && (
+                  <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div className="flex items-start gap-2 text-amber-700 text-[11px] text-left">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                      <span>{payError}</span>
+                    </div>
+                  </div>
+                )}
+                {canSimulate ? (
+                  /* MODO DE TESTE: ação única — simula o pagamento e libera a defesa */
+                  <button
+                    type="button"
+                    id="btn-simulate-payment"
+                    onClick={handleSimulatePayment}
+                    disabled={isProcessing}
+                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-emerald-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                        <span>Aprovando pagamento (simulado)...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        <span>Simular Pagamento &amp; Emitir Defesa</span>
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    id="btn-confirm-payment-pix"
+                    onClick={handleVerifyPayment}
+                    disabled={!pixData || isProcessing}
+                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-emerald-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                        <span>Verificando pagamento no banco...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="w-4 h-4" />
+                        <span>Já paguei — Verificar e Emitir Defesa</span>
+                      </>
+                    )}
+                  </button>
+                )}
 
                 <div className="flex items-center justify-center gap-1 text-[10px] text-slate-400 font-mono">
                   <Lock className="w-3 h-3 text-emerald-600" />

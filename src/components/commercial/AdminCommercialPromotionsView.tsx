@@ -116,11 +116,11 @@ export const AdminCommercialPromotionsView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-400 border border-rose-500/30 font-mono">
+            <span className="px-2 py-0.5 rounded text-sm font-bold uppercase tracking-wider bg-rose-500/20 text-rose-400 border border-rose-500/30 font-mono">
               Campanhas Promocionais
             </span>
-            <span className="text-slate-500 text-xs font-mono">•</span>
-            <span className="text-slate-400 text-xs">Gestão de Descontos & Ofertas Sazonais</span>
+            <span className="text-slate-500 text-sm font-mono">•</span>
+            <span className="text-slate-400 text-sm">Gestão de Descontos & Ofertas Sazonais</span>
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight mt-1">
             Campanhas & Descontos Comerciais
@@ -129,7 +129,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
 
         <div className="flex items-center gap-2">
           {feedback && (
-            <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-medium flex items-center gap-2">
+            <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-sm font-medium flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4" />
               {feedback}
             </div>
@@ -137,7 +137,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-orange-500/20 transition-all cursor-pointer"
+            className="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold flex items-center gap-1.5 shadow-lg shadow-orange-500/20 transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Nova Campanha
@@ -159,7 +159,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className="text-[10px] font-mono font-bold uppercase text-orange-400">
+                    <span className="text-sm font-mono font-bold uppercase text-orange-400">
                       {promo.discountType === 'percentage' ? `${promo.discountValue}% OFF` : `R$ ${promo.discountValue.toFixed(2)} OFF`}
                     </span>
                     <h3 className="text-base font-bold text-white mt-0.5">
@@ -168,7 +168,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                   </div>
 
                   <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full font-mono flex items-center gap-1 ${
+                    className={`text-sm font-bold px-2 py-0.5 rounded-full font-mono flex items-center gap-1 ${
                       isActive
                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                         : isPaused
@@ -180,22 +180,22 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-400 line-clamp-2">
+                <p className="text-sm text-slate-400 line-clamp-2">
                   {promo.description}
                 </p>
 
                 {/* Badges / Constraints */}
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {promo.isFirstPurchaseOnly && (
-                    <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px] font-mono border border-blue-500/20">
+                    <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-sm font-mono border border-blue-500/20">
                       1ª Compra Apenas
                     </span>
                   )}
-                  <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] font-mono border border-slate-700">
+                  <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-sm font-mono border border-slate-700">
                     Alvo: {promo.targetServices.join(', ')}
                   </span>
                   {promo.minOrderAmount > 0 && (
-                    <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] font-mono border border-slate-700">
+                    <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-sm font-mono border border-slate-700">
                       Mín: R$ {promo.minOrderAmount.toFixed(2)}
                     </span>
                   )}
@@ -203,7 +203,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
 
                 {/* Progress / Usage Stats */}
                 <div className="pt-3 border-t border-slate-800 space-y-1.5">
-                  <div className="flex items-center justify-between text-xs font-mono">
+                  <div className="flex items-center justify-between text-sm font-mono">
                     <span className="text-slate-400">Usos / Limite:</span>
                     <span className="text-white font-bold">
                       {promo.usageCount} {promo.maxUsageLimit ? `/ ${promo.maxUsageLimit}` : '(Ilimitado)'}
@@ -222,7 +222,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                 </div>
 
                 {/* Validity */}
-                <div className="flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                <div className="flex items-center justify-between text-sm text-slate-500 font-mono">
                   <span className="flex items-center gap-1">
                     <Calendar className="w-3 h-3 text-slate-600" />
                     Validade:
@@ -237,7 +237,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
               <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
                 <button
                   onClick={() => handleToggleStatus(promo)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 border transition-colors cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-bold flex items-center gap-1.5 border transition-colors cursor-pointer ${
                     isActive
                       ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border-amber-500/30'
                       : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
@@ -249,7 +249,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
 
                 <button
                   onClick={() => setSelectedPromo(promo)}
-                  className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium border border-slate-700 cursor-pointer"
                 >
                   Ver Detalhes
                 </button>
@@ -265,7 +265,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
-                <span className="text-[10px] font-mono uppercase text-orange-400 font-bold">
+                <span className="text-sm font-mono uppercase text-orange-400 font-bold">
                   Nova Campanha
                 </span>
                 <h3 className="text-base font-bold text-white">
@@ -280,7 +280,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleCreatePromo} className="space-y-3.5 text-xs">
+            <form onSubmit={handleCreatePromo} className="space-y-3.5 text-sm">
               <div>
                 <label className="block text-slate-400 font-medium mb-1">
                   Nome da Campanha *
@@ -291,7 +291,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                   placeholder="Ex: Campanha de Conscientização CNH"
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-hidden focus:border-orange-500"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-hidden focus:border-orange-500"
                 />
               </div>
 
@@ -304,7 +304,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                   placeholder="Ex: 15% de desconto para todos os recursos no mês de Maio..."
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white text-xs focus:outline-hidden focus:border-orange-500"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white text-sm focus:outline-hidden focus:border-orange-500"
                 />
               </div>
 
@@ -316,7 +316,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                   <select
                     value={formDiscountType}
                     onChange={(e) => setFormDiscountType(e.target.value as any)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-hidden focus:border-orange-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-hidden focus:border-orange-500"
                   >
                     <option value="percentage">Percentual (%)</option>
                     <option value="fixed">Valor Fixo (R$)</option>
@@ -334,7 +334,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                     required
                     value={formDiscountValue}
                     onChange={(e) => setFormDiscountValue(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-xs focus:outline-hidden focus:border-orange-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-hidden focus:border-orange-500"
                   />
                 </div>
               </div>
@@ -349,7 +349,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                     required
                     value={formStartDate}
                     onChange={(e) => setFormStartDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-hidden focus:border-orange-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-hidden focus:border-orange-500"
                   />
                 </div>
 
@@ -362,7 +362,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                     required
                     value={formEndDate}
                     onChange={(e) => setFormEndDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-hidden focus:border-orange-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-hidden focus:border-orange-500"
                   />
                 </div>
               </div>
@@ -377,7 +377,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                     placeholder="Ex: 500 (Vazio = Ilimitado)"
                     value={formMaxUsageLimit}
                     onChange={(e) => setFormMaxUsageLimit(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-xs focus:outline-hidden focus:border-orange-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-hidden focus:border-orange-500"
                   />
                 </div>
 
@@ -388,7 +388,7 @@ export const AdminCommercialPromotionsView: React.FC = () => {
                   <select
                     value={formTargetService}
                     onChange={(e) => setFormTargetService(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-hidden focus:border-orange-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-hidden focus:border-orange-500"
                   >
                     <option value="all">Todos os Serviços</option>
                     <option value="defesa_previa">Defesa Prévia</option>

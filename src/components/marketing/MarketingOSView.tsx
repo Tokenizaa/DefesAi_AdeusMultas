@@ -102,12 +102,12 @@ export const MarketingOSView: React.FC = () => {
     <>
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 space-y-5">
         <div>
-          <span className="text-[10px] font-bold text-orange-500 uppercase tracking-wider font-mono flex items-center gap-1">
+          <span className="text-sm font-bold text-orange-500 uppercase tracking-wider font-mono flex items-center gap-1">
             <Bot className="w-3.5 h-3.5 text-orange-500" />
             Organismo Autônomo • 7 Agentes de Aquisição
           </span>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">Marketing OS</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-500 mt-0.5">
             Ciclo autônomo, biblioteca de conteúdos e automações — modelo v1 (DefesAi).
           </p>
         </div>
@@ -120,7 +120,7 @@ export const MarketingOSView: React.FC = () => {
                 key={key}
                 id={`marketing-tab-${key}`}
                 onClick={() => setActiveView(key)}
-                className={`px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 font-mono ${
+                className={`px-3 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 font-mono ${
                   activeView === key
                     ? 'bg-slate-900 text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'

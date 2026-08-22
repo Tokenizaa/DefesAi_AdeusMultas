@@ -31,7 +31,7 @@ auditLogs.unshift({
 // Start Server
 // ---------------------------------------------------------------------------
 async function startServer() {
-  const PORT = Number(process.env.PORT) || 3000;
+  const PORT = 3000;
   const app = createApp();
 
   // Vite middleware (dev) or static assets (prod)

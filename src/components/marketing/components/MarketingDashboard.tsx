@@ -18,19 +18,19 @@ export const MarketingDashboard: React.FC<{
   const activeAgents = agents.filter((a) => a.status === 'running').length;
   const inAlert = agents.filter((a) => a.status === 'alert').length;
 
-  return (
+return (
     <div className="space-y-4">
       {/* AI Studio & 7-Day Campaign Quick Launcher */}
       {onOpenStudio && (
         <div className="p-4 bg-gradient-to-r from-[#071D41] via-[#0C326F] to-[#155BCB] rounded-xl text-white shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-blue-800">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-900/60 text-[#FFCD07] text-[10px] font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-900/60 text-[#FFCD07] text-sm font-bold uppercase tracking-wider">
               <span>Novas Ferramentas de IA Generativa</span>
             </div>
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              Gerador de Imagens HD (1K, 2K, 4K) &amp; Animação de Vídeos Veo 3.1
+              Gerador de Imagens HD (1K, 2K, 4K) & Animação de Vídeos Veo 3.1
             </h3>
-            <p className="text-xs text-blue-100 max-w-xl">
+            <p className="text-sm text-blue-100 max-w-xl">
               Crie peças visuais em alta resolução para seus recursos e gere campanhas completas de 7 dias de postagens automaticamente.
             </p>
           </div>
@@ -38,14 +38,15 @@ export const MarketingDashboard: React.FC<{
           <button
             type="button"
             onClick={onOpenStudio}
-            className="px-4 py-2.5 bg-[#FFCD07] hover:bg-[#F5A623] text-[#071D41] font-bold rounded-lg text-xs transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer shrink-0"
+            className="px-4 py-2.5 bg-[#FFCD07] hover:bg-[#F5A623] text-[#071D41] font-bold rounded-lg text-sm transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer shrink-0"
+            aria-label="Abrir Estúdio IA e gerar posts"
           >
-            <span>Abrir Estúdio IA &amp; Gerar Posts</span>
+            <span>Abrir Estúdio IA & Gerar Posts</span>
           </button>
         </div>
       )}
       {/* Supervisão: estado real do organismo */}
-      <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono">
+      <div className="flex flex-wrap items-center gap-3 text-sm font-mono">
         <span className="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-1.5">
           <CheckCircle2 className="w-3.5 h-3.5" />
           {activeAgents}/{agents.length} agentes ativos
@@ -76,33 +77,33 @@ export const MarketingDashboard: React.FC<{
       />
 
       {/* KPIs resumidos */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-white">
-          <span className="text-slate-400 text-[11px] font-medium block">Alcance Mensal</span>
+          <span className="text-slate-400 text-sm font-medium block">Alcance Mensal</span>
           <span className="text-xl font-black font-mono mt-1 block">
             {metrics ? (metrics.monthlyReach / 1000).toFixed(1) + 'k' : '—'}
           </span>
         </div>
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-white">
-          <span className="text-slate-400 text-[11px] font-medium block">Novos Casos</span>
+          <span className="text-slate-400 text-sm font-medium block">Novos Casos</span>
           <span className="text-xl font-black font-mono mt-1 block">{metrics?.newCasesGenerated ?? '—'}</span>
         </div>
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-white">
-          <span className="text-slate-400 text-[11px] font-medium block">Conversão</span>
+          <span className="text-slate-400 text-sm font-medium block">Conversão</span>
           <span className="text-xl font-black font-mono mt-1 block">
             {metrics ? metrics.conversionRate.toFixed(1) + '%' : '—'}
           </span>
         </div>
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-white">
-          <span className="text-slate-400 text-[11px] font-medium block">Publicados</span>
+          <span className="text-slate-400 text-sm font-medium block">Publicados</span>
           <span className="text-xl font-black font-mono mt-1 block">
             {metrics?.publishedPosts ?? '—'}
-            <span className="text-xs text-slate-400"> / {metrics?.scheduledPosts ?? 0} agendados</span>
+            <span className="text-sm text-slate-400"> / {metrics?.scheduledPosts ?? 0} agendados</span>
           </span>
         </div>
       </div>
 
-      <p className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+      <p className="text-sm text-slate-400 font-mono flex items-center gap-1">
         <Bot className="w-3 h-3" />
         Organismo autônomo — nenhuma intervenção manual necessária. Exceções reais aparecem acima.
       </p>

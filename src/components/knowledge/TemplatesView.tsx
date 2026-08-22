@@ -69,12 +69,12 @@ export const TemplatesView: React.FC<{
             <FileText className="w-5 h-5 text-purple-400" />
             Templates Canônicos de Petições & Recursos
             {templates.length > 0 && (
-              <span className="text-xs text-slate-400 font-mono font-normal">
+              <span className="text-sm text-slate-400 font-mono font-normal">
                 ({templates.length} templates)
               </span>
             )}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             Modelos de peças determinísticas compostas por blocos parametrizáveis para Defesa Prévia, JARI e CETRAN.
           </p>
         </div>
@@ -86,7 +86,7 @@ export const TemplatesView: React.FC<{
             placeholder="Buscar por template, fase ou tipo..."
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
           />
         </div>
       </div>
@@ -94,7 +94,7 @@ export const TemplatesView: React.FC<{
       {loading ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
           <div className="inline-block animate-spin rounded-full border-2 border-purple-500 border-t-transparent w-8 h-8"></div>
-          <p className="mt-3 text-xs text-slate-400">Carregando catálogo de templates...</p>
+          <p className="mt-3 text-sm text-slate-400">Carregando catálogo de templates...</p>
         </div>
       ) : templates.length === 0 ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
@@ -110,10 +110,10 @@ export const TemplatesView: React.FC<{
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded font-mono font-bold text-[11px]">
+                  <span className="px-2 py-0.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded font-mono font-bold text-sm">
                     {tpl.id || tpl.code}
                   </span>
-                  <span className="text-[10px] uppercase font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                  <span className="text-sm uppercase font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
                     {tpl.procedureType || 'Recurso'}
                   </span>
                 </div>
@@ -122,13 +122,13 @@ export const TemplatesView: React.FC<{
                   {tpl.title || tpl.name}
                 </h3>
 
-                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
                   {tpl.description || 'Template determinístico com estrutura padronizada perante a autoridade de trânsito.'}
                 </p>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-slate-900 text-xs">
-                <span className="text-slate-500 flex items-center gap-1 font-mono text-[11px]">
+              <div className="flex items-center justify-between pt-3 border-t border-slate-900 text-sm">
+                <span className="text-slate-500 flex items-center gap-1 font-mono text-sm">
                   <Layers className="w-3.5 h-3.5 text-slate-400" />
                   {tpl.blocks ? `${tpl.blocks.length} blocos` : '5 seções'}
                 </span>
@@ -154,7 +154,7 @@ export const TemplatesView: React.FC<{
                   <h3 className="text-base font-bold text-white">
                     {selectedTemplate.title || selectedTemplate.name}
                   </h3>
-                  <p className="text-xs font-mono text-purple-400">{selectedTemplate.id || selectedTemplate.code}</p>
+                  <p className="text-sm font-mono text-purple-400">{selectedTemplate.id || selectedTemplate.code}</p>
                 </div>
               </div>
               <button
@@ -165,7 +165,7 @@ export const TemplatesView: React.FC<{
               </button>
             </div>
 
-            <div className="space-y-4 text-xs text-slate-300">
+            <div className="space-y-4 text-sm text-slate-300">
               <div>
                 <label className="text-slate-400 font-medium block mb-1">Finalidade do Modelo:</label>
                 <p className="p-3 bg-slate-950 border border-slate-800 rounded-lg text-slate-200">
@@ -179,13 +179,13 @@ export const TemplatesView: React.FC<{
                     <label className="text-slate-400 font-medium">Estrutura da Minuta:</label>
                     <button
                       onClick={() => handleCopy(selectedTemplate.rawTemplate || selectedTemplate.templateText)}
-                      className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] flex items-center gap-1 cursor-pointer"
+                      className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-sm flex items-center gap-1 cursor-pointer"
                     >
                       {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                       {copied ? 'Copiado!' : 'Copiar Texto'}
                     </button>
                   </div>
-                  <pre className="p-4 bg-slate-950 border border-slate-800 rounded-lg font-mono text-[11px] text-slate-200 whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto">
+                  <pre className="p-4 bg-slate-950 border border-slate-800 rounded-lg font-mono text-sm text-slate-200 whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto">
                     {selectedTemplate.rawTemplate || selectedTemplate.templateText}
                   </pre>
                 </div>
@@ -195,7 +195,7 @@ export const TemplatesView: React.FC<{
             <div className="flex justify-end pt-3 border-t border-slate-800">
               <button
                 onClick={() => setSelectedTemplate(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold cursor-pointer"
+                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm font-semibold cursor-pointer"
               >
                 Fechar
               </button>

@@ -84,9 +84,9 @@ export const ContentKanban: React.FC<ContentKanbanProps> = ({ contents, onMove }
             <div className={`flex items-center justify-between gap-2 px-3 py-2.5 rounded-t-xl border ${col.headerClass}`}>
               <div className="flex items-center gap-2">
                 <Icon className="w-4 h-4" />
-                <h3 className="text-xs font-bold">{col.label}</h3>
+                <h3 className="text-sm font-bold">{col.label}</h3>
               </div>
-              <span className="px-2 py-0.5 text-[10px] font-bold bg-white/70 text-slate-600 rounded-full border border-slate-200">
+              <span className="px-2 py-0.5 text-sm font-bold bg-white/70 text-slate-600 rounded-full border border-slate-200">
                 {items.length}
               </span>
             </div>
@@ -105,7 +105,7 @@ export const ContentKanban: React.FC<ContentKanbanProps> = ({ contents, onMove }
               }`}
             >
               {items.length === 0 ? (
-                <div className="flex items-center justify-center h-full text-[11px] text-slate-400 py-8">
+                <div className="flex items-center justify-center h-full text-sm text-slate-400 py-8">
                   Arraste itens aqui
                 </div>
               ) : (
@@ -115,7 +115,7 @@ export const ContentKanban: React.FC<ContentKanbanProps> = ({ contents, onMove }
                     draggable
                     onDragStart={() => setDragId(item.id)}
                     onDragEnd={() => setDragId(null)}
-                    className="p-3 bg-white border border-slate-200 rounded-xl hover:border-slate-300 hover:shadow-xs transition-all cursor-grab active:cursor-grabbing text-xs space-y-2"
+                    className="p-3 bg-white border border-slate-200 rounded-xl hover:border-slate-300 hover:shadow-xs transition-all cursor-grab active:cursor-grabbing text-sm space-y-2"
                   >
                     <div className="flex items-start gap-2">
                       <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center">
@@ -123,7 +123,7 @@ export const ContentKanban: React.FC<ContentKanbanProps> = ({ contents, onMove }
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold text-slate-900 line-clamp-2 leading-snug">{item.title}</h4>
-                        <p className="text-slate-500 text-[10px] mt-0.5 font-mono">
+                        <p className="text-slate-500 text-sm mt-0.5 font-mono">
                           {item.channel} • {item.format}
                         </p>
                       </div>
@@ -136,7 +136,7 @@ export const ContentKanban: React.FC<ContentKanbanProps> = ({ contents, onMove }
                         qualidade {item.qualityReviewScore}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                    <div className="flex items-center justify-between text-sm text-slate-400 font-mono">
                       <span>{item.scheduledDate}</span>
                       <span>~{item.estimatedReach.toLocaleString('pt-BR')}</span>
                     </div>

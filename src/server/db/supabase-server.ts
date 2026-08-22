@@ -11,9 +11,9 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { configService } from '../config/config-service';
-import { logger } from '../observability/logger';
-import { Database } from '../../types/supabase';
+import { configService } from '../config/config-service.ts';
+import { logger } from '../observability/logger.ts';
+import { Database } from '../../types/supabase.ts';
 
 let clientInstance: SupabaseClient<Database> | null = null;
 let initialized = false;

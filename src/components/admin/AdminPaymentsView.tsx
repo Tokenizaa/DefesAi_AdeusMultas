@@ -125,7 +125,7 @@ export const AdminPaymentsView: React.FC = () => {
               Gestão Financeira & PagBank Orders v2
             </h1>
           </div>
-          <p className="text-xs text-slate-400 font-mono mt-0.5">
+          <p className="text-sm text-slate-400 font-mono mt-0.5">
             Monitoramento de liquidação PIX, conciliação e simulação de webhooks com idempotência
           </p>
         </div>
@@ -142,7 +142,7 @@ export const AdminPaymentsView: React.FC = () => {
       </div>
 
       {actionNotice && (
-        <div className="p-3.5 bg-emerald-950/50 border border-emerald-500/40 text-emerald-300 rounded-xl text-xs font-mono flex items-center gap-2">
+        <div className="p-3.5 bg-emerald-950/50 border border-emerald-500/40 text-emerald-300 rounded-xl text-sm font-mono flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
           <span>{actionNotice}</span>
         </div>
@@ -151,37 +151,37 @@ export const AdminPaymentsView: React.FC = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <span className="text-[10px] text-slate-400 uppercase font-bold">Volume Total Faturado</span>
+          <span className="text-sm text-slate-400 uppercase font-bold">Volume Total Faturado</span>
           <p className="text-xl font-bold text-emerald-400">
             R$ {summary.totalVolume.toFixed(2)}
           </p>
-          <p className="text-[10px] text-slate-500">Valor líquido via PIX PagBank</p>
+          <p className="text-sm text-slate-500">Valor líquido via PIX PagBank</p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <span className="text-[10px] text-slate-400 uppercase font-bold">Pedidos Aprovados</span>
+          <span className="text-sm text-slate-400 uppercase font-bold">Pedidos Aprovados</span>
           <p className="text-xl font-bold text-white">
-            {summary.paidCount} <span className="text-xs text-slate-500">/ {summary.totalCount}</span>
+            {summary.paidCount} <span className="text-sm text-slate-500">/ {summary.totalCount}</span>
           </p>
-          <p className="text-[10px] text-emerald-400">
+          <p className="text-sm text-emerald-400">
             {summary.totalCount > 0 ? ((summary.paidCount / summary.totalCount) * 100).toFixed(1) : 0}% taxa de conversão
           </p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <span className="text-[10px] text-slate-400 uppercase font-bold">Aguardando PIX</span>
+          <span className="text-sm text-slate-400 uppercase font-bold">Aguardando PIX</span>
           <p className="text-xl font-bold text-amber-400">
             {summary.pendingCount}
           </p>
-          <p className="text-[10px] text-slate-500">QR Codes pendentes de leitura</p>
+          <p className="text-sm text-slate-500">QR Codes pendentes de leitura</p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <span className="text-[10px] text-slate-400 uppercase font-bold">Ticket Médio</span>
+          <span className="text-sm text-slate-400 uppercase font-bold">Ticket Médio</span>
           <p className="text-xl font-bold text-white">
             R$ {PRICING.DEFAULT_PRICE.toFixed(2).replace('.', ',')}
           </p>
-          <p className="text-[10px] text-slate-500">Ticket médio por minuta</p>
+          <p className="text-sm text-slate-500">Ticket médio por minuta</p>
         </div>
       </div>
 
@@ -194,11 +194,11 @@ export const AdminPaymentsView: React.FC = () => {
             placeholder="Buscar por cliente, e-mail ou caso..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-orange-500 font-mono"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-orange-500 font-mono"
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto font-mono text-xs">
+        <div className="flex items-center gap-2 w-full sm:w-auto font-mono text-sm">
           <button
             onClick={() => setStatusFilter('all')}
             className={`px-3 py-1.5 rounded-xl cursor-pointer transition-colors ${
@@ -235,9 +235,9 @@ export const AdminPaymentsView: React.FC = () => {
       {/* Transactions Table */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse font-mono text-xs">
+          <table className="w-full text-left border-collapse font-mono text-sm">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-950/70 text-slate-400 uppercase text-[10px]">
+              <tr className="border-b border-slate-800 bg-slate-950/70 text-slate-400 uppercase text-sm">
                 <th className="p-3.5">ID Transação / Caso</th>
                 <th className="p-3.5">Cliente</th>
                 <th className="p-3.5">Valor</th>
@@ -270,7 +270,7 @@ export const AdminPaymentsView: React.FC = () => {
                         <div className="font-bold text-white">{p.id}</div>
                         <div
                           onClick={() => navigate(`/admin/cases/${p.caseId}`)}
-                          className="text-[10px] text-orange-400 hover:underline cursor-pointer flex items-center gap-1"
+                          className="text-sm text-orange-400 hover:underline cursor-pointer flex items-center gap-1"
                         >
                           <span>Caso #{p.caseId}</span>
                           <ExternalLink className="w-2.5 h-2.5" />
@@ -278,7 +278,7 @@ export const AdminPaymentsView: React.FC = () => {
                       </td>
                       <td className="p-3.5">
                         <div className="text-white font-medium">{p.customerName}</div>
-                        <div className="text-[10px] text-slate-500">{p.customerEmail}</div>
+                        <div className="text-sm text-slate-500">{p.customerEmail}</div>
                       </td>
                       <td className="p-3.5">
                         <div className="font-bold text-emerald-400">
@@ -287,11 +287,11 @@ export const AdminPaymentsView: React.FC = () => {
                       </td>
                       <td className="p-3.5">
                         {isPaid ? (
-                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 w-fit">
+                          <span className="px-2 py-0.5 rounded text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 w-fit">
                             <CheckCircle2 className="w-3 h-3" /> PAGO
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-1 w-fit">
+                          <span className="px-2 py-0.5 rounded text-sm font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-1 w-fit">
                             <Clock className="w-3 h-3" /> AGUARDANDO PIX
                           </span>
                         )}
@@ -299,7 +299,7 @@ export const AdminPaymentsView: React.FC = () => {
                       <td className="p-3.5">
                         <span className="text-slate-300 uppercase">{p.method}</span>
                       </td>
-                      <td className="p-3.5 text-slate-400 text-[11px]">
+                      <td className="p-3.5 text-slate-400 text-sm">
                         <div>{new Date(p.createdAt).toLocaleDateString('pt-BR')}</div>
                         <div className="text-[9px] text-slate-500">
                           {p.paidAt ? new Date(p.paidAt).toLocaleTimeString('pt-BR') : 'Pendente'}
@@ -311,7 +311,7 @@ export const AdminPaymentsView: React.FC = () => {
                             <button
                               onClick={() => handleSimulateWebhook(p.caseId)}
                               disabled={isSimulating}
-                              className="px-2 py-1 bg-emerald-600/80 hover:bg-emerald-600 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                              className="px-2 py-1 bg-emerald-600/80 hover:bg-emerald-600 text-white rounded-lg text-sm font-bold flex items-center gap-1 cursor-pointer transition-colors"
                               title="Simular Webhook PagBank"
                             >
                               <Zap className="w-3 h-3" />

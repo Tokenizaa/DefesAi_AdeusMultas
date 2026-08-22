@@ -397,11 +397,11 @@ export const DocumentEngineSimulator: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider font-mono px-2.5 py-1 rounded bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center gap-1">
+              <span className="text-sm font-bold uppercase tracking-wider font-mono px-2.5 py-1 rounded bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center gap-1">
                 <Cpu className="w-3.5 h-3.5 text-orange-400" />
                 Fase 4.3 • Motor de Documentos v1 (Test Playground)
               </span>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 flex items-center gap-1">
+              <span className="text-sm font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                 Zero Dependência de IA
               </span>
@@ -409,7 +409,7 @@ export const DocumentEngineSimulator: React.FC = () => {
             <h2 className="text-xl font-bold tracking-tight text-white">
               Simulador de Montagem Determinística de Peças Jurídicas
             </h2>
-            <p className="text-xs text-slate-300 mt-1 max-w-3xl leading-relaxed">
+            <p className="text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
               O motor recebe os dados do caso, seleciona o template adequado entre os 7 procedimentos catalogados, resolve as preliminares e o mérito técnico na biblioteca de 52 teses e 65 blocos, interpola todas as variáveis e entrega uma petição 100% formatada e pronta para protocolo.
             </p>
           </div>
@@ -417,7 +417,7 @@ export const DocumentEngineSimulator: React.FC = () => {
           <div className="flex items-center gap-3">
             <div className="bg-slate-800 px-4 py-2.5 rounded-xl border border-slate-700 text-center">
               <div className="text-sm font-bold text-emerald-400 font-mono">100% OK</div>
-              <div className="text-[10px] text-slate-400">0 Placeholders Perdidos</div>
+              <div className="text-sm text-slate-400">0 Placeholders Perdidos</div>
             </div>
           </div>
         </div>
@@ -426,11 +426,11 @@ export const DocumentEngineSimulator: React.FC = () => {
       {/* Preset Selector Bar */}
       <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs space-y-3">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+          <label className="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5 font-mono">
             <Sliders className="w-3.5 h-3.5 text-orange-500" />
             Selecione um Caso de Teste (7 Procedimentos Disponíveis):
           </label>
-          <span className="text-[11px] font-mono text-slate-500">
+          <span className="text-sm font-mono text-slate-500">
             Procedimento: <strong>{activePayload.procedureType}</strong>
           </span>
         </div>
@@ -450,7 +450,7 @@ export const DocumentEngineSimulator: React.FC = () => {
               >
                 <div>
                   <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="text-[10px] font-mono font-bold uppercase text-slate-500">
+                    <span className="text-sm font-mono font-bold uppercase text-slate-500">
                       Caso #{idx + 1}
                     </span>
                     {isSelected && (
@@ -459,9 +459,9 @@ export const DocumentEngineSimulator: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <h4 className="text-xs font-bold text-slate-900 line-clamp-2">{preset.label}</h4>
+                  <h4 className="text-sm font-bold text-slate-900 line-clamp-2">{preset.label}</h4>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-2 line-clamp-2">{preset.description}</p>
+                <p className="text-sm text-slate-500 mt-2 line-clamp-2">{preset.description}</p>
               </button>
             );
           })}
@@ -474,18 +474,18 @@ export const DocumentEngineSimulator: React.FC = () => {
         <div className="lg:col-span-4 space-y-4">
           <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-2xs space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5 font-mono">
                 <Settings2 className="w-3.5 h-3.5 text-slate-500" />
                 Parâmetros do Caso
               </h3>
-              <span className="text-[10px] font-mono text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-bold">
+              <span className="text-sm font-mono text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-bold">
                 Interpolação Ativa
               </span>
             </div>
 
             {/* Requerente */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+              <label className="text-sm font-bold text-slate-700 uppercase tracking-wider block">
                 Requerente (Pessoa Física / Condutor)
               </label>
               <input
@@ -497,7 +497,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                     applicant: { ...activePayload.applicant, name: e.target.value },
                   })
                 }
-                className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-medium text-slate-800 focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-orange-500"
+                className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-sm font-medium text-slate-800 focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-orange-500"
                 placeholder="Nome completo"
               />
               <div className="grid grid-cols-2 gap-2">
@@ -510,7 +510,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                       applicant: { ...activePayload.applicant, cpf: e.target.value },
                     })
                   }
-                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-mono text-slate-800"
+                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-sm font-mono text-slate-800"
                   placeholder="CPF"
                 />
                 <input
@@ -522,7 +522,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                       applicant: { ...activePayload.applicant, cnh: e.target.value },
                     })
                   }
-                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-mono text-slate-800"
+                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-sm font-mono text-slate-800"
                   placeholder="CNH"
                 />
               </div>
@@ -530,12 +530,12 @@ export const DocumentEngineSimulator: React.FC = () => {
 
             {/* Auto de Infração e Órgão */}
             <div className="space-y-2 pt-2 border-t border-slate-100">
-              <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+              <label className="text-sm font-bold text-slate-700 uppercase tracking-wider block">
                 Dados da Infração & Órgão
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <span className="text-[10px] text-slate-500 block mb-1">Nº do AIT:</span>
+                  <span className="text-sm text-slate-500 block mb-1">Nº do AIT:</span>
                   <input
                     type="text"
                     value={activePayload.infraction.aitNumber}
@@ -545,11 +545,11 @@ export const DocumentEngineSimulator: React.FC = () => {
                         infraction: { ...activePayload.infraction, aitNumber: e.target.value },
                       })
                     }
-                    className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-mono text-slate-800"
+                    className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-sm font-mono text-slate-800"
                   />
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-500 block mb-1">Placa:</span>
+                  <span className="text-sm text-slate-500 block mb-1">Placa:</span>
                   <input
                     type="text"
                     value={activePayload.vehicle.plate}
@@ -559,13 +559,13 @@ export const DocumentEngineSimulator: React.FC = () => {
                         vehicle: { ...activePayload.vehicle, plate: e.target.value.toUpperCase() },
                       })
                     }
-                    className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-mono text-slate-800"
+                    className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-sm font-mono text-slate-800"
                   />
                 </div>
               </div>
 
               <div>
-                <span className="text-[10px] text-slate-500 block mb-1">Órgão Autuador:</span>
+                <span className="text-sm text-slate-500 block mb-1">Órgão Autuador:</span>
                 <input
                   type="text"
                   value={activePayload.infraction.autuadorBody}
@@ -575,12 +575,12 @@ export const DocumentEngineSimulator: React.FC = () => {
                       infraction: { ...activePayload.infraction, autuadorBody: e.target.value },
                     })
                   }
-                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-800"
+                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-sm text-slate-800"
                 />
               </div>
 
               <div>
-                <span className="text-[10px] text-slate-500 block mb-1">Enquadramento CTB:</span>
+                <span className="text-sm text-slate-500 block mb-1">Enquadramento CTB:</span>
                 <input
                   type="text"
                   value={activePayload.infraction.ctbArticle}
@@ -590,7 +590,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                       infraction: { ...activePayload.infraction, ctbArticle: e.target.value },
                     })
                   }
-                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-mono text-slate-800"
+                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-sm font-mono text-slate-800"
                 />
               </div>
             </div>
@@ -598,7 +598,7 @@ export const DocumentEngineSimulator: React.FC = () => {
             {/* Speeds (if applicable) */}
             {activePayload.speeds && (
               <div className="space-y-2 pt-2 border-t border-slate-100">
-                <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider block">
                   Metrologia de Velocidade (Radar)
                 </label>
                 <div className="grid grid-cols-3 gap-1.5 text-center">
@@ -616,7 +616,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                           },
                         })
                       }
-                      className="w-full text-center font-mono font-bold text-xs bg-transparent border-0"
+                      className="w-full text-center font-mono font-bold text-sm bg-transparent border-0"
                     />
                   </div>
                   <div className="bg-orange-50 p-2 rounded border border-orange-200">
@@ -633,7 +633,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                           },
                         })
                       }
-                      className="w-full text-center font-mono font-bold text-xs text-orange-700 bg-transparent border-0"
+                      className="w-full text-center font-mono font-bold text-sm text-orange-700 bg-transparent border-0"
                     />
                   </div>
                   <div className="bg-slate-50 p-2 rounded border border-slate-200">
@@ -650,7 +650,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                           },
                         })
                       }
-                      className="w-full text-center font-mono font-bold text-xs bg-transparent border-0"
+                      className="w-full text-center font-mono font-bold text-sm bg-transparent border-0"
                     />
                   </div>
                 </div>
@@ -660,7 +660,7 @@ export const DocumentEngineSimulator: React.FC = () => {
             {/* Nominated Driver (FICI) */}
             {activePayload.nominatedDriver && (
               <div className="space-y-2 pt-2 border-t border-slate-100">
-                <label className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider block">
+                <label className="text-sm font-bold text-emerald-700 uppercase tracking-wider block">
                   Condutor Infrator Indicado (FICI)
                 </label>
                 <input
@@ -675,7 +675,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                       },
                     })
                   }
-                  className="w-full px-3 py-1.5 bg-emerald-50/50 border border-emerald-200 rounded-md text-xs text-slate-800"
+                  className="w-full px-3 py-1.5 bg-emerald-50/50 border border-emerald-200 rounded-md text-sm text-slate-800"
                   placeholder="Nome do condutor indicado"
                 />
                 <div className="grid grid-cols-2 gap-2">
@@ -691,7 +691,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                         },
                       })
                     }
-                    className="w-full px-2.5 py-1.5 bg-emerald-50/50 border border-emerald-200 rounded-md text-xs font-mono text-slate-800"
+                    className="w-full px-2.5 py-1.5 bg-emerald-50/50 border border-emerald-200 rounded-md text-sm font-mono text-slate-800"
                     placeholder="CPF"
                   />
                   <input
@@ -706,7 +706,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                         },
                       })
                     }
-                    className="w-full px-2.5 py-1.5 bg-emerald-50/50 border border-emerald-200 rounded-md text-xs font-mono text-slate-800"
+                    className="w-full px-2.5 py-1.5 bg-emerald-50/50 border border-emerald-200 rounded-md text-sm font-mono text-slate-800"
                     placeholder="CNH"
                   />
                 </div>
@@ -722,7 +722,7 @@ export const DocumentEngineSimulator: React.FC = () => {
             <div className="flex items-center gap-1 overflow-x-auto">
               <button
                 onClick={() => setActiveViewTab('petition')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                   activeViewTab === 'petition'
                     ? 'bg-slate-900 text-white'
                     : 'text-slate-600 hover:bg-slate-100'
@@ -734,7 +734,7 @@ export const DocumentEngineSimulator: React.FC = () => {
 
               <button
                 onClick={() => setActiveViewTab('validation')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                   activeViewTab === 'validation'
                     ? 'bg-slate-900 text-white'
                     : 'text-slate-600 hover:bg-slate-100'
@@ -748,7 +748,7 @@ export const DocumentEngineSimulator: React.FC = () => {
             <div className="flex items-center gap-2 self-end sm:self-center">
               <button
                 onClick={handlePrint}
-                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs rounded-lg font-medium transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm rounded-lg font-medium transition-colors flex items-center gap-1.5 cursor-pointer"
                 title="Imprimir / Salvar em PDF"
               >
                 <Printer className="w-3.5 h-3.5 text-slate-600" />
@@ -757,7 +757,7 @@ export const DocumentEngineSimulator: React.FC = () => {
 
               <button
                 onClick={handleCopyDraft}
-                className="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs rounded-lg font-bold transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
+                className="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-sm rounded-lg font-bold transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 {copiedDraft ? (
                   <>
@@ -777,12 +777,12 @@ export const DocumentEngineSimulator: React.FC = () => {
           {/* Tab Content: Petition Preview */}
           {activeViewTab === 'petition' && (
             <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-              <div className="bg-slate-50 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between text-xs text-slate-600">
+              <div className="bg-slate-50 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between text-sm text-slate-600">
                 <span className="font-mono font-bold text-slate-800 flex items-center gap-1.5">
                   <FileCheck className="w-4 h-4 text-emerald-600" />
                   {assemblyResult.validation.templateCode} • {assemblyResult.validation.procedureName}
                 </span>
-                <span className="text-[11px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">
+                <span className="text-sm font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">
                   Pronto para Protocolo
                 </span>
               </div>
@@ -803,44 +803,44 @@ export const DocumentEngineSimulator: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   Relatório de Conformidade do Motor Determinístico
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-sm text-slate-500 mt-0.5">
                   Verificação estrutural em tempo real de interpolação de variáveis e blocos jurídicos aplicados.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                  <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+                  <div className="text-sm font-bold text-slate-500 uppercase tracking-wider font-mono">
                     Blocos Aplicados
                   </div>
                   <div className="text-2xl font-bold text-slate-900 font-mono mt-1">
                     {assemblyResult.validation.appliedBlockCount}
                   </div>
-                  <div className="text-[11px] text-slate-500 mt-1">
+                  <div className="text-sm text-slate-500 mt-1">
                     Integrados do catálogo modular
                   </div>
                 </div>
 
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                  <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+                  <div className="text-sm font-bold text-slate-500 uppercase tracking-wider font-mono">
                     Teses & Artigos
                   </div>
                   <div className="text-2xl font-bold text-slate-900 font-mono mt-1">
                     {assemblyResult.validation.appliedArgumentCount}
                   </div>
-                  <div className="text-[11px] text-slate-500 mt-1">
+                  <div className="text-sm text-slate-500 mt-1">
                     Preliminares e mérito técnico
                   </div>
                 </div>
 
                 <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
-                  <div className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider font-mono">
+                  <div className="text-sm font-bold text-emerald-800 uppercase tracking-wider font-mono">
                     Placeholders Perdidos
                   </div>
                   <div className="text-2xl font-bold text-emerald-700 font-mono mt-1">
                     {assemblyResult.validation.unresolvedPlaceholders.length}
                   </div>
-                  <div className="text-[11px] text-emerald-700 mt-1">
+                  <div className="text-sm text-emerald-700 mt-1">
                     {assemblyResult.validation.unresolvedPlaceholders.length === 0
                       ? '100% das variáveis foram preenchidas'
                       : 'Atenção aos campos pendentes'}
@@ -850,7 +850,7 @@ export const DocumentEngineSimulator: React.FC = () => {
 
               {assemblyResult.validation?.unresolvedPlaceholders && assemblyResult.validation.unresolvedPlaceholders.length > 0 && (
                 <div className="bg-rose-50 border border-rose-200 rounded-xl p-4">
-                  <div className="text-xs font-bold text-rose-800 mb-1 flex items-center gap-1.5">
+                  <div className="text-sm font-bold text-rose-800 mb-1 flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4 text-rose-600" />
                     Placeholders não resolvidos no rascunho:
                   </div>
@@ -858,7 +858,7 @@ export const DocumentEngineSimulator: React.FC = () => {
                     {(assemblyResult.validation.unresolvedPlaceholders || []).map((ph) => (
                       <span
                         key={ph}
-                        className="text-xs font-mono bg-rose-200/60 text-rose-900 px-2 py-0.5 rounded font-bold"
+                        className="text-sm font-mono bg-rose-200/60 text-rose-900 px-2 py-0.5 rounded font-bold"
                       >
                         {ph}
                       </span>
@@ -868,10 +868,10 @@ export const DocumentEngineSimulator: React.FC = () => {
               )}
 
               <div className="space-y-3 pt-4 border-t border-slate-100">
-                <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider font-mono">
+                <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider font-mono">
                   Garantias Arquiteturais da Fase 4.3 (Motor v1)
                 </h4>
-                <div className="space-y-2 text-xs text-slate-600">
+                <div className="space-y-2 text-sm text-slate-600">
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                     <span>

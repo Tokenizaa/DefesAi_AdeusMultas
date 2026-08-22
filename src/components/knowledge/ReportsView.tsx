@@ -33,7 +33,7 @@ export const ReportsView: React.FC<{
           <BarChart3 className="w-5 h-5 text-orange-400" />
           Relatório de Cobertura e Métricas da Base Canônica
         </h2>
-        <p className="text-xs text-slate-400 mt-0.5">
+        <p className="text-sm text-slate-400 mt-0.5">
           Auditoria de completude dos dados jurídicos, taxonomias e modelos do Motor de Petições v1.
         </p>
       </div>
@@ -45,7 +45,7 @@ export const ReportsView: React.FC<{
           return (
             <div key={idx} className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-400 font-medium">{stat.label}</span>
+                <span className="text-sm text-slate-400 font-medium">{stat.label}</span>
                 <div className={`p-2 rounded-lg ${stat.bg} ${stat.color}`}>
                   <Icon className="w-4 h-4" />
                 </div>
@@ -62,7 +62,7 @@ export const ReportsView: React.FC<{
           <Shield className="w-4 h-4 text-emerald-400" />
           Status de Validação & Conformidade LGPD
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-slate-300">
           <div className="p-3 bg-slate-900/60 border border-slate-800 rounded-lg flex items-center gap-3">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <div>

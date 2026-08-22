@@ -287,7 +287,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
           </button>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-slate-900 truncate">{title || 'Conteúdo sem título'}</p>
-            <p className="text-xs text-slate-500">
+            <p className="text-sm text-slate-500">
               {content.channel} • {FORMAT_LABELS[content.format] ?? content.format} • Autor: IA
             </p>
           </div>
@@ -297,7 +297,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
           <div className="relative">
             <button
               onClick={() => setAiMenuOpen((o) => !o)}
-              className="px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+              className="px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
               <Sparkles className="w-4 h-4" /> Menu IA
             </button>
@@ -307,7 +307,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                   <button
                     key={id}
                     onClick={() => { setAiMenuOpen(false); applyAIAction(id); }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-orange-50 hover:text-orange-800 rounded-lg cursor-pointer text-left"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-orange-50 hover:text-orange-800 rounded-lg cursor-pointer text-left"
                   >
                     <Icon className="w-4 h-4 text-orange-600 shrink-0" /> {label}
                   </button>
@@ -318,7 +318,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                     <button
                       disabled
                       title={hint}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-400 cursor-not-allowed text-left"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-400 cursor-not-allowed text-left"
                     >
                       <Music className="w-4 h-4 shrink-0" /> {label}
                       <AlertCircle className="w-3 h-3 ml-auto opacity-50" />
@@ -331,13 +331,13 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
           <button
             onClick={handleSaveManual}
             disabled={saving}
-            className="px-3 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer hover:bg-slate-50 disabled:opacity-50"
+            className="px-3 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-bold flex items-center gap-1.5 cursor-pointer hover:bg-slate-50 disabled:opacity-50"
           >
             <Save className="w-4 h-4" /> {saving ? 'Salvando...' : 'Salvar'}
           </button>
           <button
             onClick={() => { onStatus(content.id, 'aprovado_qualidade'); setNotice({ kind: 'ok', msg: 'Conteúdo aprovado pela qualidade.' }); }}
-            className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold cursor-pointer"
+            className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold cursor-pointer"
           >
             <CheckCircle2 className="w-4 h-4 inline -mt-0.5" /> Aprovar
           </button>
@@ -350,13 +350,13 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
         <div className="min-h-0 overflow-y-auto">
           <div className="max-w-3xl mx-auto p-6 space-y-4">
             {notice && (
-              <div className={`p-3 rounded-xl border text-xs ${notice.kind === 'ok' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'}`}>
+              <div className={`p-3 rounded-xl border text-sm ${notice.kind === 'ok' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'}`}>
                 {notice.msg}
               </div>
             )}
 
             <div>
-              <label className="font-bold text-slate-700 uppercase block text-[10px] font-mono mb-1">Título</label>
+              <label className="font-bold text-slate-700 uppercase block text-sm font-mono mb-1">Título</label>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -366,41 +366,41 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
             </div>
 
             <div>
-              <label className="font-bold text-slate-700 uppercase block text-[10px] font-mono mb-1">Copy (Markdown)</label>
+              <label className="font-bold text-slate-700 uppercase block text-sm font-mono mb-1">Copy (Markdown)</label>
               <textarea
                 value={liveText}
                 onChange={(e) => setLiveText(e.target.value)}
                 rows={14}
                 placeholder="Escreva o conteúdo ou use ✨ Menu IA..."
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono resize-none outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-mono resize-none outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
             <div>
-              <label className="font-bold text-slate-700 uppercase block text-[10px] font-mono mb-1">Hashtags</label>
+              <label className="font-bold text-slate-700 uppercase block text-sm font-mono mb-1">Hashtags</label>
               <input
                 value={hashtags}
                 onChange={(e) => setHashtags(e.target.value)}
                 placeholder="#adeusmulta #defesademulta"
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
             {/* Validação legal */}
             <div className={`rounded-xl border p-3 space-y-1 ${validation.valid ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`}>
-              <p className={`flex items-center gap-2 text-xs font-medium ${validation.valid ? 'text-emerald-800' : 'text-rose-800'}`}>
+              <p className={`flex items-center gap-2 text-sm font-medium ${validation.valid ? 'text-emerald-800' : 'text-rose-800'}`}>
                 {validation.valid ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
                 {validation.valid ? 'Validação legal aprovada' : `${validation.errors.length} erro(s) bloqueante(s)`}
               </p>
               {!validation.valid && validation.errors.map((e, i) => (
-                <p key={i} className="text-[11px] text-rose-700">• {e}</p>
+                <p key={i} className="text-sm text-rose-700">• {e}</p>
               ))}
             </div>
 
             {/* Preview por rede */}
             <section>
               <div className="flex items-center justify-between mb-2">
-                <p className="flex items-center gap-1.5 text-xs font-medium text-slate-800">
+                <p className="flex items-center gap-1.5 text-sm font-medium text-slate-800">
                   <Eye className="w-4 h-4" /> Preview em tempo real
                 </p>
                 <div className="flex items-center gap-1">
@@ -408,7 +408,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                     <button
                       key={n}
                       onClick={() => setPreviewNetwork(n)}
-                      className={`px-2 py-0.5 text-[10px] font-medium rounded border capitalize cursor-pointer ${previewNetwork === n ? 'bg-orange-50 border-orange-300 text-orange-700' : 'bg-white border-slate-200 text-slate-500'}`}
+                      className={`px-2 py-0.5 text-sm font-medium rounded border capitalize cursor-pointer ${previewNetwork === n ? 'bg-orange-50 border-orange-300 text-orange-700' : 'bg-white border-slate-200 text-slate-500'}`}
                     >
                       {n}
                     </button>
@@ -416,11 +416,11 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                 </div>
               </div>
               <div className="p-4 bg-slate-900 rounded-xl text-white">
-                <p className="font-bold text-xs mb-2">{title || 'Sem título'}</p>
-                <p className="text-[11px] text-slate-300 font-mono whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto">
+                <p className="font-bold text-sm mb-2">{title || 'Sem título'}</p>
+                <p className="text-sm text-slate-300 font-mono whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto">
                   {liveText}
                 </p>
-                {hashtags && <p className="text-[10px] text-blue-400 mt-2 font-mono">{hashtags}</p>}
+                {hashtags && <p className="text-sm text-blue-400 mt-2 font-mono">{hashtags}</p>}
                 {previewNetwork !== 'blog' && <p className="mt-3 text-[9px] uppercase font-mono text-slate-500">Prévia simulada — {previewNetwork}</p>}
               </div>
             </section>
@@ -441,7 +441,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
               <button
                 key={id}
                 onClick={() => { setPanelTab(id); if (id === 'history') loadVersions(); }}
-                className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-[10px] font-medium border-b-2 -mb-px transition-colors cursor-pointer ${
+                className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-sm font-medium border-b-2 -mb-px transition-colors cursor-pointer ${
                   panelTab === id ? 'text-orange-700 border-orange-600' : 'text-slate-500 hover:text-slate-700 border-transparent'
                 }`}
                 aria-pressed={panelTab === id}
@@ -461,7 +461,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                     <div className="rounded-lg overflow-hidden bg-black border border-slate-200">
                       <video src={attachedVideoUrl} controls className="w-full max-h-48 object-contain" />
                     </div>
-                    <div className="flex items-center justify-between text-[11px]">
+                    <div className="flex items-center justify-between text-sm">
                       <span className="text-emerald-700 font-bold flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" /> Vídeo Veo Anexado
                       </span>
@@ -479,7 +479,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                     <div className="rounded-lg overflow-hidden bg-slate-900 border border-slate-200">
                       <img src={attachedImageUrl} alt="Anexo Visual" className="w-full max-h-48 object-contain" />
                     </div>
-                    <div className="flex items-center justify-between text-[11px]">
+                    <div className="flex items-center justify-between text-sm">
                       <span className="text-emerald-700 font-bold flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" /> Imagem {editorImageSize} Anexada
                       </span>
@@ -508,7 +508,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                 {/* Image Generation Tool */}
                 <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
+                    <span className="text-sm font-bold text-slate-700 flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-[#155BCB]" />
                       Gerador de Imagem HD
                     </span>
@@ -518,19 +518,19 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1">
+                    <label className="text-sm font-bold text-slate-600 uppercase block mb-1">
                       Prompt Visual
                     </label>
                     <textarea
                       rows={3}
                       value={editorVisualPrompt}
                       onChange={(e) => setEditorVisualPrompt(e.target.value)}
-                      className="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg resize-none"
+                      className="w-full text-sm p-2 bg-white border border-slate-300 rounded-lg resize-none"
                     />
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1">
+                    <label className="text-sm font-bold text-slate-600 uppercase block mb-1">
                       Resolução da Imagem
                     </label>
                     <div className="grid grid-cols-3 gap-1.5">
@@ -539,7 +539,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                           key={s}
                           type="button"
                           onClick={() => setEditorImageSize(s)}
-                          className={`py-1 text-xs font-bold rounded border cursor-pointer ${
+                          className={`py-1 text-sm font-bold rounded border cursor-pointer ${
                             editorImageSize === s
                               ? 'bg-[#155BCB] text-white border-[#155BCB]'
                               : 'bg-white text-slate-600 border-slate-200'
@@ -555,7 +555,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                     type="button"
                     onClick={handleGenerateEditorImage}
                     disabled={editorGeneratingImage}
-                    className="w-full py-2 bg-[#155BCB] hover:bg-[#0C326F] disabled:bg-slate-300 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                    className="w-full py-2 bg-[#155BCB] hover:bg-[#0C326F] disabled:bg-slate-300 text-white rounded-lg text-sm font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
                   >
                     {editorGeneratingImage ? (
                       <>
@@ -576,11 +576,11 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
             {panelTab === 'info' && (
               <div className="space-y-3">
                 <div>
-                  <label className="font-bold text-slate-700 uppercase block text-[10px] font-mono mb-1">Canal</label>
+                  <label className="font-bold text-slate-700 uppercase block text-sm font-mono mb-1">Canal</label>
                   <select
                     value={content.channel}
                     onChange={(e) => { onChannel(content.id, e.target.value); }}
-                    className="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     {['instagram', 'blog', 'tiktok', 'linkedin', 'email'].map((ch) => (
                       <option key={ch} value={ch}>{ch}</option>
@@ -597,8 +597,8 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                   ['Tese jurídica', content.legalTheme],
                 ].map(([label, value]) => (
                   <div key={label} className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                    <span className="text-[10px] uppercase font-mono text-slate-400">{label}</span>
-                    <span className="text-xs font-semibold text-slate-800 text-right">{value}</span>
+                    <span className="text-sm uppercase font-mono text-slate-400">{label}</span>
+                    <span className="text-sm font-semibold text-slate-800 text-right">{value}</span>
                   </div>
                 ))}
               </div>
@@ -606,14 +606,14 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
 
             {panelTab === 'ai' && (
               <div className="space-y-2">
-                <p className="flex items-center gap-1.5 text-[11px] font-medium text-orange-700">
+                <p className="flex items-center gap-1.5 text-sm font-medium text-orange-700">
                   <Sparkles className="w-3.5 h-3.5" /> IA contextual — ações aplicadas ao texto e salvas
                 </p>
                 {IA_ACTIONS.map(({ id, label, icon: Icon }) => (
                   <button
                     key={id}
                     onClick={() => applyAIAction(id)}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-left text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:border-orange-300 hover:bg-orange-50 transition-colors cursor-pointer"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:border-orange-300 hover:bg-orange-50 transition-colors cursor-pointer"
                   >
                     <Icon className="w-4 h-4 text-orange-600 shrink-0" /> {label}
                   </button>
@@ -623,7 +623,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
                   <div
                     key={id}
                     title={hint}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-400 bg-slate-50 border border-slate-200 rounded-lg"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-400 bg-slate-50 border border-slate-200 rounded-lg"
                   >
                     <Music className="w-4 h-4 shrink-0 opacity-60" /> {label}
                     <AlertCircle className="w-3 h-3 ml-auto opacity-50" />
@@ -635,16 +635,16 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
             {panelTab === 'history' && (
               <div className="space-y-2">
                 {versions.length === 0 ? (
-                  <p className="text-[11px] text-slate-400">Nenhuma versão registrada ainda. Edite e salve para começar o histórico.</p>
+                  <p className="text-sm text-slate-400">Nenhuma versão registrada ainda. Edite e salve para começar o histórico.</p>
                 ) : (
                   versions.map((v) => (
                     <div key={v.id} className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
                       <div className="flex items-center justify-between">
-                        <p className="text-xs font-medium text-slate-900">v{v.version}</p>
-                        <p className="text-[10px] text-slate-500">{new Date(v.createdAt).toLocaleString('pt-BR')}</p>
+                        <p className="text-sm font-medium text-slate-900">v{v.version}</p>
+                        <p className="text-sm text-slate-500">{new Date(v.createdAt).toLocaleString('pt-BR')}</p>
                       </div>
-                      <p className="text-[11px] text-slate-600 mt-0.5">{v.author}</p>
-                      <p className="text-[10px] text-slate-500">{v.changes}</p>
+                      <p className="text-sm text-slate-600 mt-0.5">{v.author}</p>
+                      <p className="text-sm text-slate-500">{v.changes}</p>
                     </div>
                   ))
                 )}

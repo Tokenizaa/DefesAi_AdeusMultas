@@ -196,7 +196,7 @@ const handleTestIntegration = async (serviceId: string) => {
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Toast Notification */}
       {successToast && (
-        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-xl bg-emerald-950 border border-emerald-700 text-emerald-200 text-xs font-semibold flex items-center gap-2.5 shadow-2xl animate-in slide-in-from-bottom-2">
+        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-xl bg-emerald-950 border border-emerald-700 text-emerald-200 text-sm font-semibold flex items-center gap-2.5 shadow-2xl animate-in slide-in-from-bottom-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           <span>{successToast}</span>
         </div>
@@ -210,11 +210,11 @@ const handleTestIntegration = async (serviceId: string) => {
               <Sliders className="w-4 h-4" />
             </div>
             <h1 className="text-xl font-bold text-white tracking-tight">Painel Central de Configurações</h1>
-            <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800">
+            <span className="text-sm font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800">
               Admin Safe Mode
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+          <p className="text-sm text-slate-400 mt-1 max-w-2xl">
             Gerencie os parâmetros operacionais da plataforma com separação rigorosa de variáveis públicas e segredos criptográficos protegidos contra vazamentos.
           </p>
         </div>
@@ -227,7 +227,7 @@ const handleTestIntegration = async (serviceId: string) => {
             placeholder="Buscar configuração ou chave..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-orange-500 font-mono transition-all"
+            className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-orange-500 font-mono transition-all"
           />
         </div>
       </div>
@@ -256,7 +256,7 @@ const handleTestIntegration = async (serviceId: string) => {
                 {isActive && <div className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />}
               </div>
               <div>
-                <div className={`text-xs font-bold ${isActive ? 'text-white' : 'text-slate-300'}`}>
+                <div className={`text-sm font-bold ${isActive ? 'text-white' : 'text-slate-300'}`}>
                   {cat.label}
                 </div>
                 <div className="text-[9px] text-slate-500 truncate font-mono mt-0.5">{cat.desc}</div>
@@ -272,8 +272,8 @@ const handleTestIntegration = async (serviceId: string) => {
           <div className="flex items-center gap-2">
             <Zap className="w-4 h-4 text-orange-400 shrink-0" />
             <div>
-              <span className="text-xs font-bold text-slate-200">Verificação Ativa de Conectividade</span>
-              <p className="text-[10px] text-slate-500 font-mono">
+              <span className="text-sm font-bold text-slate-200">Verificação Ativa de Conectividade</span>
+              <p className="text-sm text-slate-500 font-mono">
                 Executa teste de ping, autenticação e latência diretamente no backend sem expor chaves.
               </p>
             </div>
@@ -289,17 +289,17 @@ const handleTestIntegration = async (serviceId: string) => {
                   key={btn.id}
                   onClick={() => handleTestIntegration(btn.id)}
                   disabled={isTesting}
-                  className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-sm font-semibold text-slate-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                 >
                   {isTesting ? (
                     <>
                       <span className="w-3.5 h-3.5 border-2 border-orange-400/30 border-t-orange-400 rounded-full animate-spin" />
-                      <span className="text-[11px]">Testando...</span>
+                      <span className="text-sm">Testando...</span>
                     </>
                   ) : (
                     <>
                       <Play className="w-3 h-3 text-orange-400" />
-                      <span className="text-[11px]">{btn.label}</span>
+                      <span className="text-sm">{btn.label}</span>
                     </>
                   )}
                 </button>
@@ -331,30 +331,30 @@ const handleTestIntegration = async (serviceId: string) => {
                 ) : (
                   <AlertTriangle className="w-4 h-4 text-amber-400" />
                 )}
-                <span className="text-xs font-bold font-mono uppercase">{res.serviceName}</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-300">
+                <span className="text-sm font-bold font-mono uppercase">{res.serviceName}</span>
+                <span className="text-sm font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-300">
                   Latência: {res.latencyMs} ms
                 </span>
               </div>
               <button
                 onClick={() => setTestResults((prev) => ({ ...prev, [svcId]: null }))}
-                className="text-[10px] text-slate-400 hover:text-white underline cursor-pointer"
+                className="text-sm text-slate-400 hover:text-white underline cursor-pointer"
               >
                 Fechar
               </button>
             </div>
 
-            <p className="text-xs font-mono">{res.message}</p>
+            <p className="text-sm font-mono">{res.message}</p>
 
             {res.checks && (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 pt-1">
                 {(res.checks || []).map((chk: any, idx: number) => (
-                  <div key={idx} className="p-2 rounded-lg bg-slate-950/60 border border-slate-900 text-[11px] font-mono">
+                  <div key={idx} className="p-2 rounded-lg bg-slate-950/60 border border-slate-900 text-sm font-mono">
                     <div className="flex items-center gap-1.5">
                       <span className={`w-1.5 h-1.5 rounded-full ${chk.passed ? 'bg-emerald-400' : 'bg-amber-400'}`} />
                       <span className="font-semibold text-slate-200">{chk.label}</span>
                     </div>
-                    {chk.detail && <div className="text-[10px] text-slate-400 truncate mt-0.5">{chk.detail}</div>}
+                    {chk.detail && <div className="text-sm text-slate-400 truncate mt-0.5">{chk.detail}</div>}
                   </div>
                 ))}
               </div>
@@ -367,22 +367,22 @@ const handleTestIntegration = async (serviceId: string) => {
       <div className="bg-slate-950 border border-slate-900 rounded-2xl overflow-hidden shadow-sm">
         <div className="p-4 border-b border-slate-900 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-white uppercase font-mono tracking-wider">
+            <span className="text-sm font-bold text-white uppercase font-mono tracking-wider">
               {categories.find((c) => c.id === activeCategory)?.label || 'Configurações'} ({filteredSettings.length})
             </span>
           </div>
-          <span className="text-[10px] text-slate-500 font-mono">
+          <span className="text-sm text-slate-500 font-mono">
             Todas as alterações geram trilha imutável no Audit Log
           </span>
         </div>
 
         {isLoading ? (
-          <div className="p-12 text-center text-slate-500 font-mono text-xs flex items-center justify-center gap-2">
+          <div className="p-12 text-center text-slate-500 font-mono text-sm flex items-center justify-center gap-2">
             <span className="w-4 h-4 border-2 border-orange-400/30 border-t-orange-400 rounded-full animate-spin" />
             <span>Carregando configurações operacionais...</span>
           </div>
         ) : filteredSettings.length === 0 ? (
-          <div className="p-12 text-center text-slate-500 font-mono text-xs">
+          <div className="p-12 text-center text-slate-500 font-mono text-sm">
             Nenhuma configuração encontrada para este filtro.
           </div>
         ) : (
@@ -398,7 +398,7 @@ const handleTestIntegration = async (serviceId: string) => {
                   {/* Left: Info */}
                   <div className="space-y-1 max-w-xl">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-white font-sans">{setting.name}</span>
+                      <span className="text-sm font-bold text-white font-sans">{setting.name}</span>
                       {setting.isSecret ? (
                         <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-amber-950/60 text-amber-400 border border-amber-800/60 flex items-center gap-1">
                           <Lock className="w-2.5 h-2.5" /> SECRET
@@ -417,9 +417,9 @@ const handleTestIntegration = async (serviceId: string) => {
                       )}
                     </div>
 
-                    <p className="text-[11px] text-slate-400 leading-relaxed font-sans">{setting.description}</p>
+                    <p className="text-sm text-slate-400 leading-relaxed font-sans">{setting.description}</p>
 
-                    <div className="flex items-center gap-3 text-[10px] text-slate-500 font-mono pt-1">
+                    <div className="flex items-center gap-3 text-sm text-slate-500 font-mono pt-1">
                       <span>Chave: {setting.key}</span>
                       {setting.lastUpdated && (
                         <span>
@@ -434,7 +434,7 @@ const handleTestIntegration = async (serviceId: string) => {
                   <div className="flex items-center gap-2.5 shrink-0">
                     {setting.isSecret ? (
                       <div className="flex items-center gap-2">
-                        <div className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 font-mono text-xs select-none">
+                        <div className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 font-mono text-sm select-none">
                           {setting.isConfigured ? '••••••••••••••••' : '(não informada)'}
                         </div>
                         <button
@@ -442,7 +442,7 @@ const handleTestIntegration = async (serviceId: string) => {
                             setSelectedSecret(setting);
                             setIsSecretModalOpen(true);
                           }}
-                          className="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                          className="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
                         >
                           <KeyRound className="w-3.5 h-3.5" />
                           <span>Alterar</span>
@@ -463,7 +463,7 @@ const handleTestIntegration = async (serviceId: string) => {
                             }`}
                           />
                         </button>
-                        <span className="text-xs font-mono text-slate-300 w-16">
+                        <span className="text-sm font-mono text-slate-300 w-16">
                           {setting.currentValue ? 'Ativado' : 'Desativado'}
                         </span>
                       </div>
@@ -472,7 +472,7 @@ const handleTestIntegration = async (serviceId: string) => {
                         value={setting.currentValue || ''}
                         onChange={(e) => handleUpdateSetting(setting.key, e.target.value)}
                         disabled={!setting.isEditable || isSaving}
-                        className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-orange-500 font-mono cursor-pointer"
+                        className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-orange-500 font-mono cursor-pointer"
                       >
                         {setting.options?.map((opt) => (
                           <option key={opt.value} value={opt.value}>
@@ -491,7 +491,7 @@ const handleTestIntegration = async (serviceId: string) => {
                             }
                           }}
                           disabled={!setting.isEditable || isSaving}
-                          className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-orange-500 font-mono w-48 sm:w-64"
+                          className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-orange-500 font-mono w-48 sm:w-64"
                         />
                       </div>
                     )}
@@ -520,18 +520,18 @@ const handleTestIntegration = async (serviceId: string) => {
         <div className="p-4 border-b border-slate-900 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <History className="w-4 h-4 text-orange-400" />
-            <span className="text-xs font-bold text-white uppercase font-mono tracking-wider">
+            <span className="text-sm font-bold text-white uppercase font-mono tracking-wider">
               Histórico de Auditoria de Configurações ({auditHistory.length})
             </span>
           </div>
-          <span className="text-[10px] text-slate-500 font-mono">
+          <span className="text-sm text-slate-500 font-mono">
             Registros imutáveis com mascaramento de dados sensíveis
           </span>
         </div>
 
         <div className="overflow-x-auto max-h-56 overflow-y-auto">
-          <table className="w-full text-left text-xs font-mono">
-            <thead className="bg-slate-900/80 text-slate-400 text-[10px] uppercase border-b border-slate-900 sticky top-0">
+          <table className="w-full text-left text-sm font-mono">
+            <thead className="bg-slate-900/80 text-slate-400 text-sm uppercase border-b border-slate-900 sticky top-0">
               <tr>
                 <th className="py-2.5 px-4">Data / Hora</th>
                 <th className="py-2.5 px-4">Administrador</th>
@@ -540,7 +540,7 @@ const handleTestIntegration = async (serviceId: string) => {
                 <th className="py-2.5 px-4">Detalhes</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-900 text-[11px]">
+            <tbody className="divide-y divide-slate-900 text-sm">
               {auditHistory.map((item) => (
                 <tr key={item.id} className="hover:bg-slate-900/40 transition-colors">
                   <td className="py-2 px-4 text-slate-500">
@@ -549,7 +549,7 @@ const handleTestIntegration = async (serviceId: string) => {
                   <td className="py-2 px-4 text-slate-300 font-sans font-semibold">{item.updatedBy}</td>
                   <td className="py-2 px-4">
                     <span
-                      className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                      className={`px-1.5 py-0.5 rounded text-sm font-bold ${
                         item.isSecret
                           ? 'bg-amber-950/60 text-amber-400 border border-amber-800/60'
                           : 'bg-orange-950/60 text-orange-400 border border-orange-800/60'
@@ -559,7 +559,7 @@ const handleTestIntegration = async (serviceId: string) => {
                     </span>
                   </td>
                   <td className="py-2 px-4 text-slate-200">{item.key}</td>
-                  <td className="py-2 px-4 text-slate-400 text-[10px] truncate max-w-xs">{item.details}</td>
+                  <td className="py-2 px-4 text-slate-400 text-sm truncate max-w-xs">{item.details}</td>
                 </tr>
               ))}
             </tbody>

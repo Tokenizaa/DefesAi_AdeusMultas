@@ -78,11 +78,11 @@ export const KnowledgeHub: React.FC = () => {
           <div>
             <h1 className="text-xl font-bold text-white flex items-center gap-2">
               Hub Canônico de Conhecimento Jurídico
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono font-bold">
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-sm font-mono font-bold">
                 100% Deterministico
               </span>
             </h1>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-sm text-slate-400 mt-0.5">
               Base canônica imutável com 142+ artigos do CTB, 52 teses fundamentadas, 65+ blocos e motor de petições v1.
             </p>
           </div>
@@ -97,7 +97,7 @@ export const KnowledgeHub: React.FC = () => {
               placeholder="Buscar em toda a base canônica..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500"
+              className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500"
             />
           </div>
         </div>
@@ -112,7 +112,7 @@ export const KnowledgeHub: React.FC = () => {
             <button
               key={v.id}
               onClick={() => setActiveView(v.id as KnowledgeViewType)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer border ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all cursor-pointer border ${
                 isActive
                   ? 'bg-orange-500 text-white border-orange-400 shadow-md shadow-orange-500/10'
                   : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800 border-slate-800'

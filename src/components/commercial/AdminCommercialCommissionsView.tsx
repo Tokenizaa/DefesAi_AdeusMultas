@@ -127,11 +127,11 @@ export const AdminCommercialCommissionsView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-violet-500/20 text-violet-400 border border-violet-500/30 font-mono">
+            <span className="px-2 py-0.5 rounded text-sm font-bold uppercase tracking-wider bg-violet-500/20 text-violet-400 border border-violet-500/30 font-mono">
               Livro de Comissões
             </span>
-            <span className="text-slate-500 text-xs font-mono">•</span>
-            <span className="text-slate-400 text-xs">Eventos de Pagamento & Liquidações</span>
+            <span className="text-slate-500 text-sm font-mono">•</span>
+            <span className="text-slate-400 text-sm">Eventos de Pagamento & Liquidações</span>
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight mt-1">
             Ledger de Comissões de Afiliados & Indicadores
@@ -139,7 +139,7 @@ export const AdminCommercialCommissionsView: React.FC = () => {
         </div>
 
         {feedback && (
-          <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-medium flex items-center gap-2">
+          <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-sm font-medium flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" />
             {feedback}
           </div>
@@ -149,28 +149,28 @@ export const AdminCommercialCommissionsView: React.FC = () => {
       {/* Summary KPI Totals */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <span className="text-slate-400 text-xs font-medium">Total de Comissões Geradas</span>
+          <span className="text-slate-400 text-sm font-medium">Total de Comissões Geradas</span>
           <div className="mt-1 text-2xl font-black text-white font-mono">
             R$ {totals.totalEarned.toFixed(2)}
           </div>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <span className="text-slate-400 text-xs font-medium">Disponíveis para Saque</span>
+          <span className="text-slate-400 text-sm font-medium">Disponíveis para Saque</span>
           <div className="mt-1 text-2xl font-black text-emerald-400 font-mono">
             R$ {totals.totalAvailable.toFixed(2)}
           </div>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <span className="text-slate-400 text-xs font-medium">Liquidadas / Pagas</span>
+          <span className="text-slate-400 text-sm font-medium">Liquidadas / Pagas</span>
           <div className="mt-1 text-2xl font-black text-blue-400 font-mono">
             R$ {totals.totalPaid.toFixed(2)}
           </div>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <span className="text-slate-400 text-xs font-medium">Revertidas / Canceladas</span>
+          <span className="text-slate-400 text-sm font-medium">Revertidas / Canceladas</span>
           <div className="mt-1 text-2xl font-black text-rose-400 font-mono">
             R$ {totals.totalReversed.toFixed(2)}
           </div>
@@ -178,7 +178,7 @@ export const AdminCommercialCommissionsView: React.FC = () => {
       </div>
 
       {/* Filters Bar */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
         <div className="relative w-full sm:w-80">
           <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
           <input
@@ -186,17 +186,17 @@ export const AdminCommercialCommissionsView: React.FC = () => {
             placeholder="Buscar por beneficiário, comprador ou pedido..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-white text-xs focus:outline-hidden focus:border-violet-500 font-mono"
+            className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-white text-sm focus:outline-hidden focus:border-violet-500 font-mono"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
           <div className="flex items-center gap-1.5">
-            <span className="text-slate-500 font-mono text-[11px]">Nível:</span>
+            <span className="text-slate-500 font-mono text-sm">Nível:</span>
             <select
               value={levelFilter}
               onChange={(e) => setLevelFilter(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white text-xs font-mono focus:outline-hidden"
+              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white text-sm font-mono focus:outline-hidden"
             >
               <option value="ALL">Todos os Níveis</option>
               <option value="1">Nível 1 (Direto)</option>
@@ -206,11 +206,11 @@ export const AdminCommercialCommissionsView: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-slate-500 font-mono text-[11px]">Status:</span>
+            <span className="text-slate-500 font-mono text-sm">Status:</span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white text-xs font-mono focus:outline-hidden"
+              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white text-sm font-mono focus:outline-hidden"
             >
               <option value="ALL">Todos os Status</option>
               <option value="AVAILABLE">AVAILABLE (Disponível)</option>
@@ -234,8 +234,8 @@ export const AdminCommercialCommissionsView: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 text-slate-400 uppercase font-mono text-[10px] border-b border-slate-800">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-950 text-slate-400 uppercase font-mono text-sm border-b border-slate-800">
               <tr>
                 <th className="px-4 py-3">Data Compra</th>
                 <th className="px-4 py-3">Beneficiário</th>
@@ -263,12 +263,12 @@ export const AdminCommercialCommissionsView: React.FC = () => {
 
                     <td className="px-4 py-3">
                       <div className="font-bold text-white">{c.beneficiaryName}</div>
-                      <div className="text-[10px] text-slate-500">{c.beneficiaryId}</div>
+                      <div className="text-sm text-slate-500">{c.beneficiaryId}</div>
                     </td>
 
                     <td className="px-4 py-3">
                       <span
-                        className={`px-2 py-0.5 rounded font-bold text-[10px] ${
+                        className={`px-2 py-0.5 rounded font-bold text-sm ${
                           c.level === 1
                             ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
                             : c.level === 2
@@ -282,7 +282,7 @@ export const AdminCommercialCommissionsView: React.FC = () => {
 
                     <td className="px-4 py-3 text-slate-300">
                       <div>{c.buyerName}</div>
-                      <div className="text-[10px] text-slate-500">{c.paymentId}</div>
+                      <div className="text-sm text-slate-500">{c.paymentId}</div>
                     </td>
 
                     <td className="px-4 py-3 text-slate-300">
@@ -299,7 +299,7 @@ export const AdminCommercialCommissionsView: React.FC = () => {
 
                     <td className="px-4 py-3">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        className={`px-2 py-0.5 rounded-full text-sm font-bold ${
                           isPaid
                             ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
                             : isAvail
@@ -318,7 +318,7 @@ export const AdminCommercialCommissionsView: React.FC = () => {
                         {isAvail && (
                           <button
                             onClick={() => handleMarkPaid(c.id)}
-                            className="px-2.5 py-1 rounded bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 text-[11px] font-bold border border-blue-500/30 transition-colors cursor-pointer"
+                            className="px-2.5 py-1 rounded bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 text-sm font-bold border border-blue-500/30 transition-colors cursor-pointer"
                           >
                             Pagar
                           </button>
@@ -348,7 +348,7 @@ export const AdminCommercialCommissionsView: React.FC = () => {
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
-                <span className="text-[10px] font-mono uppercase text-rose-400 font-bold">
+                <span className="text-sm font-mono uppercase text-rose-400 font-bold">
                   Reversão Financeira
                 </span>
                 <h3 className="text-base font-bold text-white">Reverter Comissões do Pedido</h3>
@@ -361,9 +361,9 @@ export const AdminCommercialCommissionsView: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleExecuteReversal} className="space-y-3 text-xs">
+            <form onSubmit={handleExecuteReversal} className="space-y-3 text-sm">
               <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-1">
-                <span className="text-slate-500 text-[10px] font-mono uppercase">ID do Pagamento:</span>
+                <span className="text-slate-500 text-sm font-mono uppercase">ID do Pagamento:</span>
                 <div className="text-white font-mono font-bold">{reversalPaymentId}</div>
               </div>
 
@@ -377,7 +377,7 @@ export const AdminCommercialCommissionsView: React.FC = () => {
                   placeholder="Ex: Chargeback PagBank, cancelamento solicitado pelo cliente..."
                   value={reversalReason}
                   onChange={(e) => setReversalReason(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white text-xs focus:outline-hidden focus:border-rose-500"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white text-sm focus:outline-hidden focus:border-rose-500"
                 />
               </div>
 

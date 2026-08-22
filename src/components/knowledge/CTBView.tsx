@@ -61,12 +61,12 @@ export const CTBView: React.FC<{
             <BookOpen className="w-5 h-5 text-blue-400" />
             Código de Trânsito Brasileiro (Lei nº 9.503/1997)
             {articles.length > 0 && (
-              <span className="text-xs text-slate-400 font-mono font-normal">
+              <span className="text-sm text-slate-400 font-mono font-normal">
                 ({articles.length} artigos catalogados)
               </span>
             )}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             Artigos processados com teses de nulidade, prazos decadenciais e resoluções do CONTRAN vinculadas.
           </p>
         </div>
@@ -78,7 +78,7 @@ export const CTBView: React.FC<{
             placeholder="Buscar por artigo, texto ou tema..."
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
           />
         </div>
       </div>
@@ -86,7 +86,7 @@ export const CTBView: React.FC<{
       {loading ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
           <div className="inline-block animate-spin rounded-full border-2 border-blue-500 border-t-transparent w-8 h-8"></div>
-          <p className="mt-3 text-xs text-slate-400">Carregando artigos do CTB...</p>
+          <p className="mt-3 text-sm text-slate-400">Carregando artigos do CTB...</p>
         </div>
       ) : articles.length === 0 ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
@@ -102,11 +102,11 @@ export const CTBView: React.FC<{
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md font-mono font-bold text-xs">
+                  <span className="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md font-mono font-bold text-sm">
                     {art.articleNumber ? `Art. ${art.articleNumber}` : (art.title || art.id)}
                   </span>
                   {art.category && (
-                    <span className="px-2 py-0.5 bg-slate-900 text-slate-400 border border-slate-800 rounded text-[10px] uppercase font-mono">
+                    <span className="px-2 py-0.5 bg-slate-900 text-slate-400 border border-slate-800 rounded text-sm uppercase font-mono">
                       {art.category.replace(/_/g, ' ')}
                     </span>
                   )}
@@ -114,11 +114,11 @@ export const CTBView: React.FC<{
                 <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
               </div>
 
-              <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
+              <p className="text-sm text-slate-300 line-clamp-3 leading-relaxed">
                 {art.caput || art.description || art.text || 'Texto do artigo CTB'}
               </p>
 
-              <div className="flex items-center justify-between pt-2 border-t border-slate-900 text-[11px] text-slate-400">
+              <div className="flex items-center justify-between pt-2 border-t border-slate-900 text-sm text-slate-400">
                 <span>{art.penalties ? `Penalidade: ${art.penalties}` : 'Penalidades vigentes'}</span>
                 <span className="text-blue-400 font-medium group-hover:underline">Inspecionar artigo</span>
               </div>
@@ -140,7 +140,7 @@ export const CTBView: React.FC<{
                   <h3 className="text-base font-bold text-white">
                     {selectedArticle.articleNumber ? `Artigo ${selectedArticle.articleNumber} — CTB` : (selectedArticle.title || selectedArticle.id)}
                   </h3>
-                  <p className="text-xs text-slate-400">Lei nº 9.503/1997 • Código de Trânsito Brasileiro</p>
+                  <p className="text-sm text-slate-400">Lei nº 9.503/1997 • Código de Trânsito Brasileiro</p>
                 </div>
               </div>
               <button
@@ -151,7 +151,7 @@ export const CTBView: React.FC<{
               </button>
             </div>
 
-            <div className="space-y-4 text-xs text-slate-300">
+            <div className="space-y-4 text-sm text-slate-300">
               <div>
                 <label className="text-slate-400 font-medium block mb-1">Caput do Artigo:</label>
                 <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg text-slate-100 leading-relaxed">
@@ -194,7 +194,7 @@ export const CTBView: React.FC<{
             <div className="flex justify-end pt-3 border-t border-slate-800">
               <button
                 onClick={() => setSelectedArticle(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold cursor-pointer"
+                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm font-semibold cursor-pointer"
               >
                 Fechar
               </button>

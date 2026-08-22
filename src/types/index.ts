@@ -508,5 +508,5 @@ export interface PagBankPaymentConfirmation {
 }
 
 // Commercial Module Domain Types
-export * from './commercial';
+export * from './commercial.ts';
 

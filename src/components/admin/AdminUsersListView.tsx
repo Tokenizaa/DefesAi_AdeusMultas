@@ -34,13 +34,13 @@ export const AdminUsersListView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-white font-mono">Gestão de Usuários da Plataforma</h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-sm text-slate-400">
             Controle de condutores cadastrados, administradores e permissões de acesso.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg">
+          <span className="text-sm font-mono text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg">
             Total: <strong className="text-white">{usersList.length}</strong> usuários
           </span>
         </div>
@@ -55,7 +55,7 @@ export const AdminUsersListView: React.FC = () => {
             placeholder="Buscar por nome, e-mail ou CPF..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-orange-500 font-mono"
+            className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-orange-500 font-mono"
           />
         </div>
       </div>
@@ -63,8 +63,8 @@ export const AdminUsersListView: React.FC = () => {
       {/* Users Table */}
       <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-800 font-mono text-[10px] uppercase">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-800 font-mono text-sm uppercase">
               <tr>
                 <th className="py-3 px-4">Usuário / Nome</th>
                 <th className="py-3 px-4">E-mail</th>
@@ -73,24 +73,24 @@ export const AdminUsersListView: React.FC = () => {
                 <th className="py-3 px-4 text-right">Permissões</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-900 font-mono text-[11px] text-slate-300">
+            <tbody className="divide-y divide-slate-900 font-mono text-sm text-slate-300">
               {filteredUsers.map((u) => (
                 <tr key={u.id} className="hover:bg-slate-900/40 transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-slate-800 text-orange-400 font-bold flex items-center justify-center text-xs shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-slate-800 text-orange-400 font-bold flex items-center justify-center text-sm shrink-0">
                         {u.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
                         <p className="font-bold text-white font-sans">{u.name}</p>
-                        <p className="text-[10px] text-slate-500">{u.cityState || 'Local não informado'}</p>
+                        <p className="text-sm text-slate-500">{u.cityState || 'Local não informado'}</p>
                       </div>
                     </div>
                   </td>
                   <td className="py-3 px-4 text-slate-400">{u.email}</td>
                   <td className="py-3 px-4">
                     <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
+                      className={`px-2 py-0.5 rounded text-sm font-bold border ${
                         u.role === 'admin'
                           ? 'bg-orange-950/60 text-orange-300 border-orange-800'
                           : 'bg-slate-900 text-slate-300 border-slate-800'
@@ -105,7 +105,7 @@ export const AdminUsersListView: React.FC = () => {
                   <td className="py-3 px-4 text-right">
                     <button
                       onClick={() => handleToggleRole(u.email, u.role)}
-                      className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-sans font-bold transition-colors cursor-pointer border border-slate-800"
+                      className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg text-sm font-sans font-bold transition-colors cursor-pointer border border-slate-800"
                     >
                       {u.role === 'admin' ? 'Rebaixar para Motorista' : 'Promover a Admin'}
                     </button>

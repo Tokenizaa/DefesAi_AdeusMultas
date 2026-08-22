@@ -93,7 +93,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 text-xs flex flex-col max-h-[90vh] overflow-hidden">
+      <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 text-sm flex flex-col max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-100">
           <div className="flex items-center gap-3">
@@ -102,7 +102,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
             </div>
             <div>
               <h2 className="text-sm font-bold text-slate-900">Integração Meta Graph API (Facebook & Instagram)</h2>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-sm text-slate-500">
                 Arquitetura Canônica Segura • Graph API v20.0 • Publicação e Automação
               </p>
             </div>
@@ -128,7 +128,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
                 {isConnected ? 'Conta Meta Conectada e Operacional' : 'Integração Desconectada'}
               </span>
               {isConnected && (
-                <div className="flex items-center gap-3 text-[11px] text-slate-500 mt-0.5">
+                <div className="flex items-center gap-3 text-sm text-slate-500 mt-0.5">
                   <span className="flex items-center gap-1 font-medium">
                     <Facebook className="w-3 h-3 text-blue-600" />
                     {activePage?.name || 'Página FB'}
@@ -155,7 +155,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
                 onClick={async () => {
                   await onDisconnect();
                 }}
-                className="px-2.5 py-1 text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-lg font-bold text-[11px]"
+                className="px-2.5 py-1 text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-lg font-bold text-sm"
               >
                 Desconectar
               </button>
@@ -167,7 +167,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
         <div className="flex border-b border-slate-200 gap-4 mb-4">
           <button
             onClick={() => setActiveTab('oauth')}
-            className={`pb-2 font-bold text-xs flex items-center gap-1.5 transition-colors border-b-2 ${
+            className={`pb-2 font-bold text-sm flex items-center gap-1.5 transition-colors border-b-2 ${
               activeTab === 'oauth'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -178,7 +178,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('token')}
-            className={`pb-2 font-bold text-xs flex items-center gap-1.5 transition-colors border-b-2 ${
+            className={`pb-2 font-bold text-sm flex items-center gap-1.5 transition-colors border-b-2 ${
               activeTab === 'token'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -192,7 +192,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
               setActiveTab('diagnostics');
               if (!diagnosticReport) handleRunDiagnostics();
             }}
-            className={`pb-2 font-bold text-xs flex items-center gap-1.5 transition-colors border-b-2 ${
+            className={`pb-2 font-bold text-sm flex items-center gap-1.5 transition-colors border-b-2 ${
               activeTab === 'diagnostics'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -219,11 +219,11 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
                   <ShieldCheck className="w-4 h-4 text-blue-600" />
                   Fluxo Recomendado para Produção
                 </h4>
-                <p className="text-slate-600 text-[11px] leading-relaxed">
+                <p className="text-slate-600 text-sm leading-relaxed">
                   O fluxo OAuth oficial solicita as permissões necessárias e realiza a troca automática de
                   código por token de longa duração (60 dias) de forma 100% segura no backend.
                 </p>
-                <div className="text-[11px] text-slate-500 space-y-1 pt-1 font-mono">
+                <div className="text-sm text-slate-500 space-y-1 pt-1 font-mono">
                   <div>• Escopos: pages_manage_posts, instagram_content_publish, instagram_manage_insights</div>
                   <div>• Versão da API: Graph API v20.0</div>
                 </div>
@@ -255,9 +255,9 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
                   placeholder="EAAB..."
                   value={tokenInput}
                   onChange={(e) => setTokenInput(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 font-mono text-xs outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 font-mono text-sm outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <p className="text-[10px] text-slate-400 mt-1">
+                <p className="text-sm text-slate-400 mt-1">
                   Obtido no Meta Business Manager &gt; Usuários do Sistema ou Graph API Explorer.
                 </p>
               </div>
@@ -270,7 +270,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
                     placeholder="109847291847192"
                     value={pageIdInput}
                     onChange={(e) => setPageIdInput(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 font-mono text-xs outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 font-mono text-sm outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -282,7 +282,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
                     placeholder="17841400928374829"
                     value={igIdInput}
                     onChange={(e) => setIgIdInput(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 font-mono text-xs outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 font-mono text-sm outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -304,7 +304,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-bold text-slate-900">Verificação Automática de Capacidades</h4>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-sm text-slate-500">
                     Valida segurança DTO, OAuth, endpoints, publicação, webhooks e insights em tempo real.
                   </p>
                 </div>
@@ -321,11 +321,11 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
               {diagnosticReport ? (
                 <div className="space-y-2">
                   <div className="p-3 bg-slate-900 text-white rounded-xl flex items-center justify-between font-mono">
-                    <span className="font-bold text-[11px]">
+                    <span className="font-bold text-sm">
                       {diagnosticReport.passedCount}/{diagnosticReport.totalTests} Testes Aprovados
                     </span>
                     <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                      className={`px-2 py-0.5 rounded text-sm font-bold ${
                         diagnosticReport.allPassed
                           ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                           : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
@@ -339,7 +339,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
                     {diagnosticReport.results?.map((t: any) => (
                       <div
                         key={t.id}
-                        className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between text-[11px]"
+                        className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between text-sm"
                       >
                         <div className="flex items-center gap-2">
                           {t.passed ? (
@@ -352,7 +352,7 @@ export const MetaConnectionModal: React.FC<MetaConnectionModalProps> = ({
                             <span className="text-slate-700">{t.name}</span>
                           </div>
                         </div>
-                        <span className="text-slate-400 font-mono text-[10px] shrink-0 ml-2">
+                        <span className="text-slate-400 font-mono text-sm shrink-0 ml-2">
                           {t.durationMs}ms
                         </span>
                       </div>

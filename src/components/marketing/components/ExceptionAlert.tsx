@@ -36,14 +36,14 @@ export const ExceptionAlert: React.FC<ExceptionAlertProps> = ({
       {failingAgents.map((agent) => (
         <div
           key={agent.id}
-          className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs flex items-start gap-2.5"
+          className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-sm flex items-start gap-2.5"
         >
           <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
           <div>
             <p className="font-bold text-rose-800">
               {agent.name} em alerta
             </p>
-            <p className="text-rose-700 text-[11px] mt-0.5">{agent.currentTask || 'Tarefa interrompida'}</p>
+            <p className="text-rose-700 text-sm mt-0.5">{agent.currentTask || 'Tarefa interrompida'}</p>
           </div>
         </div>
       ))}
@@ -51,12 +51,12 @@ export const ExceptionAlert: React.FC<ExceptionAlertProps> = ({
       {retryingPublishes.map((q) => (
         <div
           key={q.id}
-          className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs flex items-center gap-2.5"
+          className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-sm flex items-center gap-2.5"
         >
           <RefreshCw className="w-4 h-4 text-amber-600 shrink-0" />
           <div className="flex-1">
             <p className="font-bold text-amber-800">Publicação {q.id} em retry</p>
-            <p className="text-amber-700 text-[11px] font-mono mt-0.5">
+            <p className="text-amber-700 text-sm font-mono mt-0.5">
               tentativa {q.attempts} • destino {q.destination}
             </p>
           </div>
@@ -64,18 +64,18 @@ export const ExceptionAlert: React.FC<ExceptionAlertProps> = ({
       ))}
 
       {stalledDelivery && (
-        <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs flex items-center gap-2.5">
+        <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-sm flex items-center gap-2.5">
           <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
           <div className="flex-1">
             <p className="font-bold text-rose-800">Entrega travada: Meta desconectada</p>
-            <p className="text-rose-700 text-[11px] mt-0.5">
+            <p className="text-rose-700 text-sm mt-0.5">
               {scheduledPosts} conteúdo(s) agendado(s) sem canal conectado para entrega.
             </p>
           </div>
           {onRetry && (
             <button
               onClick={onRetry}
-              className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-[10px] font-bold"
+              className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-sm font-bold"
             >
               Verificar
             </button>
@@ -84,7 +84,7 @@ export const ExceptionAlert: React.FC<ExceptionAlertProps> = ({
       )}
 
       {metrics && metrics.conversionRate === 0 && metrics.publishedPosts > 0 && (
-        <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs flex items-center gap-2.5">
+        <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-sm flex items-center gap-2.5">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
           <p className="text-amber-800">
             {metrics.publishedPosts} publicação(ões) sem conversão registrada — investigar funil.

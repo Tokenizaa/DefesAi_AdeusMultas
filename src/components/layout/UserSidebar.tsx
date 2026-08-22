@@ -75,7 +75,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ activeCaseCount = 0 })
           onClick={() => navigate('/dashboard')}
           className="flex items-center gap-2.5 cursor-pointer group"
         >
-          <div className="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center font-bold text-white shadow-sm shadow-orange-500/20 group-hover:scale-105 transition-transform text-xs">
+          <div className="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center font-bold text-white shadow-sm shadow-orange-500/20 group-hover:scale-105 transition-transform text-sm">
             <ShieldAlert className="w-4 h-4 text-white" />
           </div>
           <div>
@@ -85,14 +85,14 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ activeCaseCount = 0 })
                 Admin
               </span>
             </div>
-            <p className="text-[10px] text-slate-500 font-mono">Console Operacional</p>
+            <p className="text-sm text-slate-500 font-mono">Console Operacional</p>
           </div>
         </div>
       </div>
 
       {/* Main User Navigation */}
       <div className="p-3 flex-1 space-y-4 overflow-y-auto">
-        <div className="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+        <div className="px-3 py-1.5 text-sm font-bold text-slate-500 uppercase tracking-wider font-mono">
           Navegação do Cidadão
         </div>
 
@@ -100,19 +100,19 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ activeCaseCount = 0 })
           const Icon = item.icon;
           const active = isActive(item.path);
 
-          return (
-            <button
-              key={item.path}
-              id={`nav-user-${item.path.replace('/', '')}`}
-              onClick={() => navigate(item.path)}
-              className={`w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between transition-all cursor-pointer ${
-                active
-                  ? 'bg-[#E7EFFF] text-[#155BCB] font-bold border-l-4 border-[#155BCB]'
-                  : item.highlight
-                  ? 'bg-blue-50/80 text-[#071D41] hover:bg-blue-100/70'
-                  : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
-              }`}
-            >
+return (
+             <button
+               key={item.path}
+               id={`nav-user-${item.path.replace('/', '')}`}
+               onClick={() => navigate(item.path)}
+               className={`w-full px-3 py-3 rounded-xl text-sm font-semibold flex items-center justify-between transition-all cursor-pointer ${
+                 active
+                   ? 'bg-[#E7EFFF] text-[#155BCB] font-bold border-l-4 border-[#155BCB]'
+                   : item.highlight
+                   ? 'bg-blue-50/80 text-[#071D41] hover:bg-blue-100/70'
+                   : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+               }`}
+             >
               <div className="flex items-center gap-2.5">
                 <Icon
                   className={`w-4 h-4 ${active ? 'text-[#155BCB]' : item.highlight ? 'text-[#155BCB]' : 'text-slate-500'}`}
@@ -127,10 +127,10 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ activeCaseCount = 0 })
 
       {/* CTA Button - Nova Análise */}
       <div className="p-3 border-t border-[#CCCCCC]">
-        <button
-          onClick={() => navigate('/novo-caso')}
-          className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-xs font-bold flex items-center justify-between transition-all cursor-pointer shadow-xs shadow-orange-200"
-        >
+<button
+           onClick={() => navigate('/novo-caso')}
+           className="w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-bold flex items-center justify-between transition-all cursor-pointer shadow-xs shadow-orange-200"
+         >
           <div className="flex items-center gap-2">
             <PlusCircle className="w-4 h-4" />
             <span>Nova Análise</span>
@@ -141,12 +141,12 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ activeCaseCount = 0 })
       {/* Link para o Painel Admin caso seja administrador */}
       {isAdmin && (
         <div className="pt-4 mt-4 border-t border-slate-200">
-          <div className="px-3 py-1 text-[10px] font-bold text-purple-700 uppercase tracking-wider font-mono">
+          <div className="px-3 py-1 text-sm font-bold text-purple-700 uppercase tracking-wider font-mono">
             Acesso Governamental
           </div>
           <button
             onClick={() => navigate('/admin')}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold text-purple-900 bg-purple-50 hover:bg-purple-100 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-bold text-purple-900 bg-purple-50 hover:bg-purple-100 transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
               <Building2 className="w-4 h-4 text-purple-700" />
@@ -157,31 +157,31 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ activeCaseCount = 0 })
         </div>
       )}
 
-      {/* User Info & Logout footer */}
-      <div className="p-3 border-t border-[#CCCCCC] bg-[#F8F8F8]">
-        <div className="flex items-center justify-between p-2 rounded-lg bg-white border border-[#E6E6E6]">
-          <div className="flex items-center gap-2 min-w-0">
-            <div className="w-7 h-7 rounded-full bg-[#071D41] text-white flex items-center justify-center text-xs font-bold shrink-0">
-              A
-            </div>
-            <div className="min-w-0">
-              <p className="text-xs font-bold text-[#071D41] truncate">{user?.name || 'Condutor'}</p>
-              <p className="text-[10px] font-mono text-[#168821] font-semibold block truncate">
-                Conta Verificada
-              </p>
-            </div>
-          </div>
+{/* User Info & Logout footer */}
+       <div className="p-3 border-t border-[#CCCCCC] bg-[#F8F8F8]">
+         <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-[#E6E6E6]">
+           <div className="flex items-center gap-2 min-w-0">
+             <div className="w-7 h-7 rounded-full bg-[#071D41] text-white flex items-center justify-center text-sm font-bold shrink-0">
+               A
+             </div>
+             <div className="min-w-0">
+               <p className="text-sm font-bold text-[#071D41] truncate">{user?.name || 'Condutor'}</p>
+               <p className="text-sm font-mono text-[#168821] font-semibold block truncate">
+                 Conta Verificada
+               </p>
+             </div>
+           </div>
 
-          <button
-            onClick={() => logout()}
-            className="p-1.5 text-slate-500 hover:text-red-600 rounded-md cursor-pointer transition-colors"
-            title="Sair do sistema"
-            aria-label="Sair da conta"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+           <button
+             onClick={() => logout()}
+             className="p-2 text-slate-500 hover:text-red-600 rounded-md cursor-pointer transition-colors"
+             title="Sair do sistema"
+             aria-label="Sair da conta"
+           >
+             <LogOut className="w-4 h-4" />
+           </button>
+         </div>
+       </div>
     </aside>
   );
 };

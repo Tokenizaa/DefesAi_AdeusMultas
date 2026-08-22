@@ -63,12 +63,12 @@ export const GraphView: React.FC<{
             <GitFork className="w-5 h-5 text-indigo-400" />
             Grafo de Conhecimento & Relações Canônicas
             {relationships.length > 0 && (
-              <span className="text-xs text-slate-400 font-mono font-normal">
+              <span className="text-sm text-slate-400 font-mono font-normal">
                 ({relationships.length} conexões mapeadas)
               </span>
             )}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             Mapeamento relacional: Infração ➔ Artigo CTB ➔ Teses Jurídicas ➔ Templates de Peça ➔ Rito Procedimental.
           </p>
         </div>
@@ -80,7 +80,7 @@ export const GraphView: React.FC<{
             placeholder="Buscar conexões no grafo..."
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
           />
         </div>
       </div>
@@ -88,7 +88,7 @@ export const GraphView: React.FC<{
       {loading ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
           <div className="inline-block animate-spin rounded-full border-2 border-indigo-500 border-t-transparent w-8 h-8"></div>
-          <p className="mt-3 text-xs text-slate-400">Carregando nós e arestas do grafo jurídico...</p>
+          <p className="mt-3 text-sm text-slate-400">Carregando nós e arestas do grafo jurídico...</p>
         </div>
       ) : relationships.length === 0 ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
@@ -103,17 +103,17 @@ export const GraphView: React.FC<{
               className="bg-slate-950 border border-slate-800 hover:border-indigo-500/50 rounded-xl p-4 transition-all cursor-pointer space-y-3 group shadow-sm"
             >
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded font-mono font-bold text-xs flex items-center gap-1.5">
+                <span className="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded font-mono font-bold text-sm flex items-center gap-1.5">
                   <AlertTriangle className="w-3.5 h-3.5" />
                   Infração: {rel.infractionId || rel.infractionCode || '745-5-0'}
                 </span>
-                <span className="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded font-mono font-bold text-xs flex items-center gap-1.5">
+                <span className="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded font-mono font-bold text-sm flex items-center gap-1.5">
                   <BookOpen className="w-3.5 h-3.5" />
                   {rel.ctbArticleId || 'Art. 218'}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 text-xs text-slate-400 py-1">
+              <div className="flex items-center gap-2 text-sm text-slate-400 py-1">
                 <div className="p-1.5 bg-slate-900 rounded border border-slate-800 text-emerald-400 flex items-center gap-1">
                   <Scale className="w-3.5 h-3.5" />
                   <span>{Array.isArray(rel.argumentIds) ? `${rel.argumentIds.length} teses` : 'Teses'}</span>
@@ -130,7 +130,7 @@ export const GraphView: React.FC<{
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-slate-900 text-xs text-slate-500">
+              <div className="flex items-center justify-between pt-2 border-t border-slate-900 text-sm text-slate-500">
                 <span>Conexão determinística canônica</span>
                 <span className="text-indigo-400 font-bold group-hover:underline">Inspecionar nó</span>
               </div>
@@ -150,7 +150,7 @@ export const GraphView: React.FC<{
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white">Inspeção de Vínculo Relacional</h3>
-                  <p className="text-xs text-slate-400">Grafo Canônico de Conhecimento DefesAi</p>
+                  <p className="text-sm text-slate-400">Grafo Canônico de Conhecimento DefesAi</p>
                 </div>
               </div>
               <button
@@ -161,7 +161,7 @@ export const GraphView: React.FC<{
               </button>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-300">
+            <div className="space-y-3 text-sm text-slate-300">
               <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-slate-400 font-mono">Infração Alvo:</span>
@@ -187,7 +187,7 @@ export const GraphView: React.FC<{
                   <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg flex flex-wrap gap-2">
                     {Array.isArray(selectedRel.argumentIds) ? (
                       selectedRel.argumentIds.map((argId: string, idx: number) => (
-                        <span key={idx} className="px-2 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded font-mono text-[11px]">
+                        <span key={idx} className="px-2 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded font-mono text-sm">
                           {argId}
                         </span>
                       ))
@@ -202,7 +202,7 @@ export const GraphView: React.FC<{
             <div className="flex justify-end pt-3 border-t border-slate-800">
               <button
                 onClick={() => setSelectedRel(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold cursor-pointer"
+                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm font-semibold cursor-pointer"
               >
                 Fechar
               </button>

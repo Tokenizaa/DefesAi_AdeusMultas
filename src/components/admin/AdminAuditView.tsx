@@ -153,7 +153,7 @@ export const AdminAuditView: React.FC = () => {
               {activeTab === 'system' ? 'Logs do Sistema & Operações' : 'Auditoria de Segurança & Trilha Imutável'}
             </h1>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-500 mt-0.5">
             {activeTab === 'system'
               ? 'Gerencie logs de operações do sistema, eventos de API e atividades de usuários.'
               : 'Trilha de eventos append-only com mascaramento criptográfico de dados sensíveis e auditoria de agentes.'}
@@ -164,7 +164,7 @@ export const AdminAuditView: React.FC = () => {
           <div className="flex space-x-2">
             <button
               onClick={() => setActiveTab('system')}
-              className={`px-3 py-1 rounded-xs text-xs font-semibold transition-colors ${
+              className={`px-3 py-1 rounded-xs text-sm font-semibold transition-colors ${
                 activeTab === 'system'
                   ? 'bg-orange-500 text-white'
                   : 'text-slate-500 hover:bg-slate-100'
@@ -174,7 +174,7 @@ export const AdminAuditView: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('audit')}
-              className={`px-3 py-1 rounded-xs text-xs font-semibold transition-colors ${
+              className={`px-3 py-1 rounded-xs text-sm font-semibold transition-colors ${
                 activeTab === 'audit'
                   ? 'bg-orange-500 text-white'
                   : 'text-slate-500 hover:bg-slate-100'
@@ -186,7 +186,7 @@ export const AdminAuditView: React.FC = () => {
 
           {activeTab === 'system' && (
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg">
+              <span className="text-sm font-mono text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg">
                 Total: <strong className="text-white">{filteredSystemLogs.length}</strong> logs
               </span>
             </div>
@@ -194,7 +194,7 @@ export const AdminAuditView: React.FC = () => {
 
           {activeTab === 'audit' && (
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg">
+              <span className="text-sm font-mono text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg">
                 Total: <strong className="text-white">{filteredAuditLogs.length}</strong> registros
               </span>
             </div>
@@ -215,7 +215,7 @@ export const AdminAuditView: React.FC = () => {
                   placeholder="Buscar por mensagem, serviço ou nível..."
                   value={systemSearchQuery}
                   onChange={(e) => setSystemSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 outline-none shadow-2xs font-medium"
+                  className="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-orange-500 outline-none shadow-2xs font-medium"
                 />
               </div>
 
@@ -224,7 +224,7 @@ export const AdminAuditView: React.FC = () => {
                 <select
                   value={systemLevelFilter}
                   onChange={(e) => setSystemLevelFilter(e.target.value)}
-                  className="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-300 outline-none focus:border-orange-500 font-mono"
+                  className="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-300 outline-none focus:border-orange-500 font-mono"
                 >
                   <option value="all">Todos os Níveis</option>
                   <option value="error">Erro</option>
@@ -238,7 +238,7 @@ export const AdminAuditView: React.FC = () => {
                 <select
                   value={systemServiceFilter}
                   onChange={(e) => setSystemServiceFilter(e.target.value)}
-                  className="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-300 outline-none focus:border-orange-500 font-mono"
+                  className="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-300 outline-none focus:border-orange-500 font-mono"
                 >
                   <option value="all">Todos os Serviços</option>
                   <option value="api">API</option>
@@ -255,7 +255,7 @@ export const AdminAuditView: React.FC = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setSystemAutoRefresh(!systemAutoRefresh)}
-                className={`px-3 py-1 rounded-xs text-xs font-semibold transition-colors ${
+                className={`px-3 py-1 rounded-xs text-sm font-semibold transition-colors ${
                   systemAutoRefresh
                     ? 'bg-orange-500 text-white'
                     : 'text-slate-500 hover:bg-slate-100'
@@ -265,7 +265,7 @@ export const AdminAuditView: React.FC = () => {
               </button>
               <button
                 onClick={handleClearSystemLogs}
-                className="px-3 py-1 rounded-xs text-xs font-semibold text-red-500 hover:text-red-700 transition-colors"
+                className="px-3 py-1 rounded-xs text-sm font-semibold text-red-500 hover:text-red-700 transition-colors"
               >
                 Limpar Logs
               </button>
@@ -275,8 +275,8 @@ export const AdminAuditView: React.FC = () => {
           {/* System Logs Table */}
           <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-<thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-800 font-mono text-[10px] uppercase">
+              <table className="w-full text-left text-sm">
+<thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-800 font-mono text-sm uppercase">
                    <tr>
                      <th className="py-3 px-4">Timestamp</th>
                      <th className="py-3 px-4">Serviço</th>
@@ -287,7 +287,7 @@ export const AdminAuditView: React.FC = () => {
                      <th className="py-3 px-4 text-right">Ações</th>
                    </tr>
                  </thead>
-                <tbody className="divide-y divide-slate-900 font-mono text-[11px] text-slate-300">
+                <tbody className="divide-y divide-slate-900 font-mono text-sm text-slate-300">
 {filteredSystemLogs.length === 0 ? (
                      <tr>
                        <td colSpan={7} className="py-8 text-center text-slate-500">
@@ -309,7 +309,7 @@ export const AdminAuditView: React.FC = () => {
                          </td>
                          <td className="py-3 px-4">
                            <span
-                             className={`px-1 py-0.5 rounded text-xs font-semibold ${
+                             className={`px-1 py-0.5 rounded text-sm font-semibold ${
                                log.level === 'error'
                                  ? 'bg-red-100 text-red-800'
                                  : log.level === 'warning'
@@ -370,7 +370,7 @@ export const AdminAuditView: React.FC = () => {
                 placeholder="Buscar por ação, ator, detalhes ou recurso..."
                 value={auditFilter}
                 onChange={(e) => setAuditFilter(e.target.value)}
-                className="w-full pl-4 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 outline-none shadow-2xs font-medium"
+                className="w-full pl-4 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-orange-500 outline-none shadow-2xs font-medium"
               />
             </div>
           </div>
@@ -378,8 +378,8 @@ export const AdminAuditView: React.FC = () => {
           {/* Audit Logs Table */}
           <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-<thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-800 font-mono text-[10px] uppercase">
+              <table className="w-full text-left text-sm">
+<thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-800 font-mono text-sm uppercase">
                    <tr>
                      <th className="py-3 px-4">Timestamp</th>
                      <th className="py-3 px-4">Ator</th>
@@ -391,7 +391,7 @@ export const AdminAuditView: React.FC = () => {
                      <th className="py-3 px-4 text-right">Ações</th>
                    </tr>
                  </thead>
-                <tbody className="divide-y divide-slate-900 font-mono text-[11px] text-slate-300">
+                <tbody className="divide-y divide-slate-900 font-mono text-sm text-slate-300">
 {filteredAuditLogs.length === 0 ? (
                      <tr>
                        <td colSpan={8} className="py-8 text-center text-slate-500">

@@ -254,7 +254,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
       </div>
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       {/* Card Brand Detection */}
-      <div className="flex items-center gap-2 text-xs text-slate-500">
+      <div className="flex items-center gap-2 text-sm text-slate-500">
         <span className="font-mono uppercase">Bandeira:</span>
         {cardBrand ? (
           <img src={getBrandIcon(cardBrand)} alt={cardBrand} className="h-5 w-auto" />
@@ -271,7 +271,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
 
       {/* Card Number */}
       <div>
-        <label htmlFor="card-number" className="block text-[10px] font-bold text-slate-700 uppercase font-mono mb-1">
+        <label htmlFor="card-number" className="block text-sm font-bold text-slate-700 uppercase font-mono mb-1">
           Número do Cartão
         </label>
         <div className="relative">
@@ -299,7 +299,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
 
       {/* Card Holder Name */}
       <div>
-        <label htmlFor="card-holder" className="block text-[10px] font-bold text-slate-700 uppercase font-mono mb-1">
+        <label htmlFor="card-holder" className="block text-sm font-bold text-slate-700 uppercase font-mono mb-1">
           Nome no Cartão (como impresso)
         </label>
         <input
@@ -317,7 +317,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
       {/* Expiry and CVV Row */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label htmlFor="card-expiry" className="block text-[10px] font-bold text-slate-700 uppercase font-mono mb-1">
+          <label htmlFor="card-expiry" className="block text-sm font-bold text-slate-700 uppercase font-mono mb-1">
             Validade (MM/AA)
           </label>
           <input
@@ -333,7 +333,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
           />
         </div>
         <div className="relative">
-          <label htmlFor="card-cvv" className="block text-[10px] font-bold text-slate-700 uppercase font-mono mb-1">
+          <label htmlFor="card-cvv" className="block text-sm font-bold text-slate-700 uppercase font-mono mb-1">
             CVV
           </label>
           <div className="relative">
@@ -363,7 +363,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
 
       {/* CPF Titular */}
       <div>
-        <label htmlFor="card-cpf" className="block text-[10px] font-bold text-slate-700 uppercase font-mono mb-1">
+        <label htmlFor="card-cpf" className="block text-sm font-bold text-slate-700 uppercase font-mono mb-1">
           CPF do Titular
         </label>
         <input
@@ -380,7 +380,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
 
       {/* Installments Selector */}
       <div>
-        <label className="block text-[10px] font-bold text-slate-700 uppercase font-mono mb-1">
+        <label className="block text-sm font-bold text-slate-700 uppercase font-mono mb-1">
           Parcelamento
         </label>
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-40 overflow-y-auto">
@@ -389,14 +389,14 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
               key={opt.installments}
               type="button"
               onClick={() => setInstallments(opt.installments)}
-              className={`relative p-2 rounded-lg text-xs font-mono transition-all border-2 ${
+              className={`relative p-2 rounded-lg text-sm font-mono transition-all border-2 ${
                 installments === opt.installments
                   ? 'border-orange-500 bg-orange-50 text-orange-700'
                   : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
               }`}
             >
               <div className="font-bold">{opt.installments}x</div>
-              <div className="text-[10px]">R$ {opt.value.toFixed(2).replace('.', ',')}</div>
+              <div className="text-sm">R$ {opt.value.toFixed(2).replace('.', ',')}</div>
               {opt.hasInterest && (
                 <span className="absolute top-1 right-1 text-[8px] bg-amber-100 text-amber-700 px-1 rounded">com juros</span>
               )}
@@ -407,7 +407,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
             </button>
           ))}
           {installmentOptions.length === 0 && (
-            <div className="col-span-full text-center text-xs text-slate-400 py-4">
+            <div className="col-span-full text-center text-sm text-slate-400 py-4">
               Insira o número do cartão para ver parcelas
             </div>
           )}
@@ -416,14 +416,14 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
 
       {/* Error Display */}
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-xs">
+        <div className="flex items-center gap-2 p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-sm">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {/* Security Badge */}
-      <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-400 font-mono pt-2 border-t border-slate-100">
+      <div className="flex items-center justify-center gap-1.5 text-sm text-slate-400 font-mono pt-2 border-t border-slate-100">
         <Lock className="w-3 h-3 text-emerald-600" />
         <span>Dados criptografados TLS 256-bit — Tokenização PagBank</span>
       </div>
@@ -435,7 +435,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
             type="button"
             onClick={handleTokenize}
             disabled={isTokenizing}
-            className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 uppercase tracking-tight"
+            className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 uppercase tracking-tight"
           >
             {isTokenizing ? (
               <>
@@ -453,7 +453,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-emerald-200 disabled:opacity-50"
+            className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-emerald-200 disabled:opacity-50"
           >
             {isSubmitting ? (
               <>

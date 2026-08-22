@@ -150,11 +150,11 @@ export const AdminCommercialCouponsView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30 font-mono">
+            <span className="px-2 py-0.5 rounded text-sm font-bold uppercase tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30 font-mono">
               Gestão de Cupons
             </span>
-            <span className="text-slate-500 text-xs font-mono">•</span>
-            <span className="text-slate-400 text-xs">Códigos Promocionais & Regras de Aplicação</span>
+            <span className="text-slate-500 text-sm font-mono">•</span>
+            <span className="text-slate-400 text-sm">Códigos Promocionais & Regras de Aplicação</span>
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight mt-1">
             Cupons de Desconto & Resgates
@@ -163,7 +163,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
 
         <div className="flex items-center gap-2">
           {feedback && (
-            <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-medium flex items-center gap-2">
+            <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-sm font-medium flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4" />
               {feedback}
             </div>
@@ -171,7 +171,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-orange-500/20 transition-all cursor-pointer"
+            className="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold flex items-center gap-1.5 shadow-lg shadow-orange-500/20 transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Novo Cupom
@@ -183,12 +183,12 @@ export const AdminCommercialCouponsView: React.FC = () => {
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-3">
           <Key className="w-4 h-4 text-orange-400" />
-          <h2 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+          <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
             Simulador / Validador de Cupom em Tempo Real
           </h2>
         </div>
 
-        <form onSubmit={handleTestCoupon} className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+        <form onSubmit={handleTestCoupon} className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm">
           <div>
             <label className="block text-slate-400 font-mono mb-1">Código do Cupom</label>
             <input
@@ -239,7 +239,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
 
         {testResult && (
           <div
-            className={`mt-3 p-3 rounded-lg border text-xs flex items-center justify-between font-mono ${
+            className={`mt-3 p-3 rounded-lg border text-sm flex items-center justify-between font-mono ${
               testResult.valid
                 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
                 : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
@@ -270,8 +270,8 @@ export const AdminCommercialCouponsView: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 text-slate-400 uppercase font-mono text-[10px] border-b border-slate-800">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-950 text-slate-400 uppercase font-mono text-sm border-b border-slate-800">
               <tr>
                 <th className="px-4 py-3">Código</th>
                 <th className="px-4 py-3">Desconto</th>
@@ -327,7 +327,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
 
                   <td className="px-4 py-3">
                     <span
-                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      className={`px-2 py-0.5 rounded-full text-sm font-bold ${
                         c.isActive
                           ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                           : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
@@ -340,7 +340,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
                   <td className="px-4 py-3 text-right">
                     <button
                       onClick={() => handleToggleCoupon(c)}
-                      className={`px-2.5 py-1 rounded text-[11px] font-bold transition-colors cursor-pointer ${
+                      className={`px-2.5 py-1 rounded text-sm font-bold transition-colors cursor-pointer ${
                         c.isActive
                           ? 'bg-slate-800 hover:bg-slate-700 text-slate-300'
                           : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400'
@@ -362,7 +362,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
-                <span className="text-[10px] font-mono uppercase text-orange-400 font-bold">
+                <span className="text-sm font-mono uppercase text-orange-400 font-bold">
                   Novo Cupom
                 </span>
                 <h3 className="text-base font-bold text-white">Criar Código de Desconto</h3>
@@ -375,7 +375,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleCreateCoupon} className="space-y-3 text-xs">
+            <form onSubmit={handleCreateCoupon} className="space-y-3 text-sm">
               <div>
                 <label className="block text-slate-400 font-medium mb-1">
                   Código do Cupom * (Letras e Números)
@@ -396,7 +396,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
                   <select
                     value={formDiscountType}
                     onChange={(e) => setFormDiscountType(e.target.value as any)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-hidden focus:border-orange-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-hidden focus:border-orange-500"
                   >
                     <option value="percentage">Percentual (%)</option>
                     <option value="fixed">Valor Fixo (R$)</option>
@@ -412,7 +412,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
                     required
                     value={formDiscountValue}
                     onChange={(e) => setFormDiscountValue(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-xs focus:outline-hidden focus:border-orange-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-hidden focus:border-orange-500"
                   />
                 </div>
               </div>
@@ -425,7 +425,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
                     placeholder="Ex: 500 (Vazio = Livre)"
                     value={formMaxUses}
                     onChange={(e) => setFormMaxUses(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-xs focus:outline-hidden focus:border-orange-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-hidden focus:border-orange-500"
                   />
                 </div>
 
@@ -436,7 +436,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
                     min="1"
                     value={formMaxUsesPerUser}
                     onChange={(e) => setFormMaxUsesPerUser(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-xs focus:outline-hidden focus:border-orange-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-hidden focus:border-orange-500"
                   />
                 </div>
               </div>
@@ -447,7 +447,7 @@ export const AdminCommercialCouponsView: React.FC = () => {
                   type="date"
                   value={formExpiresAt}
                   onChange={(e) => setFormExpiresAt(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-hidden focus:border-orange-500"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-hidden focus:border-orange-500"
                 />
               </div>
 

@@ -21,7 +21,7 @@ export const AdminCasesListView: React.FC<AdminCasesListViewProps> = ({
 
   const handleSelectCaseWithNavigation = (c: CaseDomain) => {
     onSelectCase(c);
-    navigate(`/cases/${c.id}`);
+    navigate(`/admin/cases/${c.id}`);
   };
 
   const handleSimulatePayment = async (caseId: string) => {

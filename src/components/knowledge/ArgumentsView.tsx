@@ -79,12 +79,12 @@ export const ArgumentsView: React.FC<{
             <Scale className="w-5 h-5 text-emerald-400" />
             Catálogo Canônico de Argumentos & Teses Jurídicas
             {argumentsList.length > 0 && (
-              <span className="text-xs text-slate-400 font-mono font-normal">
+              <span className="text-sm text-slate-400 font-mono font-normal">
                 ({argumentsList.length} teses fundamentadas)
               </span>
             )}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             Teses técnicas e preliminares de nulidade amparadas em jurisprudência do STJ, STF e Resoluções CONTRAN.
           </p>
         </div>
@@ -96,7 +96,7 @@ export const ArgumentsView: React.FC<{
             placeholder="Buscar por tese, súmula, artigo..."
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
           />
         </div>
       </div>
@@ -104,7 +104,7 @@ export const ArgumentsView: React.FC<{
       {loading ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
           <div className="inline-block animate-spin rounded-full border-2 border-emerald-500 border-t-transparent w-8 h-8"></div>
-          <p className="mt-3 text-xs text-slate-400">Carregando teses jurídicas...</p>
+          <p className="mt-3 text-sm text-slate-400">Carregando teses jurídicas...</p>
         </div>
       ) : argumentsList.length === 0 ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
@@ -113,8 +113,8 @@ export const ArgumentsView: React.FC<{
       ) : (
         <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-800 font-mono text-[10px] uppercase">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-800 font-mono text-sm uppercase">
                 <tr>
                   <th className="py-3 px-4">Código da Tese</th>
                   <th className="py-3 px-4">Título do Argumento</th>
@@ -134,15 +134,15 @@ export const ArgumentsView: React.FC<{
                       {arg.title || arg.name}
                     </td>
                     <td className="py-3 px-4">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase ${getCategoryBadge(arg.category)}`}>
+                      <span className={`px-2 py-0.5 rounded-full text-sm font-bold border uppercase ${getCategoryBadge(arg.category)}`}>
                         {arg.category || 'mérito'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-mono text-slate-400 text-[11px] truncate max-w-xs">
+                    <td className="py-3 px-4 font-mono text-slate-400 text-sm truncate max-w-xs">
                       {arg.legalBasis || arg.legalReference || 'Art. 281 CTB'}
                     </td>
                     <td className="py-3 px-4">
-                      <span className="text-emerald-400 font-medium text-[11px] flex items-center gap-1">
+                      <span className="text-emerald-400 font-medium text-sm flex items-center gap-1">
                         <Zap className="w-3 h-3" />
                         {arg.confidenceScore ? `${arg.confidenceScore}% sucesso` : (arg.impactType || 'Nulidade do AIT')}
                       </span>
@@ -150,7 +150,7 @@ export const ArgumentsView: React.FC<{
                     <td className="py-3 px-4 text-right">
                       <button
                         onClick={() => setSelectedArgument(arg)}
-                        className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-emerald-400 rounded-lg text-xs font-bold transition-colors border border-slate-800 inline-flex items-center gap-1 cursor-pointer"
+                        className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-emerald-400 rounded-lg text-sm font-bold transition-colors border border-slate-800 inline-flex items-center gap-1 cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5" /> Inspecionar
                       </button>
@@ -176,7 +176,7 @@ export const ArgumentsView: React.FC<{
                   <h3 className="text-base font-bold text-white">
                     {selectedArgument.title || selectedArgument.name}
                   </h3>
-                  <p className="text-xs font-mono text-emerald-400">{selectedArgument.code || selectedArgument.id}</p>
+                  <p className="text-sm font-mono text-emerald-400">{selectedArgument.code || selectedArgument.id}</p>
                 </div>
               </div>
               <button
@@ -187,7 +187,7 @@ export const ArgumentsView: React.FC<{
               </button>
             </div>
 
-            <div className="space-y-4 text-xs text-slate-300">
+            <div className="space-y-4 text-sm text-slate-300">
               <div>
                 <label className="text-slate-400 font-medium block mb-1">Fundamentação & Doutrina:</label>
                 <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg text-slate-100 leading-relaxed whitespace-pre-wrap">
@@ -197,14 +197,14 @@ export const ArgumentsView: React.FC<{
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg">
-                  <span className="text-[10px] text-slate-400 uppercase font-mono block">Base Normativa</span>
-                  <span className="font-mono text-slate-200 text-xs mt-0.5 block">
+                  <span className="text-sm text-slate-400 uppercase font-mono block">Base Normativa</span>
+                  <span className="font-mono text-slate-200 text-sm mt-0.5 block">
                     {selectedArgument.legalBasis || selectedArgument.legalReference || 'Art. 280/281 CTB'}
                   </span>
                 </div>
                 <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg">
-                  <span className="text-[10px] text-slate-400 uppercase font-mono block">Efeito Pretendido</span>
-                  <span className="font-bold text-emerald-400 text-xs mt-0.5 block">
+                  <span className="text-sm text-slate-400 uppercase font-mono block">Efeito Pretendido</span>
+                  <span className="font-bold text-emerald-400 text-sm mt-0.5 block">
                     {selectedArgument.impactType || 'Extinção da Autuação & Cancelamento de Pontos'}
                   </span>
                 </div>
@@ -213,7 +213,7 @@ export const ArgumentsView: React.FC<{
               {selectedArgument.jurisprudence && (
                 <div>
                   <label className="text-slate-400 font-medium block mb-1">Jurisprudência Vinculada:</label>
-                  <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-blue-300 font-mono text-[11px]">
+                  <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-blue-300 font-mono text-sm">
                     {selectedArgument.jurisprudence}
                   </div>
                 </div>
@@ -223,7 +223,7 @@ export const ArgumentsView: React.FC<{
             <div className="flex justify-end pt-3 border-t border-slate-800">
               <button
                 onClick={() => setSelectedArgument(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold cursor-pointer"
+                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm font-semibold cursor-pointer"
               >
                 Fechar
               </button>

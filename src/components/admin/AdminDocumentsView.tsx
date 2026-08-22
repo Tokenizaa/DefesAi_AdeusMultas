@@ -88,7 +88,7 @@ export const AdminDocumentsView: React.FC = () => {
               Repositório de Petições & Minutas Administrativas
             </h1>
           </div>
-          <p className="text-xs text-slate-400 font-mono mt-0.5">
+          <p className="text-sm text-slate-400 font-mono mt-0.5">
             Inspeção de peças geradas pelo motor determinístico CTB e modelos RAG
           </p>
         </div>
@@ -105,25 +105,25 @@ export const AdminDocumentsView: React.FC = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono">
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <span className="text-[10px] text-slate-400 uppercase font-bold">Total de Peças Geradas</span>
+          <span className="text-sm text-slate-400 uppercase font-bold">Total de Peças Geradas</span>
           <p className="text-xl font-bold text-white">{documents.length}</p>
-          <p className="text-[10px] text-slate-500">Minutas ABNT estruturadas</p>
+          <p className="text-sm text-slate-500">Minutas ABNT estruturadas</p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <span className="text-[10px] text-slate-400 uppercase font-bold">Liberadas (Pagas)</span>
+          <span className="text-sm text-slate-400 uppercase font-bold">Liberadas (Pagas)</span>
           <p className="text-xl font-bold text-emerald-400">
             {documents.filter((d) => d.status === 'LIBERADO_PAGO').length}
           </p>
-          <p className="text-[10px] text-slate-500">Prontas para protocolo e envio</p>
+          <p className="text-sm text-slate-500">Prontas para protocolo e envio</p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <span className="text-[10px] text-slate-400 uppercase font-bold">Em Análise / Preview</span>
+          <span className="text-sm text-slate-400 uppercase font-bold">Em Análise / Preview</span>
           <p className="text-xl font-bold text-amber-400">
             {documents.filter((d) => d.status !== 'LIBERADO_PAGO').length}
           </p>
-          <p className="text-[10px] text-slate-500">Aguardando confirmação do motorista</p>
+          <p className="text-sm text-slate-500">Aguardando confirmação do motorista</p>
         </div>
       </div>
 
@@ -136,11 +136,11 @@ export const AdminDocumentsView: React.FC = () => {
             placeholder="Buscar por placa, AIT, cliente ou caso..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-orange-500 font-mono"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-orange-500 font-mono"
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto font-mono text-xs overflow-x-auto">
+        <div className="flex items-center gap-2 w-full sm:w-auto font-mono text-sm overflow-x-auto">
           <button
             onClick={() => setTypeFilter('all')}
             className={`px-3 py-1.5 rounded-xl cursor-pointer transition-colors whitespace-nowrap ${
@@ -187,9 +187,9 @@ export const AdminDocumentsView: React.FC = () => {
       {/* Documents Table */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse font-mono text-xs">
+          <table className="w-full text-left border-collapse font-mono text-sm">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-950/70 text-slate-400 uppercase text-[10px]">
+              <tr className="border-b border-slate-800 bg-slate-950/70 text-slate-400 uppercase text-sm">
                 <th className="p-3.5">Petição / Caso</th>
                 <th className="p-3.5">Cliente & Veículo</th>
                 <th className="p-3.5">Tipo de Procedimento</th>
@@ -220,7 +220,7 @@ export const AdminDocumentsView: React.FC = () => {
                       <div className="font-bold text-white">{doc.title}</div>
                       <div
                         onClick={() => navigate(`/admin/cases/${doc.caseId}`)}
-                        className="text-[10px] text-orange-400 hover:underline cursor-pointer flex items-center gap-1"
+                        className="text-sm text-orange-400 hover:underline cursor-pointer flex items-center gap-1"
                       >
                         <span>Caso #{doc.caseId} • AIT {doc.aitNumber}</span>
                         <ExternalLink className="w-2.5 h-2.5" />
@@ -228,10 +228,10 @@ export const AdminDocumentsView: React.FC = () => {
                     </td>
                     <td className="p-3.5">
                       <div className="text-white font-medium">{doc.clientName}</div>
-                      <div className="text-[10px] text-slate-500">Placa: {doc.vehiclePlate}</div>
+                      <div className="text-sm text-slate-500">Placa: {doc.vehiclePlate}</div>
                     </td>
                     <td className="p-3.5">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-200 border border-slate-700">
+                      <span className="px-2 py-0.5 rounded text-sm font-bold bg-slate-800 text-slate-200 border border-slate-700">
                         {doc.procedureLabel}
                       </span>
                     </td>
@@ -243,11 +243,11 @@ export const AdminDocumentsView: React.FC = () => {
                     </td>
                     <td className="p-3.5">
                       {doc.status === 'LIBERADO_PAGO' ? (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        <span className="px-2 py-0.5 rounded text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                           LIBERADO (PAGO)
                         </span>
                       ) : (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                        <span className="px-2 py-0.5 rounded text-sm font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
                           PREVIEW
                         </span>
                       )}
@@ -256,7 +256,7 @@ export const AdminDocumentsView: React.FC = () => {
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => setPreviewDoc(doc)}
-                          className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer transition-colors"
+                          className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm font-semibold flex items-center gap-1 cursor-pointer transition-colors"
                           title="Inspecionar Minuta A4"
                         >
                           <Eye className="w-3.5 h-3.5 text-orange-400" />
@@ -288,7 +288,7 @@ export const AdminDocumentsView: React.FC = () => {
                 <FileText className="w-5 h-5 text-orange-400" />
                 <div>
                   <h3 className="text-sm font-bold text-white">{previewDoc.title}</h3>
-                  <p className="text-[10px] text-slate-400">
+                  <p className="text-sm text-slate-400">
                     Cliente: {previewDoc.clientName} • Auto: {previewDoc.aitNumber} • {previewDoc.procedureLabel}
                   </p>
                 </div>
@@ -311,12 +311,12 @@ export const AdminDocumentsView: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-6 overflow-y-auto bg-slate-950 flex-1 text-slate-200 text-xs leading-relaxed space-y-4 whitespace-pre-wrap selection:bg-orange-500 selection:text-white">
+            <div className="p-6 overflow-y-auto bg-slate-950 flex-1 text-slate-200 text-sm leading-relaxed space-y-4 whitespace-pre-wrap selection:bg-orange-500 selection:text-white">
               {previewDoc.draftText}
             </div>
 
-            <div className="p-4 border-t border-slate-800 bg-slate-900 flex items-center justify-between text-xs">
-              <span className="text-[10px] text-slate-500">
+            <div className="p-4 border-t border-slate-800 bg-slate-900 flex items-center justify-between text-sm">
+              <span className="text-sm text-slate-500">
                 Motor: {previewDoc.engine} • Versão {previewDoc.version}
               </span>
               <button

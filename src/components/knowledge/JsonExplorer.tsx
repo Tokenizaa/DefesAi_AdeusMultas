@@ -89,7 +89,7 @@ export const JsonExplorer: React.FC<JsonExplorerProps> = ({
               setSelectedEntity(tab.id);
               setSelectedItem(null);
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors cursor-pointer ${
               selectedEntity === tab.id
                 ? 'bg-orange-500 text-white'
                 : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
@@ -109,13 +109,13 @@ export const JsonExplorer: React.FC<JsonExplorerProps> = ({
             placeholder="Filtrar árvore JSON por qualquer campo..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500"
           />
         </div>
 
         <button
           onClick={handleCopyJson}
-          className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-lg text-xs font-mono flex items-center gap-1.5 cursor-pointer shrink-0"
+          className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-lg text-sm font-mono flex items-center gap-1.5 cursor-pointer shrink-0"
         >
           {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
           {copied ? 'Copiado!' : 'Copiar JSON'}
@@ -126,7 +126,7 @@ export const JsonExplorer: React.FC<JsonExplorerProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Left items list */}
         <div className="bg-slate-950 border border-slate-800 rounded-xl p-2 max-h-[500px] overflow-y-auto space-y-1">
-          <div className="text-[10px] uppercase font-mono text-slate-500 px-2 py-1">
+          <div className="text-sm uppercase font-mono text-slate-500 px-2 py-1">
             Entidades encontradas ({filteredData.length})
           </div>
           {filteredData.map((item, idx) => {
@@ -135,14 +135,14 @@ export const JsonExplorer: React.FC<JsonExplorerProps> = ({
               <button
                 key={idx}
                 onClick={() => setSelectedItem(item)}
-                className={`w-full text-left p-2.5 rounded-lg text-xs font-mono transition-all cursor-pointer truncate ${
+                className={`w-full text-left p-2.5 rounded-lg text-sm font-mono transition-all cursor-pointer truncate ${
                   isSelected
                     ? 'bg-orange-500/20 text-orange-300 border border-orange-500/30'
                     : 'text-slate-300 hover:bg-slate-900 border border-transparent'
                 }`}
               >
                 <div className="font-bold truncate">{item.id || item.code || item.articleNumber || `Item #${idx + 1}`}</div>
-                <div className="text-[10px] text-slate-500 truncate">{item.title || item.description || item.name || item.caput || 'Detalhes...'}</div>
+                <div className="text-sm text-slate-500 truncate">{item.title || item.description || item.name || item.caput || 'Detalhes...'}</div>
               </button>
             );
           })}
@@ -150,11 +150,11 @@ export const JsonExplorer: React.FC<JsonExplorerProps> = ({
 
         {/* Right JSON Preview */}
         <div className="md:col-span-2 bg-slate-950 border border-slate-800 rounded-xl p-4 max-h-[500px] overflow-y-auto">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-800 mb-3 text-xs text-slate-400 font-mono">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-800 mb-3 text-sm text-slate-400 font-mono">
             <span>{selectedItem ? `Objeto: ${selectedItem.id || selectedItem.code || 'Selecionado'}` : 'Visualizador JSON Canônico'}</span>
             <span>UTF-8 • JSON Schema v1</span>
           </div>
-          <pre className="text-xs font-mono text-emerald-400 whitespace-pre-wrap leading-relaxed">
+          <pre className="text-sm font-mono text-emerald-400 whitespace-pre-wrap leading-relaxed">
             {selectedItem
               ? JSON.stringify(selectedItem, null, 2)
               : JSON.stringify(filteredData.slice(0, 5), null, 2)}

@@ -46,15 +46,15 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl max-w-lg w-full p-5 shadow-xl border border-slate-200 text-xs">
+      <div className="bg-white rounded-xl max-w-lg w-full p-5 shadow-xl border border-slate-200 text-sm">
         <div className="flex items-center justify-between pb-3 border-b border-slate-200">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-md bg-emerald-600 text-white flex items-center justify-center">
               <MessageSquare className="w-3.5 h-3.5" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-xs">Notificação WhatsApp Automatizada</h3>
-              <p className="text-[10px] text-slate-500 font-mono">Evolution API • Webhook Seguro</p>
+              <h3 className="font-bold text-slate-900 text-sm">Notificação WhatsApp Automatizada</h3>
+              <p className="text-sm text-slate-500 font-mono">Evolution API • Webhook Seguro</p>
             </div>
           </div>
           <button
@@ -67,25 +67,25 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
 
         <form onSubmit={handleSend} className="space-y-3 mt-3">
           <div>
-            <label className="font-bold text-slate-700 uppercase block text-[10px] font-mono">
+            <label className="font-bold text-slate-700 uppercase block text-sm font-mono">
               Número do Destinatário
             </label>
             <input
               type="text"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              className="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-slate-900 text-xs outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-slate-900 text-sm outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
           <div>
-            <label className="font-bold text-slate-700 uppercase block text-[10px] font-mono">
+            <label className="font-bold text-slate-700 uppercase block text-sm font-mono">
               Tipo de Evento do Processo
             </label>
             <select
               value={notificationType}
               onChange={(e) => setNotificationType(e.target.value)}
-              className="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-xs outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-sm outline-none focus:ring-2 focus:ring-orange-500"
             >
               <option value="status_update">Atualização de Julgamento (JARI)</option>
               <option value="defense_ready">Minuta Pronta para Protocolo</option>
@@ -95,14 +95,14 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
           </div>
 
           <div>
-            <label className="font-bold text-slate-700 uppercase block text-[10px] font-mono">
+            <label className="font-bold text-slate-700 uppercase block text-sm font-mono">
               Mensagem Formatada (WhatsApp Markdown)
             </label>
             <textarea
               rows={5}
               value={messagePreview}
               onChange={(e) => setMessagePreview(e.target.value)}
-              className="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-mono text-slate-800 text-[11px] leading-relaxed outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-mono text-slate-800 text-sm leading-relaxed outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
@@ -116,7 +116,7 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
             </button>
             <button
               type="submit"
-              className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg flex items-center gap-1.5 cursor-pointer shadow-xs font-mono text-xs uppercase"
+              className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg flex items-center gap-1.5 cursor-pointer shadow-xs font-mono text-sm uppercase"
             >
               {isSent ? <CheckCheck className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
               <span>{isSent ? 'Mensagem Enviada!' : 'Enviar WhatsApp'}</span>

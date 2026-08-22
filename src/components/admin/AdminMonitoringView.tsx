@@ -197,7 +197,7 @@ export const AdminMonitoringView: React.FC = () => {
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold text-white tracking-tight">Monitoramento & Saúde da Plataforma</h1>
               <span
-                className={`text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-full border flex items-center gap-1.5 ${getStatusColor(
+                className={`text-sm font-mono font-bold uppercase px-2.5 py-0.5 rounded-full border flex items-center gap-1.5 ${getStatusColor(
                   healthData?.overallStatus || 'HEALTHY'
                 )}`}
               >
@@ -205,7 +205,7 @@ export const AdminMonitoringView: React.FC = () => {
                 {healthData?.overallStatus || 'HEALTHY'}
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-1 font-mono">
+            <p className="text-sm text-slate-400 mt-1 font-mono">
               Ambiente: <span className="text-slate-200 uppercase font-semibold">{healthData?.environment || 'Development'}</span> • Uptime:{' '}
               <span className="text-slate-200 font-semibold">{formatUptime(healthData?.uptimeSeconds)}</span> • Última verificação:{' '}
               {healthData?.timestamp ? new Date(healthData.timestamp).toLocaleTimeString('pt-BR') : 'agora'}
@@ -218,7 +218,7 @@ export const AdminMonitoringView: React.FC = () => {
           <button
             onClick={() => loadAllData(true)}
             disabled={isRefreshing}
-            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-sm font-semibold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-orange-400' : ''}`} />
             <span>Atualizar Agora</span>
@@ -230,7 +230,7 @@ export const AdminMonitoringView: React.FC = () => {
       <div className="flex items-center gap-2 border-b border-slate-900 pb-2">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'overview'
               ? 'bg-orange-500 text-white shadow-xs'
               : 'bg-slate-950 text-slate-400 hover:text-white hover:bg-slate-900'
@@ -242,7 +242,7 @@ export const AdminMonitoringView: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('ai_pipeline')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'ai_pipeline'
               ? 'bg-orange-500 text-white shadow-xs'
               : 'bg-slate-950 text-slate-400 hover:text-white hover:bg-slate-900'
@@ -254,7 +254,7 @@ export const AdminMonitoringView: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('edge_functions')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'edge_functions'
               ? 'bg-orange-500 text-white shadow-xs'
               : 'bg-slate-950 text-slate-400 hover:text-white hover:bg-slate-900'
@@ -266,7 +266,7 @@ export const AdminMonitoringView: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('logs')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'logs'
               ? 'bg-orange-500 text-white shadow-xs'
               : 'bg-slate-950 text-slate-400 hover:text-white hover:bg-slate-900'
@@ -279,7 +279,7 @@ export const AdminMonitoringView: React.FC = () => {
         {alertsData?.unreadCount > 0 && (
           <button
             onClick={() => setActiveTab('alerts')}
-            className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'alerts'
                 ? 'bg-amber-500 text-slate-950'
                 : 'bg-amber-950/60 border border-amber-800 text-amber-300'
@@ -299,53 +299,53 @@ export const AdminMonitoringView: React.FC = () => {
           {/* Quick Metrics KPI Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 font-mono">
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-900">
-              <span className="text-[10px] text-slate-500 block uppercase">Requisições / min</span>
+              <span className="text-sm text-slate-500 block uppercase">Requisições / min</span>
               <span className="text-xl font-extrabold text-white mt-1 block">
                 {metricsData?.requestsPerMin || 84}
               </span>
-              <span className="text-[10px] text-emerald-400">● Carga nominal</span>
+              <span className="text-sm text-emerald-400">● Carga nominal</span>
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-900">
-              <span className="text-[10px] text-slate-500 block uppercase">Taxa de Erros Global</span>
+              <span className="text-sm text-slate-500 block uppercase">Taxa de Erros Global</span>
               <span className="text-xl font-extrabold text-emerald-400 mt-1 block">
                 {metricsData?.errorRatePercent || 0.8}%
               </span>
-              <span className="text-[10px] text-slate-500">SLA 99.2%</span>
+              <span className="text-sm text-slate-500">SLA 99.2%</span>
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-900">
-              <span className="text-[10px] text-slate-500 block uppercase">Latência P50 (Mediana)</span>
+              <span className="text-sm text-slate-500 block uppercase">Latência P50 (Mediana)</span>
               <span className="text-xl font-extrabold text-slate-200 mt-1 block">
                 {metricsData?.p50LatencyMs || 240} ms
               </span>
-              <span className="text-[10px] text-slate-500">Tempo de resposta</span>
+              <span className="text-sm text-slate-500">Tempo de resposta</span>
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-900">
-              <span className="text-[10px] text-slate-500 block uppercase">Latência P95</span>
+              <span className="text-sm text-slate-500 block uppercase">Latência P95</span>
               <span className="text-xl font-extrabold text-slate-200 mt-1 block">
                 {metricsData?.p95LatencyMs || 980} ms
               </span>
-              <span className="text-[10px] text-slate-500">Percentil 95</span>
+              <span className="text-sm text-slate-500">Percentil 95</span>
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-900">
-              <span className="text-[10px] text-slate-500 block uppercase">Latência P99</span>
+              <span className="text-sm text-slate-500 block uppercase">Latência P99</span>
               <span className="text-xl font-extrabold text-amber-400 mt-1 block">
                 {metricsData?.p99LatencyMs || 1650} ms
               </span>
-              <span className="text-[10px] text-slate-500">Casos com OCR pesado</span>
+              <span className="text-sm text-slate-500">Casos com OCR pesado</span>
             </div>
           </div>
 
           {/* Services Health Cards Grid */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-xs font-bold text-white uppercase font-mono tracking-wider">
+              <h2 className="text-sm font-bold text-white uppercase font-mono tracking-wider">
                 Status dos Serviços Críticos ({healthData?.services?.length || 0})
               </h2>
-              <span className="text-[10px] text-slate-500 font-mono">
+              <span className="text-sm text-slate-500 font-mono">
                 {healthData?.summary?.healthyCount} Saudáveis • {healthData?.summary?.degradedCount} Degradados
               </span>
             </div>
@@ -368,17 +368,17 @@ export const AdminMonitoringView: React.FC = () => {
                               : 'bg-rose-500'
                           }`}
                         />
-                        <span className="text-xs font-bold text-white font-sans">{svc.name}</span>
+                        <span className="text-sm font-bold text-white font-sans">{svc.name}</span>
                       </div>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">
+                      <span className="text-sm font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">
                         {svc.latencyMs} ms
                       </span>
                     </div>
 
-                    <p className="text-[11px] text-slate-400 mt-2 leading-relaxed">{svc.message}</p>
+                    <p className="text-sm text-slate-400 mt-2 leading-relaxed">{svc.message}</p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-slate-900/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                  <div className="mt-4 pt-3 border-t border-slate-900/80 flex items-center justify-between text-sm font-mono text-slate-500">
                     <span>
                       {svc.isConfigured ? '✓ Configuração ativa' : '○ Standby / Local'}
                     </span>
@@ -392,11 +392,11 @@ export const AdminMonitoringView: React.FC = () => {
           {/* Trace Correlation Quick Tool */}
           <div className="p-5 rounded-2xl bg-slate-950 border border-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
-              <span className="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase">
+              <span className="text-sm font-bold text-white flex items-center gap-1.5 font-mono uppercase">
                 <Search className="w-3.5 h-3.5 text-orange-400" />
                 Rastreamento Ponta-a-Ponta (Correlation ID)
               </span>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-sm text-slate-400">
                 Insira um <code className="text-orange-400 font-mono font-bold">correlationId</code> ou <code className="text-slate-200 font-mono">caseId</code> para reconstruir todo o ciclo de vida da requisição across AI, OCR e Database.
               </p>
             </div>
@@ -407,12 +407,12 @@ export const AdminMonitoringView: React.FC = () => {
                 placeholder="Ex: corr_17238192..."
                 value={traceCorrelationId}
                 onChange={(e) => setTraceCorrelationId(e.target.value)}
-                className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 font-mono outline-none focus:border-orange-500 w-48 sm:w-64"
+                className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 font-mono outline-none focus:border-orange-500 w-48 sm:w-64"
               />
               <button
                 onClick={() => handleTraceLookup(traceCorrelationId)}
                 disabled={!traceCorrelationId.trim() || isTracing}
-                className="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                className="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
               >
                 <span>Rastrear</span>
               </button>
@@ -428,38 +428,38 @@ export const AdminMonitoringView: React.FC = () => {
         <div className="space-y-6">
           {/* Visual Architecture Flow */}
           <div className="p-5 rounded-2xl bg-slate-950 border border-slate-900 space-y-4">
-            <span className="text-xs font-bold text-white uppercase font-mono tracking-wider block">
+            <span className="text-sm font-bold text-white uppercase font-mono tracking-wider block">
               Topologia do Pipeline de IA & Contingência
             </span>
 
             <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 text-center font-mono">
               <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
-                <span className="text-[10px] text-slate-500 uppercase block">1. Requisição</span>
-                <span className="text-xs font-bold text-slate-200 mt-1 block">Análise de Auto</span>
+                <span className="text-sm text-slate-500 uppercase block">1. Requisição</span>
+                <span className="text-sm font-bold text-slate-200 mt-1 block">Análise de Auto</span>
                 <span className="text-[9px] text-slate-500">Entrada de dados</span>
               </div>
 
               <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-800 text-emerald-300">
-                <span className="text-[10px] text-emerald-400 uppercase block font-bold">2. NVIDIA NIM (Primário)</span>
-                <span className="text-xs font-bold text-white mt-1 block">Llama 3.3 70B</span>
+                <span className="text-sm text-emerald-400 uppercase block font-bold">2. NVIDIA NIM (Primário)</span>
+                <span className="text-sm font-bold text-white mt-1 block">Llama 3.3 70B</span>
                 <span className="text-[9px] text-emerald-400">98.7% de Sucesso</span>
               </div>
 
               <div className="p-3.5 rounded-xl bg-amber-950/40 border border-amber-800 text-amber-300">
-                <span className="text-[10px] text-amber-400 uppercase block font-bold">3. 9Router (Fallback)</span>
-                <span className="text-xs font-bold text-white mt-1 block">Qwen 2.5 72B</span>
+                <span className="text-sm text-amber-400 uppercase block font-bold">3. 9Router (Fallback)</span>
+                <span className="text-sm font-bold text-white mt-1 block">Qwen 2.5 72B</span>
                 <span className="text-[9px] text-amber-400">Acionado em 503/429</span>
               </div>
 
               <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
-                <span className="text-[10px] text-slate-500 uppercase block">4. RAG Jurídico</span>
-                <span className="text-xs font-bold text-slate-200 mt-1 block">52 Teses CTB</span>
+                <span className="text-sm text-slate-500 uppercase block">4. RAG Jurídico</span>
+                <span className="text-sm font-bold text-slate-200 mt-1 block">52 Teses CTB</span>
                 <span className="text-[9px] text-slate-500">Fundamentação ABNT</span>
               </div>
 
               <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
-                <span className="text-[10px] text-slate-500 uppercase block">5. Petição Pronta</span>
-                <span className="text-xs font-bold text-emerald-400 mt-1 block">100% Determinística</span>
+                <span className="text-sm text-slate-500 uppercase block">5. Petição Pronta</span>
+                <span className="text-sm font-bold text-emerald-400 mt-1 block">100% Determinística</span>
                 <span className="text-[9px] text-slate-500">Minuta em A4</span>
               </div>
             </div>
@@ -476,38 +476,38 @@ export const AdminMonitoringView: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-white font-sans">NVIDIA NIM Provider</h3>
-                    <p className="text-[10px] text-slate-400 font-mono">meta/llama-3.3-70b-instruct</p>
+                    <p className="text-sm text-slate-400 font-mono">meta/llama-3.3-70b-instruct</p>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+                <span className="text-sm font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
                   ● Operacional
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="grid grid-cols-3 gap-2 text-sm">
                 <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <span className="text-[10px] text-slate-500 block">Total Requests</span>
+                  <span className="text-sm text-slate-500 block">Total Requests</span>
                   <span className="text-base font-extrabold text-white mt-1 block">
                     {metricsData?.nvidia?.requestsTotal || 1284}
                   </span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <span className="text-[10px] text-slate-500 block">Taxa de Sucesso</span>
+                  <span className="text-sm text-slate-500 block">Taxa de Sucesso</span>
                   <span className="text-base font-extrabold text-emerald-400 mt-1 block">
                     {metricsData?.nvidia?.successRate || 98.7}%
                   </span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <span className="text-[10px] text-slate-500 block">Latência P95</span>
+                  <span className="text-sm text-slate-500 block">Latência P95</span>
                   <span className="text-base font-extrabold text-slate-200 mt-1 block">
                     {(metricsData?.nvidia?.p95LatencyMs / 1000).toFixed(2) || '1.82'}s
                   </span>
                 </div>
               </div>
 
-              <div className="space-y-1.5 text-[11px] text-slate-400">
+              <div className="space-y-1.5 text-sm text-slate-400">
                 <div className="flex justify-between py-1 border-b border-slate-900">
                   <span>Timeouts registrados:</span>
                   <span className="text-slate-200 font-bold">{metricsData?.nvidia?.timeoutsCount || 4}</span>
@@ -536,38 +536,38 @@ export const AdminMonitoringView: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-white font-sans">9Router Gateway</h3>
-                    <p className="text-[10px] text-slate-400 font-mono">qwen/qwen-2.5-72b-instruct (Fallback)</p>
+                    <p className="text-sm text-slate-400 font-mono">qwen/qwen-2.5-72b-instruct (Fallback)</p>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+                <span className="text-sm font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
                   ● Standby Ativo
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="grid grid-cols-3 gap-2 text-sm">
                 <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <span className="text-[10px] text-slate-500 block">Fallbacks Recebidos</span>
+                  <span className="text-sm text-slate-500 block">Fallbacks Recebidos</span>
                   <span className="text-base font-extrabold text-amber-400 mt-1 block">
                     {metricsData?.nineRouter?.fallbackTriggeredCount || 3}
                   </span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <span className="text-[10px] text-slate-500 block">Sucesso no Fallback</span>
+                  <span className="text-sm text-slate-500 block">Sucesso no Fallback</span>
                   <span className="text-base font-extrabold text-emerald-400 mt-1 block">
                     {metricsData?.nineRouter?.successRate || 97.9}%
                   </span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <span className="text-[10px] text-slate-500 block">Latência P95</span>
+                  <span className="text-sm text-slate-500 block">Latência P95</span>
                   <span className="text-base font-extrabold text-slate-200 mt-1 block">
                     {(metricsData?.nineRouter?.p95LatencyMs / 1000).toFixed(2) || '2.10'}s
                   </span>
                 </div>
               </div>
 
-              <div className="space-y-1.5 text-[11px] text-slate-400">
+              <div className="space-y-1.5 text-sm text-slate-400">
                 <div className="flex justify-between py-1 border-b border-slate-900">
                   <span>Disponibilidade:</span>
                   <span className="text-emerald-400 font-bold">100%</span>
@@ -596,17 +596,17 @@ export const AdminMonitoringView: React.FC = () => {
       {activeTab === 'edge_functions' && (
         <div className="bg-slate-950 border border-slate-900 rounded-2xl overflow-hidden shadow-sm">
           <div className="p-4 border-b border-slate-900 flex items-center justify-between">
-            <span className="text-xs font-bold text-white uppercase font-mono tracking-wider">
+            <span className="text-sm font-bold text-white uppercase font-mono tracking-wider">
               Deno Edge Functions Microservices (Supabase Cluster)
             </span>
-            <span className="text-[10px] text-slate-500 font-mono">
+            <span className="text-sm text-slate-500 font-mono">
               Execução serverless de baixa latência em sa-east-1
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/80 text-slate-400 text-[10px] uppercase border-b border-slate-900">
+            <table className="w-full text-left text-sm font-mono">
+              <thead className="bg-slate-900/80 text-slate-400 text-sm uppercase border-b border-slate-900">
                 <tr>
                   <th className="py-3 px-4">Função / Endpoint</th>
                   <th className="py-3 px-4">Status</th>
@@ -616,22 +616,22 @@ export const AdminMonitoringView: React.FC = () => {
                   <th className="py-3 px-4">Última Execução</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-900 text-[11px]">
+              <tbody className="divide-y divide-slate-900 text-sm">
                 {metricsData?.edgeFunctions?.map((fn: any) => (
                   <tr key={fn.name} className="hover:bg-slate-900/40 transition-colors">
                     <td className="py-3 px-4">
                       <div className="font-bold text-white font-sans">{fn.name}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">{fn.endpoint}</div>
+                      <div className="text-sm text-slate-500 font-mono">{fn.endpoint}</div>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 w-fit">
+                      <span className="px-2 py-0.5 rounded text-sm font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 w-fit">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> healthy
                       </span>
                     </td>
                     <td className="py-3 px-4 text-slate-200 font-bold">{fn.requests}</td>
                     <td className="py-3 px-4 text-emerald-400 font-bold">{fn.successRate}%</td>
                     <td className="py-3 px-4 text-slate-300">{fn.p95LatencyMs} ms</td>
-                    <td className="py-3 px-4 text-slate-400 text-[10px]">
+                    <td className="py-3 px-4 text-slate-400 text-sm">
                       {new Date(fn.lastExecutionAt).toLocaleTimeString('pt-BR')}
                     </td>
                   </tr>
@@ -649,13 +649,13 @@ export const AdminMonitoringView: React.FC = () => {
         <div className="space-y-4">
           {/* Trace banner if filtered by correlation */}
           {logFilterCorrelation && (
-            <div className="p-3.5 rounded-xl bg-orange-950/40 border border-orange-800/80 text-orange-200 text-xs flex items-center justify-between font-mono">
+            <div className="p-3.5 rounded-xl bg-orange-950/40 border border-orange-800/80 text-orange-200 text-sm flex items-center justify-between font-mono">
               <span>
                 Filtrado por fluxo de correlação: <strong>{logFilterCorrelation}</strong>
               </span>
               <button
                 onClick={() => setLogFilterCorrelation('')}
-                className="text-[11px] text-orange-300 hover:text-white underline cursor-pointer"
+                className="text-sm text-orange-300 hover:text-white underline cursor-pointer"
               >
                 Limpar filtro de correlação
               </button>
@@ -669,7 +669,7 @@ export const AdminMonitoringView: React.FC = () => {
               <select
                 value={logFilterLevel}
                 onChange={(e) => setLogFilterLevel(e.target.value)}
-                className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white font-mono outline-none cursor-pointer"
+                className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-sm text-white font-mono outline-none cursor-pointer"
               >
                 <option value="">Todos os Níveis</option>
                 <option value="debug">DEBUG</option>
@@ -683,7 +683,7 @@ export const AdminMonitoringView: React.FC = () => {
               <select
                 value={logFilterService}
                 onChange={(e) => setLogFilterService(e.target.value)}
-                className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white font-mono outline-none cursor-pointer"
+                className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-sm text-white font-mono outline-none cursor-pointer"
               >
                 <option value="">Todos os Serviços</option>
                 <option value="ai">IA & LLM</option>
@@ -703,7 +703,7 @@ export const AdminMonitoringView: React.FC = () => {
                   placeholder="Buscar texto no log..."
                   value={logFilterSearch}
                   onChange={(e) => setLogFilterSearch(e.target.value)}
-                  className="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white font-mono outline-none w-48 sm:w-64"
+                  className="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-sm text-white font-mono outline-none w-48 sm:w-64"
                 />
               </div>
             </div>
@@ -712,7 +712,7 @@ export const AdminMonitoringView: React.FC = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleExportLogs}
-                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-1.5 cursor-pointer"
+                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-sm font-semibold text-slate-300 hover:text-white flex items-center gap-1.5 cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Exportar JSON</span>
@@ -731,8 +731,8 @@ export const AdminMonitoringView: React.FC = () => {
           {/* Logs Table */}
           <div className="bg-slate-950 border border-slate-900 rounded-2xl overflow-hidden shadow-sm">
             <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
-              <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-slate-900 text-slate-400 text-[10px] uppercase border-b border-slate-900 sticky top-0 z-10">
+              <table className="w-full text-left text-sm font-mono">
+                <thead className="bg-slate-900 text-slate-400 text-sm uppercase border-b border-slate-900 sticky top-0 z-10">
                   <tr>
                     <th className="py-2.5 px-3">Hora</th>
                     <th className="py-2.5 px-3">Nível</th>
@@ -743,7 +743,7 @@ export const AdminMonitoringView: React.FC = () => {
                     <th className="py-2.5 px-3 text-right">Ação</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-900 text-[11px]">
+                <tbody className="divide-y divide-slate-900 text-sm">
                   {logs.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="p-8 text-center text-slate-500">
@@ -787,7 +787,7 @@ export const AdminMonitoringView: React.FC = () => {
                           {log.duration !== undefined ? `${log.duration}ms` : '—'}
                         </td>
                         <td className="py-2 px-3 text-right whitespace-nowrap">
-                          <span className="text-[10px] text-orange-400 hover:text-orange-300 underline font-sans">
+                          <span className="text-sm text-orange-400 hover:text-orange-300 underline font-sans">
                             Ver Detalhes
                           </span>
                         </td>
@@ -807,7 +807,7 @@ export const AdminMonitoringView: React.FC = () => {
       {activeTab === 'alerts' && (
         <div className="space-y-4">
           <div className="p-4 border-b border-slate-900 flex items-center justify-between">
-            <span className="text-xs font-bold text-white uppercase font-mono tracking-wider">
+            <span className="text-sm font-bold text-white uppercase font-mono tracking-wider">
               Alertas Operacionais Ativos
             </span>
           </div>
@@ -827,9 +827,9 @@ export const AdminMonitoringView: React.FC = () => {
                 <div className="flex items-start gap-3">
                   <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-current" />
                   <div>
-                    <h4 className="text-xs font-bold">{alt.title}</h4>
-                    <p className="text-[11px] mt-0.5 opacity-90">{alt.message}</p>
-                    <span className="text-[10px] opacity-60 font-mono mt-1 block">
+                    <h4 className="text-sm font-bold">{alt.title}</h4>
+                    <p className="text-sm mt-0.5 opacity-90">{alt.message}</p>
+                    <span className="text-sm opacity-60 font-mono mt-1 block">
                       {new Date(alt.timestamp).toLocaleString('pt-BR')} • Serviço: {alt.service}
                     </span>
                   </div>
@@ -838,7 +838,7 @@ export const AdminMonitoringView: React.FC = () => {
                 {!alt.acknowledged && (
                   <button
                     onClick={() => handleAcknowledgeAlert(alt.id)}
-                    className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-white transition-colors cursor-pointer"
+                    className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-sm font-semibold text-white transition-colors cursor-pointer"
                   >
                     Reconhecer
                   </button>

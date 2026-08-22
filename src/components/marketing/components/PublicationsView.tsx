@@ -84,7 +84,7 @@ export const PublicationsView: React.FC<{
     { id: 'publicado', label: `Publicados (${counts.publicado})` },
   ];
 
-  if (loading) return <p className="text-xs text-slate-500 font-mono">Carregando conteúdos...</p>;
+  if (loading) return <p className="text-sm text-slate-500 font-mono">Carregando conteúdos...</p>;
 
   return (
     <div className="space-y-3">
@@ -93,7 +93,7 @@ export const PublicationsView: React.FC<{
           <button
             key={t.id}
             onClick={() => setFilter(t.id)}
-            className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer border ${
+            className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all cursor-pointer border ${
               filter === t.id
                 ? 'bg-slate-900 text-white border-slate-900'
                 : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'
@@ -112,13 +112,13 @@ export const PublicationsView: React.FC<{
             placeholder="Buscar por título ou tese jurídica..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-900 outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
         <select
           value={channel}
           onChange={(e) => setChannel(e.target.value)}
-          className="px-2.5 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-700 outline-none focus:ring-2 focus:ring-orange-500"
+          className="px-2.5 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-orange-500"
         >
           {CHANNELS.map((c) => (
             <option key={c.value} value={c.value}>{c.label}</option>
@@ -127,7 +127,7 @@ export const PublicationsView: React.FC<{
         <select
           value={format}
           onChange={(e) => setFormat(e.target.value)}
-          className="px-2.5 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-700 outline-none focus:ring-2 focus:ring-orange-500"
+          className="px-2.5 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-orange-500"
         >
           {FORMATS.map((f) => (
             <option key={f.value} value={f.value}>{f.label}</option>
@@ -154,13 +154,13 @@ export const PublicationsView: React.FC<{
       {filtered.length === 0 ? (
         <div className="p-10 text-center text-slate-400 bg-white border border-dashed border-slate-300 rounded-xl">
           <FileText className="w-6 h-6 mx-auto mb-1.5 opacity-40" />
-          <p className="text-[11px]">Nenhum conteúdo encontrado para estes filtros.</p>
+          <p className="text-sm">Nenhum conteúdo encontrado para estes filtros.</p>
         </div>
       ) : viewMode === 'list' ? (
         <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
-          <table className="w-full text-xs">
+          <table className="w-full text-sm">
             <thead>
-              <tr className="text-left border-b border-slate-200 bg-slate-50 text-[10px] uppercase font-mono text-slate-500">
+              <tr className="text-left border-b border-slate-200 bg-slate-50 text-sm uppercase font-mono text-slate-500">
                 <th className="px-3 py-2.5">Título</th>
                 <th className="px-3 py-2.5">Canal / Formato</th>
                 <th className="px-3 py-2.5">Status</th>
@@ -177,7 +177,7 @@ export const PublicationsView: React.FC<{
                 >
                   <td className="px-3 py-2.5">
                     <p className="font-semibold text-slate-900">{item.title}</p>
-                    <p className="text-[10px] text-slate-500 font-mono">Tese: {item.legalTheme}</p>
+                    <p className="text-sm text-slate-500 font-mono">Tese: {item.legalTheme}</p>
                   </td>
                   <td className="px-3 py-2.5 text-slate-600 font-mono">
                     {item.channel} • {item.format}
@@ -200,7 +200,7 @@ export const PublicationsView: React.FC<{
             <div
               key={item.id}
               onClick={() => onSelect(item)}
-              className="p-4 bg-white border border-slate-200 rounded-xl shadow-xs hover:border-orange-500 transition-all cursor-pointer space-y-2 text-xs"
+              className="p-4 bg-white border border-slate-200 rounded-xl shadow-xs hover:border-orange-500 transition-all cursor-pointer space-y-2 text-sm"
             >
               <div className="flex items-center justify-between">
                 <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 text-[9px] font-bold uppercase font-mono">
@@ -211,8 +211,8 @@ export const PublicationsView: React.FC<{
                 </span>
               </div>
               <h4 className="font-bold text-slate-900 line-clamp-2 leading-snug">{item.title}</h4>
-              <p className="text-slate-500 text-[10px] line-clamp-2">Tese: {item.legalTheme}</p>
-              <div className="flex items-center justify-between pt-1 border-t border-slate-100 text-[10px] text-slate-400 font-mono">
+              <p className="text-slate-500 text-sm line-clamp-2">Tese: {item.legalTheme}</p>
+              <div className="flex items-center justify-between pt-1 border-t border-slate-100 text-sm text-slate-400 font-mono">
                 <span>{item.scheduledDate}</span>
                 <span className="text-emerald-700 font-semibold">{item.qualityReviewScore}/10</span>
               </div>

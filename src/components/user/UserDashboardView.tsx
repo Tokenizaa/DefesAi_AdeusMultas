@@ -34,19 +34,19 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({ cases, onS
   const estimatedSavedValue = readyCases * 293.47;
   const estimatedPointsSaved = readyCases * 5;
 
-  return (
+return (
     <div className="space-y-6">
       {/* Driver Welcome Hero & Primary CTA */}
       <div className="p-6 bg-[#071D41] text-white rounded-xl shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b-4 border-[#155BCB]">
         <div className="space-y-2 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-900/60 text-[#FFCD07] border border-blue-800 text-sm font-mono uppercase tracking-wider font-bold">
-            <Sparkles className="w-3 h-3 text-[#FFCD07]" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-blue-900/60 text-[#FFCD07] border border-blue-800 text-sm font-mono uppercase tracking-wider font-bold">
+            <Sparkles className="w-4 h-4 text-[#FFCD07]" />
             <span>Área do Condutor • DefesAi</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
             Olá, {user?.name || 'Condutor'}!
           </h2>
-          <p className="text-sm sm:text-sm text-blue-100 leading-relaxed">
+          <p className="text-sm sm:text-base text-blue-100 leading-relaxed">
             Consulte seus diagnósticos gratuitos de autuação, recursos prontos para protocolo e prazos decadenciais perante o DETRAN, DNIT, PRF e JARI.
           </p>
         </div>
@@ -54,16 +54,17 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({ cases, onS
         <button
           id="user-dashboard-start-analysis-btn"
           onClick={() => navigate('/novo-caso')}
-          className="w-full md:w-auto px-6 py-3.5 bg-[#155BCB] hover:bg-[#0C326F] text-white font-bold rounded-lg text-sm shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+          className="w-full md:w-auto px-6 py-4 bg-[#155BCB] hover:bg-[#0C326F] text-white font-bold rounded-lg text-base shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+          aria-label="Iniciar nova análise gratuita"
         >
-          <PlusCircle className="w-4 h-4" />
+          <PlusCircle className="w-5 h-5" />
           <span>Nova Análise Gratuita</span>
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-5 h-5" />
         </button>
       </div>
 
       {/* KPI Metrics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         <div className="p-4 bg-white border border-[#CCCCCC] rounded-xl shadow-2xs space-y-1">
           <span className="text-sm font-semibold text-slate-600">Total de Processos</span>
           <p className="text-2xl font-extrabold text-[#071D41]">{totalCases}</p>
@@ -106,6 +107,7 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({ cases, onS
           <button
             onClick={() => navigate('/cases')}
             className="text-sm font-bold text-[#155BCB] hover:underline flex items-center gap-1 cursor-pointer"
+            aria-label="Ver todos os casos"
           >
             <span>Ver Todos</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -120,6 +122,7 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({ cases, onS
               <button
                 onClick={() => navigate('/novo-caso')}
                 className="px-4 py-2 bg-[#155BCB] hover:bg-[#0C326F] text-white rounded-lg text-sm font-bold transition-colors cursor-pointer"
+                aria-label="Cadastrar primeira multa"
               >
                 Cadastrar Primeira Multa (Grátis)
               </button>
@@ -130,6 +133,7 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({ cases, onS
                 key={c.id}
                 onClick={() => onSelectCase(c)}
                 className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between cursor-pointer"
+                aria-label={`Selecionar caso ${c.aitNumber || c.id}`}
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
@@ -149,8 +153,8 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({ cases, onS
                       {c.status === 'defense_ready'
                         ? 'Minuta Pronta'
                         : c.status === 'filed'
-                        ? 'Protocolado'
-                        : 'Em Análise'}
+                          ? 'Protocolado'
+                          : 'Em Análise'}
                     </span>
                   </div>
                   <p className="text-sm text-slate-600 truncate max-w-md">

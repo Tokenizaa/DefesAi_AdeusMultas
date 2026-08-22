@@ -103,11 +103,11 @@ export const AdminCommercialBonusesView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono">
+            <span className="px-2 py-0.5 rounded text-sm font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono">
               Sistema de Bônus & Créditos
             </span>
-            <span className="text-slate-500 text-xs font-mono">•</span>
-            <span className="text-slate-400 text-xs">Ledger Imutável de Movimentações</span>
+            <span className="text-slate-500 text-sm font-mono">•</span>
+            <span className="text-slate-400 text-sm">Ledger Imutável de Movimentações</span>
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight mt-1">
             Livro-Razão (Ledger) de Bônus aos Condutores
@@ -116,7 +116,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
 
         <div className="flex items-center gap-2">
           {feedback && (
-            <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-medium flex items-center gap-2">
+            <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-sm font-medium flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4" />
               {feedback}
             </div>
@@ -124,7 +124,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
 
           <button
             onClick={() => setShowCreditModal(true)}
-            className="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-orange-500/20 transition-all cursor-pointer"
+            className="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold flex items-center gap-1.5 shadow-lg shadow-orange-500/20 transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Conceder Bônus Manual
@@ -133,7 +133,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
       </div>
 
       {/* Philosophy Rule Card */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-start gap-3 text-xs text-slate-300">
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-start gap-3 text-sm text-slate-300">
         <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
         <div className="space-y-1">
           <p className="font-semibold text-white">Integridade Financeira Baseada em Ledger:</p>
@@ -144,7 +144,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
       </div>
 
       {/* Filters Bar */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
         <div className="relative w-full sm:w-80">
           <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
           <input
@@ -152,16 +152,16 @@ export const AdminCommercialBonusesView: React.FC = () => {
             placeholder="Buscar por usuário, CPF ou motivo..."
             value={searchUser}
             onChange={(e) => setSearchUser(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-white text-xs focus:outline-hidden focus:border-orange-500 font-mono"
+            className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-white text-sm focus:outline-hidden focus:border-orange-500 font-mono"
           />
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <span className="text-slate-500 font-mono text-[11px]">Tipo:</span>
+          <span className="text-slate-500 font-mono text-sm">Tipo:</span>
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-white text-xs font-mono focus:outline-hidden"
+            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-white text-sm font-mono focus:outline-hidden"
           >
             <option value="ALL">Todos os Tipos</option>
             <option value="CREDIT">Apenas Créditos (+)</option>
@@ -184,8 +184,8 @@ export const AdminCommercialBonusesView: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 text-slate-400 uppercase font-mono text-[10px] border-b border-slate-800">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-950 text-slate-400 uppercase font-mono text-sm border-b border-slate-800">
               <tr>
                 <th className="px-4 py-3">Data / Hora</th>
                 <th className="px-4 py-3">Usuário Beneficiado</th>
@@ -209,12 +209,12 @@ export const AdminCommercialBonusesView: React.FC = () => {
 
                     <td className="px-4 py-3">
                       <div className="font-bold text-white">{entry.userName}</div>
-                      <div className="text-[10px] text-slate-500">{entry.userId}</div>
+                      <div className="text-sm text-slate-500">{entry.userId}</div>
                     </td>
 
                     <td className="px-4 py-3">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 w-max ${
+                        className={`px-2 py-0.5 rounded-full text-sm font-bold flex items-center gap-1 w-max ${
                           isCredit
                             ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                             : isDebit
@@ -227,7 +227,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
                       </span>
                     </td>
 
-                    <td className="px-4 py-3 text-slate-400 uppercase text-[10px]">
+                    <td className="px-4 py-3 text-slate-400 uppercase text-sm">
                       {entry.origin}
                     </td>
 
@@ -239,10 +239,10 @@ export const AdminCommercialBonusesView: React.FC = () => {
                       R$ {entry.balanceAfter.toFixed(2)}
                     </td>
 
-                    <td className="px-4 py-3 text-slate-300 font-sans text-[11px]">
+                    <td className="px-4 py-3 text-slate-300 font-sans text-sm">
                       <div className="line-clamp-1">"{entry.reason}"</div>
                       {entry.adminAuthor && (
-                        <div className="text-[10px] text-slate-500 font-mono">Autor: {entry.adminAuthor}</div>
+                        <div className="text-sm text-slate-500 font-mono">Autor: {entry.adminAuthor}</div>
                       )}
                     </td>
                   </tr>
@@ -259,7 +259,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
-                <span className="text-[10px] font-mono uppercase text-emerald-400 font-bold">
+                <span className="text-sm font-mono uppercase text-emerald-400 font-bold">
                   Crédito no Ledger
                 </span>
                 <h3 className="text-base font-bold text-white">Conceder Bônus ao Condutor</h3>
@@ -272,7 +272,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleCreditBonus} className="space-y-3 text-xs">
+            <form onSubmit={handleCreditBonus} className="space-y-3 text-sm">
               <div>
                 <label className="block text-slate-400 font-medium mb-1">ID do Usuário / E-mail *</label>
                 <input
@@ -281,7 +281,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
                   placeholder="Ex: usr_joao@gmail.com"
                   value={formUserId}
                   onChange={(e) => setFormUserId(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-xs focus:outline-hidden focus:border-emerald-500"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-hidden focus:border-emerald-500"
                 />
               </div>
 
@@ -292,7 +292,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
                   placeholder="Ex: João da Silva"
                   value={formUserName}
                   onChange={(e) => setFormUserName(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-hidden focus:border-emerald-500"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-hidden focus:border-emerald-500"
                 />
               </div>
 
@@ -306,7 +306,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
                     required
                     value={formAmount}
                     onChange={(e) => setFormAmount(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-xs focus:outline-hidden focus:border-emerald-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-hidden focus:border-emerald-500"
                   />
                 </div>
 
@@ -315,7 +315,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
                   <select
                     value={formOrigin}
                     onChange={(e) => setFormOrigin(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-hidden focus:border-emerald-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-hidden focus:border-emerald-500"
                   >
                     <option value="manual_adjustment">Ajuste Manual</option>
                     <option value="signup">Cadastro Inicial</option>
@@ -335,7 +335,7 @@ export const AdminCommercialBonusesView: React.FC = () => {
                   placeholder="Ex: Bonificação concedida por fidelidade após 3 recursos..."
                   value={formReason}
                   onChange={(e) => setFormReason(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white text-xs focus:outline-hidden focus:border-emerald-500"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white text-sm focus:outline-hidden focus:border-emerald-500"
                 />
               </div>
 

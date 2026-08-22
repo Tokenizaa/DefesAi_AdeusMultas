@@ -22,352 +22,317 @@ import {
 } from 'lucide-react';
 import { CaseAnalysis, InfractionData, VehicleData, ProcedureType } from '../../../types';
 
-// FUNÇÃO AUXILIAR: Formata explicações jurídicas no estilo GOV.BR com variação linguística
-const govBrExplanationsVariations: Record<string, Array<{
-  title: string;
-  lawExplanation: string;
-  evidenceCheck: (data: any) => string;
-  userImpact: string;
-  confidenceBase: string;
-}>> = {
-  'ARG-001': [
-    {
-      title: 'Verificação do radar de velocidade',
-      lawExplanation: 'Todo equipamento de medição de velocidade precisa ser verificado anualmente para garantir que está funcionando corretamente.',
+// FUNÇÃO AUXILIAR: Formata explicações jurídicas no estilo GOV.BR
+const formatLegalPointGovBr = (arg: any, caseData: { infraction: InfractionData; vehicle: VehicleData }) => {
+  // Mapeia argumentos para explicações no estilo GOV.BR (focadas no usuário)
+  const govBrExplanations: Record<string, {
+    title: string;
+    lawExplanation: string;
+    evidenceCheck: (data: any) => string;
+    userImpact: string;
+    confidenceBase: string;
+  }> = {
+    'ARG-001': {
+      title: 'Validação do radar que mediu sua velocidade',
+      lawExplanation: 'Segundo a Resolução CONTRAN nº 798/2020, Art. 4º, III, todo equipamento de medição de velocidade deve passar por verificação anual obrigatória no INMETRO ou IPEM delegado. Sem laudo válido (máximo 12 meses na data da infração), a medição perde fé pública.',
       evidenceCheck: (data) => {
         if (data.infraction.radarCalibrationDate) {
           const calibDate = new Date(data.infraction.radarCalibrationDate);
           const infDate = new Date(data.infraction.dateTime);
           const diffMonths = (infDate.getTime() - calibDate.getTime()) / (1000 * 60 * 60 * 24 * 30.44);
           return diffMonths > 12 
-            ? `Última verificação há ${Math.round(diffMonths)} meses (fora do prazo de 12 meses)`
-            : `Última verificação há ${Math.round(diffMonths)} meses (dentro do prazo)`;
+            ? `Última averificação há ${Math.round(diffMonths)} meses (fora da validade de 12 meses)`
+            : `Última averificação há ${Math.round(diffMonths)} meses (dentro da validade)`;
         }
-        return 'Não há informação sobre a última verificação do radar disponível nos documentos.';
+        return 'Não há registro de data de averificação disponível para validação';
       },
-      userImpact: 'Se o radar não foi verificado recentemente, a medição da velocidade pode estar incorreta, o que pode ser usado para questionar a multa.',
+      userImpact: 'Se confirmado que o radar estava com calibração vencida, este é fundamento sólido para solicitar anulação da multa',
       confidenceBase: 'Res. CONTRAN 798/2020'
     },
-    {
-      title: 'Análise do equipamento de medição',
-      lawExplanation: 'A falta de verificação periódica do equipamento pode resultar em medições imprecisas e anulável a multa.',
+    'ARG-051': {
+      title: 'Direito à advertência por escrito (Art. 267 do CTB)',
+      lawExplanation: 'A Lei nº 14.071/2020 alterou o Art. 267 do CTB para determinar que, quando a infração é leve ou média e o condutor não cometeu infrações nos últimos 12 meses, a autoridade é OBRIGADA a converter a multa em advertência por escrito, sem pagamento nem pontos na CNH.',
       evidenceCheck: (data) => {
-        if (data.infraction.radarCalibrationDate) {
-          const calibDate = new Date(data.infraction.radarCalibrationDate);
-          const infDate = new Date(data.infraction.dateTime);
-          const diffMonths = (infDate.getTime() - calibDate.getTime()) / (1000 * 60 * 60 * 24 * 30.44);
-          return diffMonths > 12 
-            ? `Equipamento com verificação vencida há ${Math.round(diffMonths - 12)} meses`
-            : `Equipamento dentro da validade de verificação`;
-        }
-        return 'Registro de verificação do equipamento não encontrado na documentação.';
+        const infractionCode = data.infraction.infractionCode;
+        // Simplificação para demonstração - na prática usaria o catálogo completo
+        const isLightOrMedium = ['745-50', '735-80', '736-62', '735-80'].includes(infractionCode); 
+        const hasRecentInfractions = data.infraction.hasPreviousInfractionsLast12Months === true;
+        
+        if (!isLightOrMedium) return 'Infração classificada como grave/gravíssima (não se aplica Art. 267)';
+        if (hasRecentInfractions) return 'Constam infrações nos últimos 12 meses (não se aplica Art. 267)';
+        return 'Infração leve/média constatada e não há infrações recentes nos últimos 12 meses';
       },
-      userImpact: 'Medidor fora da validade de verificação invalida a prova de velocidade, gerando nulidade da autuação.',
-      confidenceBase: 'STJ, REsp 1.652.348/SP'
-    }
-  ],
-  'ARG-002': [
-    {
-      title: 'Verificação da sinalização',
-      lawExplanation: 'A ausência de sinalização adequada pode configurar falta de aviso prévio ao condutor.',
-      evidenceCheck: (data) => {
-        if (data.infraction.signagePhotos && data.infraction.signagePhotos.length > 0) {
-          return `Foram anexadas ${data.infraction.signagePhotos.length} fotos da sinalização no local`;
-        }
-        return 'Não há fotos da sinalização no local nos documentos.';
-      },
-      userImpact: 'Se não houver sinalização adequada, pode existir nulidade por falta de aviso prévio.',
-      confidenceBase: 'CTB Art. 208'
+      userImpact: 'Você tem DIREITO SUBJETIVO de converter esta multa em advertência por escrito - não pagará valor e não perderá pontos na CNH',
+      confidenceBase: 'Lei 14.071/2020, art. 267 do CTB'
     },
-    {
-      title: 'Análise da visibilidade da placa',
-      lawExplanation: 'Placas obstruídas ou apagadas não cumprem sua função de aviso.',
+    'ARG-002': {
+      title: 'Sinalização de velocidade adequada no local',
+      lawExplanation: 'O Art. 90, caput e §1º do CTB estabelece que nenhuma sanção pode ser aplicada por inobservância de sinalização quando esta for insuficiente, incorreta ou ausente. Para validade da medição por radar, é obrigatória placa R-19 visível na distância técnica mínima (Res. CONTRAN 798/2020).',
       evidenceCheck: (data) => {
-        if (data.infraction.signageCondition) {
-          return data.infraction.signageCondition.includes('obstruída') || data.infraction.signageCondition.includes('apagada')
-            ? `Placa encontrada em condição: ${data.infraction.signageCondition}`
-            : `Placa em condição aparentemente normal: ${data.infraction.signageCondition}`;
-        }
-        return 'Não há informações sobre o estado da sinalização nos autos.';
+        if (data.infraction.hasR19SignageProof === false) return 'Ausência de comprovação de sinalização regulatória nos documentos';
+        if (data.infraction.hasR19SignageProof === true) return 'Comprovação de sinalização regulatória presente nos documentos';
+        return 'Não há comprovação fotográfica de sinalização regulatória disponível';
       },
-      userImpact: 'Placa obstruída ou apagada pode invalidar a autuação por não cumprir função de aviso.',
-      confidenceBase: 'STJ, REsp 1.456.789/RJ'
+      userImpact: 'Se constatada ausência ou inadequação da sinalização, isso pode invalidar a medição de velocidade como prova da infração',
+      confidenceBase: 'Art. 90 do CTB, Res. CONTRAN 798/2020'
     }
-  ],
-  'ARG-003': [
-    {
-      title: 'Verificação da medição',
-      lawExplanation: 'Erros de medição podem ocorrer por diversos fatores ambientais e técnicos.',
-      evidenceCheck: (data) => {
-        if (data.infraction.witnesses && data.infraction.witnesses.length > 0) {
-          return `Há ${data.infraction.witnesses.length} testemunha(s) que pode(m) contestar a medição`;
-        }
-        return 'Não há testemunhas listadas nos autos que possam corroborar a medição.';
-      },
-      userImpact: 'Testemunhas podem contestar a precisão da medição realizada pelo agente.',
-      confidenceBase: 'Súmula 362 do STJ'
-    }
-  ],
-  'DEFAULT': [
-    {
-      title: 'Análise preliminar de documentação',
-      lawExplanation: 'Verificação básica de conformidade documental e procedural.',
-      evidenceCheck: (data) => {
-        const missingDocs = [];
-        if (!data.infraction.notificationDate) missingDocs.push('data da notificação');
-        if (!data.infraction.vehiclePlate) missingDocs.push('placa do veículo');
-        if (!data.infraction.dateTime) missingDocs.append('data e hora da infração');
-        return missingDocs.length > 0
-          ? `Documentos pendentes: ${missingDocs.join(', ')}`
-          : 'Documentação básica presente nos autos.';
-      },
-      userImpact: 'Falta de documentos essenciais pode causar nulidade da autuação.',
-      confidenceBase: 'Lei 9.099/95 - Art. 10'
-    }
-  ]
+  };
+
+  const explanation = govBrExplanations[arg.id] || {
+    title: arg.title,
+    lawExplanation: `${arg.legalBase} ${arg.contraranResolution ? `(c/c ${arg.contraranResolution})` : ''}`,
+    evidenceCheck: () => 'Verificação específica não configurada para este argumento',
+    userImpact: arg.summary,
+    confidenceBase: 'Base jurídica padrão'
+  };
+
+  // Calcula nível de confiança baseado na evidência disponível
+  const evidenceResult = explanation.evidenceCheck({
+    infraction: caseData.infraction,
+    vehicle: caseData.vehicle
+  });
+   
+  let confidenceLevel: 'Baixo' | 'Médio' | 'Alto' | 'Muito Alto' = 'Médio';
+  let confidenceReason = '';
+   
+  // Lógica de confiança baseada na qualidade da evidência
+  if (explanation.confidenceBase.includes('Lei') && 
+      (evidenceResult.includes('constatada') || evidenceResult.includes('fora da validade'))) {
+    confidenceLevel = 'Muito Alto';
+    confidenceReason = 'Baseado em lei com alteração recente que tornou o direito obrigatório';
+  } else if (explanation.confidenceBase.includes('Res.') && 
+             (evidenceResult.includes('fora da validade') || evidenceResult.includes('dentro da validade'))) {
+    confidenceLevel = 'Alto';
+    confidenceReason = 'Baseado em resolução técnica com prazo claro e objetivo';
+  } else if (evidenceResult.includes('Não há registro') || 
+             evidenceResult.includes('Não há comprovação') ||
+             evidenceResult.includes('ausência de')) {
+    confidenceLevel = 'Médio';
+    confidenceReason = 'Baseado em ausência de comprovação disponível nos dados fornecidos';
+  } else {
+    confidenceLevel = 'Baixo';
+    confidenceReason = 'Evidência insuficiente para conclusão definitiva';
+  }
+
+  return {
+    ...explanation,
+    evidenceResult,
+    confidenceLevel,
+    confidenceReason
+  };
 };
 
 interface FreeAnalysisResultStepProps {
-  analysis: CaseAnalysis | null;
-  isLoading: boolean;
-  leadName: string | null;
-  vehicleData: VehicleData | null;
-  infractionData: InfractionData | null;
-  procedureType: ProcedureType | null;
-  onDownloadPDF: () => void;
-  onStartOver: () => void;
-  onWhatsApp: () => void;
-  onNewAnalysis: () => void;
+  analysis: CaseAnalysis;
+  infractionData: InfractionData;
+  vehicleData: VehicleData;
+  serviceType: ProcedureType;
+  leadName?: string;
+  leadPhone?: string;
+  onProceedToDocumentGeneration: () => void;
+  onSaveToDashboard: () => void;
 }
 
 export const FreeAnalysisResultStep: React.FC<FreeAnalysisResultStepProps> = ({
   analysis,
-  isLoading,
-  leadName,
-  vehicleData,
   infractionData,
-  procedureType,
-  onDownloadPDF,
-  onStartOver,
-  onWhatsApp,
-  onNewAnalysis
+  vehicleData,
+  serviceType,
+  leadName = '',
+  leadPhone = '',
+  onProceedToDocumentGeneration,
+  onSaveToDashboard,
 }) => {
-  if (isLoading || !analysis) {
-    return (
-      <div className="text-center py-12">
-        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full text-base font-bold uppercase tracking-wider bg-blue-50 text-[#155BCB] border border-blue-200 font-mono">
-          <Sparkles className="w-5 h-5 text-[#155BCB]" />
-          Passo 5 de 10 • Análise em Progresso
-        </div>
-        <h2 className="text-3xl font-bold text-slate-900 mt-6">Processando sua análise...</h2>
-        <p className="text-lg text-slate-500 mt-4">
-          Nossa IA está revisando todos os detalhes da sua multa para identificar as melhores defesas.
-        </p>
-        <div className="mt-8 flex justify-center space-x-4">
-          <div className="w-4 h-4 border-2 border-[#155BCB] border-t-transparent rounded-full animate-spin" />
-          <div className="w-4 h-4 border-2 border-[#155BCB] border-r-transparent rounded-full animate-spin" />
-          <div className="w-4 h-4 border-2 border-[#155BCB] border-b-transparent rounded-full animate-spin" />
-          <div className="w-4 h-4 border-2 border-[#155BCB] border-l-transparent rounded-full animate-spin" />
-        </div>
-      </div>
-    );
-  }
-
-  // Select variation based on hash of user data for consistent but varied explanations
-  const getVariationIndex = (argId: string, data: any): number => {
-    let hash = 0;
-    const str = JSON.stringify(data) + argId;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const variations = govBrExplanationsVariations[argId] || govBrExplanationsVariations.DEFAULT;
-    return Math.abs(hash) % variations.length;
-  };
-
-  const getVariation = (argId: string, data: any) => {
-    const variations = govBrExplanationsVariations[argId] || govBrExplanationsVariations.DEFAULT;
-    const index = getVariationIndex(argId, data);
-    return variations[index];
-  };
+  const successRate = analysis?.overallSuccessRate ?? 0;
+  const isHighProbability = successRate >= 80;
+  
+  // Calcula pontos de defesa personalizados (top 3 por relevância)
+  const defensePoints = analysis?.recommendedArguments
+    ?.map(arg => formatLegalPointGovBr(arg, { infraction: infractionData, vehicle: vehicleData }))
+    ?.sort((a, b) => {
+      // Ordena por: confiança (Muito Alto > Alto > Médio > Baixo) 
+      const confidenceOrder: Record<string, number> = {
+        'Muito Alto': 4,
+        'Alto': 3,
+        'Médio': 2,
+        'Baixo': 1
+      };
+      return (confidenceOrder[b.confidenceLevel] || 0) - (confidenceOrder[a.confidenceLevel] || 0);
+    })
+    .slice(0, 3) // Mostra apenas os top 3 argumentos mais relevantes
+    ?? [];
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-lg space-y-8">
-      {/* Header - melhorado */}
+    <div className="space-y-6">
+      {/* Cabeçalho com informações básicas */}
       <div className="space-y-4">
-        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full text-base font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono">
           <ShieldCheck className="w-4 h-4 text-emerald-600" />
-          Passo 5 de 10 • Diagnóstico Jurídico Gratuito Concluído
+          Diagnóstico Jurídico Gratuito Concluído
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-snug mb-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
           {leadName ? `Diagnóstico de ${leadName.split(' ')[0]}` : 'Resultado da Análise Preliminar'}
         </h1>
-        <p className="text-base text-sm leading-relaxed max-w-2xl mx-auto text-slate-600">
-          {leadName ? `Olá ${leadName.split(' ')[0]}, aqui estão os resultados da análise da sua multa.` : 'Nossa análise identificou pontos fortes para sua defesa.'}
+        <p className="text-base text-slate-500">
+          Auto nº <span className="font-mono font-bold text-slate-800">{infractionData.aitNumber || 'N/A'}</span> • 
+          Placa <span className="font-mono font-bold text-slate-800">{vehicleData.plate || 'N/A'}</span>
+          {leadPhone && <span className="ml-2 text-slate-400 font-mono">• WhatsApp: {leadPhone}</span>}
         </p>
       </div>
 
-      {/* Status Overview Cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {/* Probabilidade de Sucesso */}
-        <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-              <h3 className="text-lg font-semibold text-slate-900">Probabilidade de Sucesso</h3>
-            </div>
-            <span className={`text-2xl font-bold ${
-              analysis.successProbability >= 0.7 ? 'text-emerald-600' :
-              analysis.successProbability >= 0.4 ? 'text-amber-500' : 'text-rose-500'
-            }`}>
-              {Math.round(analysis.successProbability * 100)}%
-            </span>
+      {/* Probabilidade de Êxito */}
+      <div className="p-6 bg-emerald-50/70 border border-emerald-200 rounded-xl text-center">
+        <div className="space-y-3">
+          <span className="text-base font-bold text-emerald-800 uppercase font-mono block">
+            Probabilidade de Êxito
+          </span>
+          <div className="text-4xl sm:text-5xl font-extrabold text-emerald-700 font-mono">
+            {successRate}%
           </div>
-          <p className="text-sm text-slate-500">
-            Chance estimada de vitória com as defesas identificadas
-          </p>
-        </div>
-
-        {/* Argumentos Fortes */}
-        <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <BarChart2 className="w-5 h-5 text-[#155BCB]" />
-              <h3 className="text-lg font-semibold text-slate-900">Principais Argumentos</h3>
-            </div>
-            <span className="text-2xl font-bold text-[#155BCB]">
-              {analysis.strongArguments.length}
-            </span>
-          </div>
-          <p className="text-sm text-slate-500">
-            Pontos jurídicos sólidos para sua defesa
-          </p>
-        </div>
-
-        {/* Estimativa de Economia */}
-        <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-5">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-3">
-              <FileCheck2 className="w-5 h-5 text-green-500" />
-              <h3 className="text-lg font-semibold text-slate-900">Economia Potencial</h3>
-            </div>
-            <span className="text-3xl font-bold text-emerald-600">
-              R$ {analysis.fineAmount?.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? '0'}
-            </span>
-          </div>
-          <p className="text-sm text-slate-500">
-            Valor que você pode não precisar pagar
-          </p>
+          <span className="text-lg text-emerald-800 font-medium">
+            Alto potencial de anulação
+          </span>
         </div>
       </div>
 
-      {/* Detailed Arguments */}
+      {/* Resumo informativo (3 colunas) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="space-y-3">
+          <span className="text-base font-bold uppercase font-mono text-slate-400">Enquadramento</span>
+          <p className="text-lg font-bold text-slate-900 truncate">{infractionData.ctbArticle || 'Art. 218 do CTB'}</p>
+          <p className="text-base text-slate-500 font-mono">Cód. {infractionData.infractionCode || '745-50'}</p>
+        </div>
+        <div className="space-y-3">
+          <span className="text-base font-bold uppercase font-mono text-slate-400">Órgão Julgador</span>
+          <p className="text-lg font-bold text-slate-900 truncate">{infractionData.autuadorBody || 'DETRAN-SP'}</p>
+          <p className="text-base text-slate-500">Instância: Defesa Administrativa</p>
+        </div>
+        <div className="space-y-3">
+          <span className="text-base font-bold uppercase font-mono text-slate-400">Impacto Estimado</span>
+          <p className="text-lg font-bold text-slate-900">R$ {infractionData.fineAmount?.toFixed(2) || '130,16'}</p>
+          <p className="text-base text-amber-700 font-semibold">{infractionData.points || 4} Pontos na CNH</p>
+        </div>
+      </div>
+
+      {/* SEÇÃO PRINCIPAL: Análise jurídica personalizada */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
-          Fundamentação Jurídica
-        </p>
-        <p className="text-base text-sm leading-relaxed max-w-xl mx-auto mb-4 text-slate-600">
-          Analisamos sua multa e identificamos os seguintes pontos que podem ser usados em sua defesa:
-        </p>
+        <div className="flex items-center gap-3">
+          <FileCheck2 className="w-5 h-5 text-orange-500" />
+          <h3 className="text-lg font-bold text-slate-900 font-mono uppercase">
+            Principais pontos verificados para sua defesa ({defensePoints?.length || 0})
+            {analysis?.recommendedArguments?.length > 3 && (
+              <span className="text-base text-slate-500 ml-2">
+                (+{analysis.recommendedArguments.length - 3} outros pontos disponíveis na visualização completa)
+              </span>
+            )}
+          </h3>
+        </div>
 
-        {analysis.strongArguments.map((arg, index) => (
-          <div key={arg.id} className="bg-slate-50 border-l-4 border-l-[${arg.confidenceLevel === 'Alto' ? '#10B981' : arg.confidenceLevel === 'Médio' ? '#F59E0B' : '#EF4444'}] rounded-xl p-5 hover:bg-slate-100 transition-colors">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${arg.confidenceLevel === 'Alto' ? 'bg-emerald-100 text-emerald-800' : arg.confidenceLevel === 'Médio' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}`}>
-                  {index + 1}
+        {defensePoints?.length > 0 ? (
+          <div className="space-y-6">
+            {defensePoints.map((point, idx) => (
+              <div
+                key={point.title || idx}
+                className="p-6 bg-white border border-slate-200 rounded-xl shadow-2xs space-y-5"
+              >
+                {/* Ícone e título */}
+                <div className="flex items-start gap-4">
+                  <div className="w-6 h-6 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-xl font-bold text-slate-900">{point.title}</h4>
+                    <p className="text-base text-slate-500 font-mono">{point.confidenceBase}</p>
+                  </div>
+                </div>
+
+                {/* Explicação no estilo GOV.BR */}
+                <div className="space-y-4">
+                  {/* O que verificamos */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-4 h-4 rounded bg-slate-100 text-slate-500 flex items-center justify-center">
+                      <Clock className="w-3 h-3" />
+                    </div>
+                    <span className="text-base font-medium text-slate-700">O que verificamos:</span>
+                    <p className="text-lg text-slate-600 leading-relaxed ml-3">{point.title}</p>
+                  </div>
+
+                  {/* O que a lei diz */}
+                  <div className="flex items-start gap-3 mt-4">
+                    <div className="w-4 h-4 rounded bg-slate-100 text-slate-500 flex items-center justify-center">
+                      <BookOpen className="w-3 h-3" />
+                    </div>
+                    <span className="text-base font-medium text-slate-700">O que a lei diz:</span>
+                    <p className="text-lg text-slate-600 leading-relaxed ml-3">{point.lawExplanation}</p>
+                  </div>
+
+                  {/* O que encontramos */}
+                  <div className="flex items-start gap-3 mt-4">
+                    <div className="w-4 h-4 rounded bg-slate-100 text-slate-500 flex items-center justify-center">
+                      <ExternalLink className="w-3 h-3" />
+                    </div>
+                    <span className="text-base font-medium text-slate-700">O que encontramos nos seus dados:</span>
+                    <p className="text-lg text-slate-600 leading-relaxed ml-3">{point.evidenceResult}</p>
+                  </div>
+
+                  {/* O que isso significa */}
+                  <div className="flex items-start gap-3 mt-4">
+                    <div className="w-4 h-4 rounded bg-slate-100 text-slate-500 flex items-center justify-center">
+                      <Check className="w-3 h-3" />
+                    </div>
+                    <span className="text-base font-medium text-slate-700">O que isso significa para você:</span>
+                    <p className="text-lg text-slate-600 leading-relaxed ml-3">{point.userImpact}</p>
+                  </div>
+
+                  {/* Nível de confiança */}
+                  <div className="flex items-start gap-3 mt-4">
+                    <div className="w-4 h-4 rounded bg-slate-100 text-slate-500 flex items-center justify-center">
+                      <BarChart2 className="w-3 h-3" />
+                    </div>
+                    <span className="text-base font-medium text-slate-700">Nível de confiança:</span>
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-sm font-medium 
+                      ${point.confidenceLevel === 'Muito Alto' ? 'bg-emerald-50 text-emerald-700' : ''}
+                      ${point.confidenceLevel === 'Alto' ? 'bg-blue-50 text-blue-700' : ''}
+                      ${point.confidenceLevel === 'Médio' ? 'bg-amber-50 text-amber-700' : ''}
+                      ${point.confidenceLevel === 'Baixo' ? 'bg-rose-50 text-rose-700' : ''}
+                    ">
+                      {point.confidenceLevel}
+                    </span>
+                    <span className="text-base text-slate-500 ml-1">({point.confidenceReason})</span>
+                  </div>
                 </div>
               </div>
-              <div className="flex-1 space-y-3">
-                <h3 className="text-lg font-bold text-slate-900">{getVariation(arg.id, analysis).title}</h3>
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-slate-700">Fundamento Legal:</p>
-                  <p className="text-base text-slate-500">{getVariation(arg.id, analysis).lawExplanation}</p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-slate-700">Como aplicar no seu caso:</p>
-                  <p className="text-base text-slate-500">{getVariation(arg.id, analysis).evidenceCheck(analysis)}</p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-slate-700">Impacto para você:</p>
-                  <p className="text-base text-slate-500">{getVariation(arg.id, analysis).userImpact}</p>
-                </div>
-                <div className="mt-2 pt-2 border-t border-slate-200">
-                  <p className="text-xs text-slate-500">
-                    Base legal: {getVariation(arg.id, analysis).confidenceBase}
-                  </p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-        ))}
-
-        {analysis.strongArguments.length === 0 && (
-          <div className="text-center py-12">
-            <AlertTriangle className="w-8 h-8 text-amber-500 mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-slate-900">Análise Concluída</h3>
-            <p className="text-base text-sm leading-relaxed max-w-lg mx-auto text-slate-600">
-              Nossa análise não identificou argumentos jurídicos fortes nos documentos fornecidos. Isso não significa que não há defesa possível, mas sim que com as informações atuais não encontramos pontos de nulidade claros. Recomendamos revisar os documentos ou consultar um advogado para uma análise mais detalhada.
+        ) : (
+          <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 text-center">
+            <p className="text-lg text-slate-600 leading-relaxed">
+              Nenhum vício formal ou tese de anulação foi identificado com base nas informações fornecidas. 
+              Recomendamos reunir mais documentos ou consultar um advogado para uma análise mais detalhada.
             </p>
           </div>
         )}
       </div>
 
-      {/* Call to Action */}
-      <div className="space-y-6 pt-6 border-t border-slate-200">
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight text-center">
-          Próximos Passos
-        </p>
-        <p className="text-base text-sm leading-relaxed max-w-xl mx-auto mb-6 text-center text-slate-600">
-          Com base na análise, você pode tomar as seguintes ações:
-        </p>
-        <div className="grid gap-4 sm:grid-cols-2">
+      {/* Botões de ação */}
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <button
-            onClick={onDownloadPDF}
-            className="w-full flex flex-col items-center justify-center gap-3 px-6 py-4 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl"
+            onClick={onSaveToDashboard}
+            className="w-full sm:w-auto px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-lg font-bold transition-colors cursor-pointer border border-slate-700"
           >
-            <FileCheck2 className="w-5 h-5 text-emerald-600" />
-            <span className="font-semibold text-emerald-800">Baixar Laudo Completo</span>
-            <span className="text-xs text-emerald-600">
-              Relatório PDF com todos os detalhes da análise
-            </span>
+            Salvar e Ver no Painel
           </button>
-          <button
-            onClick={onStartOver}
-            className="w-full flex flex-col items-center justify-center gap-3 px-6 py-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl"
-          >
-            <ArrowRight className="w-5 h-5 text-slate-500" />
-            <span className="font-semibold text-slate-700">Fazer Nova Análise</span>
-            <span className="text-xs text-slate-600">
-              Começar do início com uma nova multa
-            </span>
-          </button>
-        </div>
-        <div className="flex flex-col items-center justify-center gap-3 pt-4">
-          <button
-            onClick={onWhatsApp}
-            className="w-full flex flex-col items-center justify-center gap-2 px-4 py-3 bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg"
-          >
-            <Phone className="w-4 h-4 text-green-600" />
-            <span className="font-medium text-green-800">Receber por WhatsApp</span>
-          </button>
-          <button
-            onClick={onNewAnalysis}
-            className="w-full flex flex-col items-center justify-center gap-2 px-4 py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg"
-          >
-            <RefreshCw className="w-4 h-4 text-slate-500" />
-            <span className="font-medium text-slate-700">Análise Detalhada (Advogado)</span>
-          </button>
-        </div>
-      </div>
 
-      {/* Footer */}
-      <div className="mt-8 pt-6 border-t border-slate-200 text-center">
-        <p className="text-xs text-slate-400">
-          Este é um diagnóstico gratuito e preliminar. Para uma análise jurídica completa e personalizada, consulte um advogado especializado em direito de trânsito.
-        </p>
-        <p className="text-xs text-slate-400">
-          Código de referência: {Math.random().toString(36).substring(2, 9).toUpperCase()}
-        </p>
+          <button
+            id="btn-proceed-to-document-generation"
+            onClick={onProceedToDocumentGeneration}
+            className="w-full sm:w-auto px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-lg font-bold shadow-lg shadow-orange-500/20 transition-all flex items-center justify-center gap-3 cursor-pointer uppercase tracking-tight"
+          >
+            <span>Gerar Minha Defesa</span>
+            <ArrowRight className="w-5 h-5" />
+          </button>
+        </div>
       </div>
     </div>
   );

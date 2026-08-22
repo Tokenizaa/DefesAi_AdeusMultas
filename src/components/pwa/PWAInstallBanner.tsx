@@ -35,11 +35,11 @@ export const PWAInstallBanner: React.FC = () => {
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="font-bold text-sm text-white truncate">Instalar DefesAi App</span>
-                <span className="text-[10px] uppercase font-extrabold bg-[#FFCD07] text-[#071D41] px-1.5 py-0.5 rounded-full shrink-0">
+                <span className="text-sm uppercase font-extrabold bg-[#FFCD07] text-[#071D41] px-1.5 py-0.5 rounded-full shrink-0">
                   PWA
                 </span>
               </div>
-              <p className="text-xs text-slate-300 truncate">
+              <p className="text-sm text-slate-300 truncate">
                 Acesso rápido, modo offline e recursos com IA.
               </p>
             </div>
@@ -49,7 +49,7 @@ export const PWAInstallBanner: React.FC = () => {
             <button
               onClick={handleInstallClick}
               disabled={installing}
-              className="bg-gradient-to-r from-[#FFCD07] to-[#F5A623] hover:brightness-110 active:scale-95 text-[#071D41] font-bold text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-md"
+              className="bg-gradient-to-r from-[#FFCD07] to-[#F5A623] hover:brightness-110 active:scale-95 text-[#071D41] font-bold text-sm px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-md"
             >
               <Download className="w-3.5 h-3.5" />
               {installing ? 'Instalando...' : 'Instalar'}
@@ -84,13 +84,13 @@ export const PWAInstallBanner: React.FC = () => {
               </button>
             </div>
 
-            <p className="text-xs text-slate-300">
+            <p className="text-sm text-slate-300">
               Para instalar a plataforma DefesAi como aplicativo no Safari:
             </p>
 
-            <div className="space-y-3 bg-[#0C326F]/40 border border-white/10 rounded-xl p-3.5 text-xs text-slate-200">
+            <div className="space-y-3 bg-[#0C326F]/40 border border-white/10 rounded-xl p-3.5 text-sm text-slate-200">
               <div className="flex items-start gap-2.5">
-                <div className="w-6 h-6 rounded-full bg-[#155BCB] text-white font-bold flex items-center justify-center shrink-0 text-xs">
+                <div className="w-6 h-6 rounded-full bg-[#155BCB] text-white font-bold flex items-center justify-center shrink-0 text-sm">
                   1
                 </div>
                 <p className="pt-0.5">
@@ -99,7 +99,7 @@ export const PWAInstallBanner: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-2.5">
-                <div className="w-6 h-6 rounded-full bg-[#155BCB] text-white font-bold flex items-center justify-center shrink-0 text-xs">
+                <div className="w-6 h-6 rounded-full bg-[#155BCB] text-white font-bold flex items-center justify-center shrink-0 text-sm">
                   2
                 </div>
                 <p className="pt-0.5">
@@ -108,7 +108,7 @@ export const PWAInstallBanner: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-2.5">
-                <div className="w-6 h-6 rounded-full bg-[#155BCB] text-white font-bold flex items-center justify-center shrink-0 text-xs">
+                <div className="w-6 h-6 rounded-full bg-[#155BCB] text-white font-bold flex items-center justify-center shrink-0 text-sm">
                   3
                 </div>
                 <p className="pt-0.5">
@@ -119,7 +119,7 @@ export const PWAInstallBanner: React.FC = () => {
 
             <button
               onClick={() => setShowIOSModal(false)}
-              className="w-full bg-[#155BCB] hover:bg-[#124ba8] text-white font-semibold text-xs py-2.5 rounded-xl transition-colors"
+              className="w-full bg-[#155BCB] hover:bg-[#124ba8] text-white font-semibold text-sm py-2.5 rounded-xl transition-colors"
             >
               Entendi
             </button>

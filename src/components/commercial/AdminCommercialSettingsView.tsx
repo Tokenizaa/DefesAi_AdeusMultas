@@ -85,11 +85,11 @@ export const AdminCommercialSettingsView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-700 text-slate-300 border border-slate-600 font-mono">
+            <span className="px-2 py-0.5 rounded text-sm font-bold uppercase tracking-wider bg-slate-700 text-slate-300 border border-slate-600 font-mono">
               Configurações & Governança
             </span>
-            <span className="text-slate-500 text-xs font-mono">•</span>
-            <span className="text-slate-400 text-xs">Políticas de Segurança e Auditoria</span>
+            <span className="text-slate-500 text-sm font-mono">•</span>
+            <span className="text-slate-400 text-sm">Políticas de Segurança e Auditoria</span>
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight mt-1">
             Governança Comercial, Permissões & Trilha de Auditoria
@@ -99,7 +99,7 @@ export const AdminCommercialSettingsView: React.FC = () => {
         <button
           onClick={fetchAudit}
           disabled={loading}
-          className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-2 border border-slate-700 transition-colors cursor-pointer"
+          className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium flex items-center gap-2 border border-slate-700 transition-colors cursor-pointer"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
           Atualizar Auditoria
@@ -116,8 +116,8 @@ export const AdminCommercialSettingsView: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 text-slate-400 uppercase font-mono text-[10px] border-b border-slate-800">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-950 text-slate-400 uppercase font-mono text-sm border-b border-slate-800">
               <tr>
                 <th className="px-4 py-3">Código de Permissão</th>
                 <th className="px-4 py-3">Funcionalidade Protegida</th>
@@ -136,11 +136,11 @@ export const AdminCommercialSettingsView: React.FC = () => {
                   <td className="px-4 py-3 font-bold text-white font-sans">
                     {perm.name}
                   </td>
-                  <td className="px-4 py-3 text-slate-400 font-sans text-xs">
+                  <td className="px-4 py-3 text-slate-400 font-sans text-sm">
                     {perm.description}
                   </td>
                   <td className="px-4 py-3 text-slate-300 font-sans">
-                    <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[11px]">
+                    <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-sm">
                       {perm.roleDefault}
                     </span>
                   </td>
@@ -163,8 +163,8 @@ export const AdminCommercialSettingsView: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto max-h-96">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 text-slate-400 uppercase font-mono text-[10px] border-b border-slate-800 sticky top-0">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-950 text-slate-400 uppercase font-mono text-sm border-b border-slate-800 sticky top-0">
               <tr>
                 <th className="px-4 py-3">Data / Hora</th>
                 <th className="px-4 py-3">Ação</th>
@@ -180,7 +180,7 @@ export const AdminCommercialSettingsView: React.FC = () => {
                     {new Date(log.timestamp).toLocaleString('pt-BR')}
                   </td>
                   <td className="px-4 py-3 font-bold text-white">
-                    <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-orange-400">
+                    <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-sm text-orange-400">
                       {log.action}
                     </span>
                   </td>
@@ -190,7 +190,7 @@ export const AdminCommercialSettingsView: React.FC = () => {
                   <td className="px-4 py-3 text-slate-200 font-bold">
                     {log.changedBy}
                   </td>
-                  <td className="px-4 py-3 text-slate-400 font-sans italic text-xs">
+                  <td className="px-4 py-3 text-slate-400 font-sans italic text-sm">
                     "{log.reason}"
                   </td>
                 </tr>

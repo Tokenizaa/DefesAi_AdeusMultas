@@ -34,19 +34,19 @@ export const PrivateHeader: React.FC = () => {
   return (
     <header className="w-full bg-white border-b border-[#CCCCCC] relative z-40">
       {/* 1. Barra Institucional DefesAi */}
-      <div className="bg-[#071D41] text-white py-1 px-4 sm:px-6 lg:px-8 text-[11px] border-b border-[#0C326F]">
+      <div className="bg-[#071D41] text-white py-1 px-4 sm:px-6 lg:px-8 text-sm border-b border-[#0C326F]">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="font-extrabold tracking-wider text-xs flex items-center gap-1">
+            <span className="font-extrabold tracking-wider text-sm flex items-center gap-1">
               <span className="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block" />
               DEFESAI
             </span>
-            <span className="hidden sm:inline text-orange-300 text-[10px]">
+            <span className="hidden sm:inline text-orange-300 text-sm">
               Sistema de Defesa Autônoma
             </span>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px] text-orange-200">
+          <div className="flex items-center gap-4 text-sm text-orange-200">
             <a
               href="/"
               className="hover:underline hidden md:inline"
@@ -100,11 +100,11 @@ export const PrivateHeader: React.FC = () => {
                 <h1 className="text-sm sm:text-base font-bold text-[#071D41] tracking-tight flex items-center gap-1.5">
                   <span>Adeus</span>
                   <span className="text-orange-500">Multa</span>
-                  <span className="text-[10px] font-bold font-mono px-1.5 py-0.2 bg-orange-50 text-orange-100 border border-orange-200 rounded">
+                  <span className="text-sm font-bold font-mono px-1.5 py-0.2 bg-orange-50 text-orange-100 border border-orange-200 rounded">
                     CTB • CONTRAN
                   </span>
                 </h1>
-                <p className="text-[11px] text-slate-600 hidden md:block">
+                <p className="text-sm text-slate-600 hidden md:block">
                   Plataforma de Defesa Autônoma para Multas de Trânsito
                 </p>
               </div>
@@ -121,7 +121,7 @@ export const PrivateHeader: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar serviços ou infrações..."
-                className="w-full bg-[#F8F8F8] border border-[#CCCCCC] rounded-full py-1.5 pl-3.5 pr-8 text-xs text-slate-800 placeholder-slate-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full bg-[#F8F8F8] border border-[#CCCCCC] rounded-full py-1.5 pl-3.5 pr-8 text-sm text-slate-800 placeholder-slate-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
               <button
                 type="submit"
@@ -135,7 +135,7 @@ export const PrivateHeader: React.FC = () => {
             {/* Ação Primária: Iniciar Análise Gratuita */}
             <button
               onClick={() => navigate('/novo-caso')}
-              className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+              className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-bold transition-colors cursor-pointer shadow-2xs"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#FFCD07]" />
               <span>Análise Gratuita</span>
@@ -146,7 +146,7 @@ export const PrivateHeader: React.FC = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => navigate(isAdmin ? '/admin' : '/dashboard')}
-                  className="px-3 py-1.5 bg-[#071D41] hover:bg-[#0C326F] text-white rounded-lg text-xs font-bold flex items-center gap-2 cursor-pointer transition-colors"
+                  className="px-3 py-1.5 bg-[#071D41] hover:bg-[#0C326F] text-white rounded-lg text-sm font-bold flex items-center gap-2 cursor-pointer transition-colors"
                 >
                   <User className="w-3.5 h-3.5 text-orange-400" />
                   <span className="max-w-[120px] truncate">{user.name.split(' ')[0]}</span>
@@ -165,7 +165,7 @@ export const PrivateHeader: React.FC = () => {
               <button
                 id="btn-login-defesai"
                 onClick={() => navigate('/login')}
-                className="px-4 py-2 bg-[#071D41] hover:bg-[#0C326F] text-white rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shadow-xs border border-[#0C326F]"
+                className="px-4 py-2 bg-[#071D41] hover:bg-[#0C326F] text-white rounded-full text-sm font-bold transition-all flex items-center gap-2 cursor-pointer shadow-xs border border-[#0C326F]"
               >
                 <div className="w-4 h-4 rounded-full bg-white flex items-center justify-center text-[#071D41] font-extrabold text-[9px]">
                   D
@@ -196,7 +196,7 @@ export const PrivateHeader: React.FC = () => {
                 <span className="font-extrabold text-xl text-white">Defe</span>
                 <span className="text-orange-500">s</span>
                 <span className="text-[#168821]">Ai</span>
-              <span className="text-xs text-orange-300">| DefesAi</span>
+              <span className="text-sm text-orange-300">| DefesAi</span>
               </div>
               <button
                 onClick={() => setIsMenuOpen(false)}
@@ -208,9 +208,9 @@ export const PrivateHeader: React.FC = () => {
             </div>
 
             {/* Links do Menu */}
-            <div className="p-4 space-y-6 flex-1 text-xs">
+            <div className="p-4 space-y-6 flex-1 text-sm">
               <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono block px-2 mb-1">
+                <span className="text-sm font-bold uppercase tracking-wider text-slate-500 font-mono block px-2 mb-1">
                   Navegação Principal
                 </span>
                 <button
@@ -239,7 +239,7 @@ export const PrivateHeader: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono block px-2 mb-1">
+                <span className="text-sm font-bold uppercase tracking-wider text-slate-500 font-mono block px-2 mb-1">
                   Área do Usuário
                 </span>
                 <button
@@ -298,7 +298,7 @@ export const PrivateHeader: React.FC = () => {
 
               {isAdmin && (
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 font-mono block px-2 mb-1">
+                  <span className="text-sm font-bold uppercase tracking-wider text-purple-700 font-mono block px-2 mb-1">
                     Administração
                   </span>
                   <button
@@ -326,10 +326,10 @@ export const PrivateHeader: React.FC = () => {
             </div>
 
             {/* Rodapé do Menu */}
-            <div className="p-4 border-t border-slate-200 bg-slate-50 text-[11px] text-slate-500">
+            <div className="p-4 border-t border-slate-200 bg-slate-50 text-sm text-slate-500">
               <p className="font-semibold text-slate-800 mb-1">Suporte & Assistência</p>
               <p>Segunda a sexta, das 8h às 18h</p>
-              <p className="mt-2 text-[10px] font-mono">DefesAi • Sistema Autônomo de Defesa</p>
+              <p className="mt-2 text-sm font-mono">DefesAi • Sistema Autônomo de Defesa</p>
             </div>
           </nav>
         </div>

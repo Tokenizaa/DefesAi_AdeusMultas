@@ -62,6 +62,8 @@ router.post('/ocr/analyze', async (req, res) => {
         notificationExpeditionDate: ocrResult.dadosExtraidos.dataInfracao,
         defenseDeadline: ocrResult.dadosExtraidos.prazoDefesa || new Date(Date.now() + 28 * 24 * 3600 * 1000).toISOString().split('T')[0],
         formalFlawsDetected: matchedInfraction?.typicalFlaws || [],
+        dateTime: ocrResult.dadosExtraidos.dataInfracao || new Date().toISOString(),
+        location: ocrResult.dadosExtraidos.localInfracao || 'Não informado',
       };
 
       // Run Gemini AI analysis if available
@@ -78,7 +80,7 @@ router.post('/ocr/analyze', async (req, res) => {
           """
 
           Contexto do Auto:
-          ${JSON.stringify(infractionContext, null, 2)}
+          ${JSON.stringify(infractionData, null, 2)}
 
           Por favor, responda no formato JSON com:
           - summary: resumo executivo do caso
@@ -195,6 +197,8 @@ router.post('/ocr/analyze', async (req, res) => {
         notificationExpeditionDate: ocrResult.dadosExtraidos.dataInfracao,
         defenseDeadline: ocrResult.dadosExtraidos.prazoDefesa || new Date(Date.now() + 28 * 24 * 3600 * 1000).toISOString().split('T')[0],
         formalFlawsDetected: matchedInfraction?.typicalFlaws || [],
+        dateTime: ocrResult.dadosExtraidos.dataInfracao || new Date().toISOString(),
+        location: ocrResult.dadosExtraidos.localInfracao || 'Não informado',
       };
 
       // Run Gemini AI analysis if available
@@ -351,10 +355,13 @@ router.post('/ocr/analyze', async (req, res) => {
       fineAmount: matchedInfraction.fineAmount,
       points: matchedInfraction.points,
       severity: matchedInfraction.severity as InfractionSeverity,
-      autuadorBody: matchedInfraction.autuador,
+      autuadorBody: autuador,
       notificationExpeditionDate: new Date().toISOString().split('T')[0],
       defenseDeadline: new Date(Date.now() + 28 * 24 * 3600 * 1000).toISOString().split('T')[0],
       formalFlawsDetected: matchedInfraction.typicalFlaws,
+      dateTime: new Date().toISOString(),
+      location: location,
+      plate: 'ABC1D23',
     };
 
     // Run Gemini AI analysis if available

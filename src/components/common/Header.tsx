@@ -24,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, activeC
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-slate-900 tracking-tight text-base">Adeus Multa</span>
-                <span className="text-[10px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 font-mono">
+                <span className="text-sm font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 font-mono">
                   CTB & CONTRAN
                 </span>
               </div>
@@ -36,7 +36,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, activeC
             <button
               id="nav-onboarding"
               onClick={() => onSelectTab('onboarding')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 currentTab === 'onboarding'
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, activeC
             <button
               id="nav-cases"
               onClick={() => onSelectTab('cases')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 currentTab === 'cases'
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -58,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, activeC
               <FileText className={`w-3.5 h-3.5 ${currentTab === 'cases' ? 'text-orange-400' : 'text-slate-500'}`} />
               Casos Ativos
               {activeCaseCount > 0 && (
-                <span className={`ml-1 text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                <span className={`ml-1 text-sm px-1.5 py-0.2 rounded-full font-mono font-bold ${
                   currentTab === 'cases' ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-800'
                 }`}>
                   {activeCaseCount}
@@ -69,7 +69,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, activeC
             <button
               id="nav-knowledge"
               onClick={() => onSelectTab('knowledge')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 currentTab === 'knowledge'
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, activeC
             <button
               id="nav-marketing"
               onClick={() => onSelectTab('marketing')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 currentTab === 'marketing'
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -95,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, activeC
             <button
               id="nav-audit"
               onClick={() => onSelectTab('audit')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 currentTab === 'audit'
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -108,14 +108,14 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, activeC
 
           {/* Quick CTA - High Density Orange Button */}
           <div className="flex items-center gap-2">
-            <span className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[10px] font-bold rounded border border-green-200 uppercase tracking-wider font-mono">
+            <span className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-sm font-bold rounded border border-green-200 uppercase tracking-wider font-mono">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
               Sistema Operacional
             </span>
             <button
               id="header-cta-button"
               onClick={() => onSelectTab('onboarding')}
-              className="px-3.5 py-1.5 text-xs font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-md shadow-xs shadow-orange-200 transition-all flex items-center gap-1.5 cursor-pointer uppercase tracking-tight"
+              className="px-3.5 py-1.5 text-sm font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-md shadow-xs shadow-orange-200 transition-all flex items-center gap-1.5 cursor-pointer uppercase tracking-tight"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Analisar Multa</span>
@@ -125,7 +125,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, activeC
       </div>
 
       {/* Mobile nav bar */}
-      <div className="md:hidden flex items-center justify-around border-t border-slate-200 bg-slate-50 py-1.5 px-2 text-[11px]">
+      <div className="md:hidden flex items-center justify-around border-t border-slate-200 bg-slate-50 py-1.5 px-2 text-sm">
         <button
           onClick={() => onSelectTab('onboarding')}
           className={`flex flex-col items-center gap-0.5 p-1 ${currentTab === 'onboarding' ? 'text-orange-600 font-bold' : 'text-slate-500'}`}

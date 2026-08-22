@@ -1,6 +1,7 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { pagBankIntegration } from '../integrations/pagbank';
 import { gatewayManager, processGatewayWebhook } from '../integrations/gateway';
+import type { GatewayId } from '../integrations/gateway';
 import { commercialService } from '../commercial/commercial-service';
 import { databaseRows, auditLogs } from '../app';
 import { CanonicalMapper } from '../../core/mappers/canonical-mapper';
@@ -12,6 +13,27 @@ import { authenticateToken, requireAdmin } from '../middleware/auth-middleware';
 import { PRICING } from '../config/pricing';
 
 const router = Router();
+
+// ============================================================================
+// Modo de teste / auth condicional
+// ============================================================================
+
+/** Fora de produção o sistema opera em modo de teste (simulação liberada). */
+function isTestMode(): boolean {
+  return process.env.NODE_ENV !== 'production';
+}
+
+/**
+ * Exige JWT apenas em produção. Em desenvolvimento/teste a rota fica aberta
+ * para permitir E2E e validação local sem Supabase configurado.
+ */
+function prodAuth(req: Request, res: Response, next: NextFunction): void {
+  if (process.env.NODE_ENV === 'production') {
+    authenticateToken(req, res, next);
+    return;
+  }
+  next();
+}
 
 // Middleware to capture raw body for webhook signature verification
 router.use('/webhooks/pagbank', (req: Request, res: Response, next) => {
@@ -36,7 +58,7 @@ router.use('/webhooks/ggpix', (req: Request, res: Response, next) => {
 });
 
 // Official PagBank Integration (Orders, PIX & Webhooks)
-router.post('/pagbank/orders', authenticateToken, async (req, res) => {
+router.post('/pagbank/orders', prodAuth, async (req, res) => {
   try {
     const { caseId, customerName, customerEmail, customerCpf, amount = PRICING.DEFAULT_PRICE } = req.body;
     
@@ -81,7 +103,7 @@ router.post('/pagbank/orders', authenticateToken, async (req, res) => {
 });
 
 // Alias for existing frontend compatibility — now gateway-agnostic
-router.post('/pix/create', authenticateToken, async (req, res) => {
+router.post('/pix/create', prodAuth, async (req, res) => {
   try {
     const { caseId, amount = PRICING.DEFAULT_PRICE, customerCpf, customerName, customerEmail } = req.body;
 
@@ -125,8 +147,46 @@ router.post('/pix/create', authenticateToken, async (req, res) => {
   }
 });
 
+// PIX Status Polling — consulta o status da transação no gateway
+// Usado pelo frontend após o usuário pagar o QR (webhook pode atrasar)
+router.get('/pix/status/:txId', prodAuth, async (req, res) => {
+  try {
+    const { txId } = req.params;
+    if (!txId) {
+      return res.status(400).json({ error: 'txId é obrigatório' });
+    }
+
+    // Consulta o gateway ativo primeiro; se PENDING, tenta os demais configurados
+    const order: GatewayId[] = [gatewayManager.getActiveGatewayId(), 'pagbank', 'ggpixapi'];
+    const tried = new Set<string>();
+    let lastStatus = 'PENDING';
+
+    for (const id of order) {
+      if (tried.has(id)) continue;
+      tried.add(id);
+      const gw = gatewayManager.getGateway(id);
+      if (!gw || !gw.isConfigured()) continue;
+
+      try {
+        const result = await gw.getPaymentStatus(txId);
+        lastStatus = result.status;
+        if (result.status !== 'PENDING') {
+          return res.json({ success: true, txId, status: result.status, paidAt: result.paidAt });
+        }
+      } catch {
+        // Gateway indisponível — tenta o próximo
+      }
+    }
+
+    return res.json({ success: true, txId, status: lastStatus });
+  } catch (err: any) {
+    logger.error('payments', 'gateway', 'pix_status', 'Error querying payment status', { error: err.message });
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 // Credit Card Order Creation Endpoint — gateway-agnostic
-router.post('/credit-card/create', authenticateToken, async (req, res) => {
+router.post('/credit-card/create', prodAuth, async (req, res) => {
   try {
     const {
       caseId,
@@ -300,16 +360,33 @@ router.post('/webhooks/pagbank', (req: Request, res: Response) => {
 });
 
 // Simulate confirm for local testing / instant preview — gateway-agnostic
-router.post('/pix/simulate-confirm', authenticateToken, requireAdmin, (req, res) => {
-  if (process.env.NODE_ENV === 'production') {
-    return res.status(403).json({ 
+// Gate único de teste: bloqueado em produção, liberado em dev/E2E (sem exigência
+// de role admin — o servidor de dev/E2E roda sem Supabase e o bypass é citizen).
+router.post('/pix/simulate-confirm', (req, res) => {
+  if (!isTestMode()) {
+    return res.status(403).json({
       error: 'Rota de simulação indisponível em produção',
-      message: 'Use o fluxo de pagamento real via PagBank.'
+      message: 'Use o fluxo de pagamento real do gateway ativo.'
     });
   }
 
-const { caseId } = req.body;
-    const row = databaseRows.get(caseId);
+const { caseId, case: casePayload } = req.body;
+    let row = databaseRows.get(caseId);
+
+    // Fluxo de teste self-contained: se o caso ainda não foi persistido
+    // (ex.: /api/cases bloqueado por auth em dev), fazemos o upsert aqui a
+    // partir do payload completo enviado pelo frontend. O banco continua
+    // sendo a fonte da verdade — o frontend apenas fornece os dados.
+    if (!row && casePayload && casePayload.id === caseId) {
+      try {
+        row = CanonicalMapper.domainToRow(casePayload);
+        databaseRows.set(caseId, row);
+        logger.info('payments', 'gateway', 'simulate_upsert', `Caso ${caseId} persistido via simulate-confirm`);
+      } catch (mapErr: any) {
+        logger.error('payments', 'gateway', 'simulate_upsert_fail', `Falha ao persistir caso ${caseId}: ${mapErr.message}`);
+      }
+    }
+
     if (!row) {
       return res.status(404).json({ error: 'Caso não encontrado' });
     }
@@ -508,6 +585,7 @@ router.get('/gateway/status', (req, res) => {
   res.json({
     activeGateway: activeId,
     gateways: status,
+    testMode: isTestMode(),
   });
 });
 

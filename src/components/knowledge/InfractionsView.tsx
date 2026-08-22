@@ -82,12 +82,12 @@ export const InfractionsView: React.FC<{
             <AlertTriangle className="w-5 h-5 text-amber-400" />
             Catálogo Canônico de Infrações de Trânsito
             {infractions.length > 0 && (
-              <span className="text-xs text-slate-400 font-mono font-normal">
+              <span className="text-sm text-slate-400 font-mono font-normal">
                 ({infractions.length} infrações)
               </span>
             )}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             Tabela estruturada do CTB com tipificação, gravidade, pontuação e competência fiscalizatória.
           </p>
         </div>
@@ -99,7 +99,7 @@ export const InfractionsView: React.FC<{
             placeholder="Filtrar por código ou descrição..."
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500"
           />
         </div>
       </div>
@@ -107,7 +107,7 @@ export const InfractionsView: React.FC<{
       {loading ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
           <div className="inline-block animate-spin rounded-full border-2 border-orange-500 border-t-transparent w-8 h-8"></div>
-          <p className="mt-3 text-xs text-slate-400">Carregando base canônica de infrações...</p>
+          <p className="mt-3 text-sm text-slate-400">Carregando base canônica de infrações...</p>
         </div>
       ) : infractions.length === 0 ? (
         <div className="text-center py-12 bg-slate-900/40 rounded-xl border border-slate-800">
@@ -116,8 +116,8 @@ export const InfractionsView: React.FC<{
       ) : (
         <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-800 font-mono text-[10px] uppercase">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-800 font-mono text-sm uppercase">
                 <tr>
                   <th className="py-3 px-4">Código / Enquadramento</th>
                   <th className="py-3 px-4">Artigo CTB</th>
@@ -141,7 +141,7 @@ export const InfractionsView: React.FC<{
                       {item.description || item.title}
                     </td>
                     <td className="py-3 px-4">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase ${getSeverityBadge(item.severity)}`}>
+                      <span className={`px-2 py-0.5 rounded-full text-sm font-bold border uppercase ${getSeverityBadge(item.severity)}`}>
                         {item.severity || 'N/I'}
                       </span>
                     </td>
@@ -154,7 +154,7 @@ export const InfractionsView: React.FC<{
                     <td className="py-3 px-4 text-right">
                       <button
                         onClick={() => setSelectedInfraction(item)}
-                        className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-orange-400 rounded-lg text-xs font-bold transition-colors border border-slate-800 inline-flex items-center gap-1 cursor-pointer"
+                        className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-orange-400 rounded-lg text-sm font-bold transition-colors border border-slate-800 inline-flex items-center gap-1 cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5" /> Detalhes
                       </button>
@@ -180,7 +180,7 @@ export const InfractionsView: React.FC<{
                   <h3 className="text-base font-bold text-white">
                     Código: <span className="font-mono text-orange-400">{selectedInfraction.code || selectedInfraction.id}</span>
                   </h3>
-                  <p className="text-xs text-slate-400">{selectedInfraction.ctbArticle || selectedInfraction.article || 'Código de Trânsito Brasileiro'}</p>
+                  <p className="text-sm text-slate-400">{selectedInfraction.ctbArticle || selectedInfraction.article || 'Código de Trânsito Brasileiro'}</p>
                 </div>
               </div>
               <button
@@ -191,7 +191,7 @@ export const InfractionsView: React.FC<{
               </button>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-300">
+            <div className="space-y-3 text-sm text-slate-300">
               <div>
                 <label className="text-slate-400 font-medium block mb-1">Descrição Tipificada:</label>
                 <p className="p-3 bg-slate-950 border border-slate-800 rounded-lg text-slate-200">
@@ -201,21 +201,21 @@ export const InfractionsView: React.FC<{
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg">
-                  <span className="text-[10px] text-slate-400 uppercase font-mono block">Gravidade</span>
+                  <span className="text-sm text-slate-400 uppercase font-mono block">Gravidade</span>
                   <span className="font-bold text-white text-sm capitalize">{selectedInfraction.severity || 'Média'}</span>
                 </div>
                 <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg">
-                  <span className="text-[10px] text-slate-400 uppercase font-mono block">Pontos CNH</span>
+                  <span className="text-sm text-slate-400 uppercase font-mono block">Pontos CNH</span>
                   <span className="font-bold text-rose-400 text-sm font-mono">{selectedInfraction.points || 4} pontos</span>
                 </div>
                 <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg">
-                  <span className="text-[10px] text-slate-400 uppercase font-mono block">Valor da Multa</span>
+                  <span className="text-sm text-slate-400 uppercase font-mono block">Valor da Multa</span>
                   <span className="font-bold text-emerald-400 text-sm font-mono">
                     {selectedInfraction.baseFineAmount ? `R$ ${Number(selectedInfraction.baseFineAmount).toFixed(2)}` : 'R$ 195,23'}
                   </span>
                 </div>
                 <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg">
-                  <span className="text-[10px] text-slate-400 uppercase font-mono block">Competência</span>
+                  <span className="text-sm text-slate-400 uppercase font-mono block">Competência</span>
                   <span className="font-bold text-slate-200 text-sm uppercase">{selectedInfraction.competence || 'Órgão de Trânsito'}</span>
                 </div>
               </div>
@@ -233,7 +233,7 @@ export const InfractionsView: React.FC<{
             <div className="flex justify-end pt-3 border-t border-slate-800">
               <button
                 onClick={() => setSelectedInfraction(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold cursor-pointer"
+                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm font-semibold cursor-pointer"
               >
                 Fechar
               </button>

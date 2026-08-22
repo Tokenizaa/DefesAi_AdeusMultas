@@ -291,11 +291,11 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
             <div>
               <h2 className="text-lg font-bold text-[#071D41] flex items-center gap-2">
                 Estúdio de Criação IA • Imagens HD &amp; Vídeos Veo
-                <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 rounded-full border border-amber-300">
+                <span className="px-2 py-0.5 text-sm font-bold uppercase tracking-wider bg-amber-100 text-amber-800 rounded-full border border-amber-300">
                   Novo
                 </span>
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-sm text-slate-500">
                 Geração de imagens em 1K/2K/4K (Gemini 3 Pro Image) e animação de fotos em vídeo (Veo 3.1 Fast)
               </p>
             </div>
@@ -306,7 +306,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
         <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 w-full md:w-auto">
           <button
             onClick={() => setActiveTab('image')}
-            className={`flex-1 md:flex-initial px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`flex-1 md:flex-initial px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               activeTab === 'image'
                 ? 'bg-white text-[#155BCB] shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -318,7 +318,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
 
           <button
             onClick={() => setActiveTab('video')}
-            className={`flex-1 md:flex-initial px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`flex-1 md:flex-initial px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               activeTab === 'video'
                 ? 'bg-white text-[#155BCB] shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -330,7 +330,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
 
           <button
             onClick={() => setActiveTab('week')}
-            className={`flex-1 md:flex-initial px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`flex-1 md:flex-initial px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               activeTab === 'week'
                 ? 'bg-white text-[#155BCB] shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -351,18 +351,18 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
           <div className="lg:col-span-5 space-y-4">
             <div className="bg-white border border-[#E6E6E6] rounded-xl p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                <span className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                   <Sliders className="w-3.5 h-3.5 text-[#155BCB]" />
                   Configurações de Geração
                 </span>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-50 text-[#155BCB] font-semibold">
+                <span className="text-sm font-mono px-2 py-0.5 rounded bg-blue-50 text-[#155BCB] font-semibold">
                   gemini-3-pro-image-preview
                 </span>
               </div>
 
               {/* Prompt Suggestions */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   Ideias Rápidas de Direito de Trânsito:
                 </label>
                 <div className="flex flex-wrap gap-1.5">
@@ -375,7 +375,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                         setImageSize(tmpl.size);
                         setAspectRatio(tmpl.ratio);
                       }}
-                      className="px-2.5 py-1 text-[11px] font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-[#155BCB] border border-slate-200 rounded-md transition-colors cursor-pointer text-left truncate max-w-full"
+                      className="px-2.5 py-1 text-sm font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-[#155BCB] border border-slate-200 rounded-md transition-colors cursor-pointer text-left truncate max-w-full"
                     >
                       {tmpl.label}
                     </button>
@@ -385,7 +385,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
 
               {/* Text Prompt */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   Descrição do Prompt Visual *
                 </label>
                 <textarea
@@ -393,17 +393,17 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                   value={imagePrompt}
                   onChange={(e) => setImagePrompt(e.target.value)}
                   placeholder="Ex: Foto realista de radar eletrônico em rodovia com selo INMETRO e iluminação de pôr do sol..."
-                  className="w-full text-xs p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#155BCB] focus:border-transparent resize-none"
+                  className="w-full text-sm p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#155BCB] focus:border-transparent resize-none"
                 />
               </div>
 
               {/* Affordance: Image Size Selector (1K, 2K, 4K) */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-bold text-slate-700">
+                  <label className="text-sm font-bold text-slate-700">
                     Resolução / Tamanho da Imagem *
                   </label>
-                  <span className="text-[11px] text-slate-500 font-medium">Ultra High Definition</span>
+                  <span className="text-sm text-slate-500 font-medium">Ultra High Definition</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   {(['1K', '2K', '4K'] as const).map((size) => (
@@ -411,7 +411,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                       key={size}
                       type="button"
                       onClick={() => setImageSize(size)}
-                      className={`py-2.5 px-3 rounded-lg text-xs font-bold border transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 ${
+                      className={`py-2.5 px-3 rounded-lg text-sm font-bold border transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 ${
                         imageSize === size
                           ? 'bg-[#155BCB] text-white border-[#155BCB] shadow-xs ring-2 ring-blue-200'
                           : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
@@ -428,7 +428,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
 
               {/* Aspect Ratio Selector */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   Proporção / Formato *
                 </label>
                 <div className="grid grid-cols-5 gap-1.5">
@@ -443,7 +443,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                       key={ratio.id}
                       type="button"
                       onClick={() => setAspectRatio(ratio.id as any)}
-                      className={`py-2 px-1.5 rounded-lg text-[11px] font-bold border transition-all cursor-pointer flex flex-col items-center justify-center ${
+                      className={`py-2 px-1.5 rounded-lg text-sm font-bold border transition-all cursor-pointer flex flex-col items-center justify-center ${
                         aspectRatio === ratio.id
                           ? 'bg-blue-50 text-[#155BCB] border-[#155BCB] ring-1 ring-[#155BCB]'
                           : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
@@ -459,14 +459,14 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
               {/* Reference Image (Optional for image-to-image) */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-bold text-slate-700">
+                  <label className="text-sm font-bold text-slate-700">
                     Foto de Referência (Opcional)
                   </label>
                   {referenceImage && (
                     <button
                       type="button"
                       onClick={() => setReferenceImage(null)}
-                      className="text-[10px] text-red-600 hover:underline cursor-pointer"
+                      className="text-sm text-red-600 hover:underline cursor-pointer"
                     >
                       Remover
                     </button>
@@ -480,7 +480,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full py-3 border-2 border-dashed border-slate-200 hover:border-blue-400 rounded-lg text-xs font-medium text-slate-600 hover:text-[#155BCB] flex items-center justify-center gap-2 cursor-pointer transition-colors bg-slate-50/50"
+                    className="w-full py-3 border-2 border-dashed border-slate-200 hover:border-blue-400 rounded-lg text-sm font-medium text-slate-600 hover:text-[#155BCB] flex items-center justify-center gap-2 cursor-pointer transition-colors bg-slate-50/50"
                   >
                     <Upload className="w-4 h-4" />
                     <span>Carregar imagem base para edição</span>
@@ -500,7 +500,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                 type="button"
                 onClick={handleGenerateImage}
                 disabled={isGeneratingImage || !imagePrompt.trim()}
-                className="w-full py-3 bg-[#155BCB] hover:bg-[#0C326F] disabled:bg-slate-300 text-white rounded-lg text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+                className="w-full py-3 bg-[#155BCB] hover:bg-[#0C326F] disabled:bg-slate-300 text-white rounded-lg text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
               >
                 {isGeneratingImage ? (
                   <>
@@ -516,7 +516,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
               </button>
 
               {imageError && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs flex items-start gap-2">
+                <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                   <span>{imageError}</span>
                 </div>
@@ -529,12 +529,12 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
             <div className="bg-white border border-[#E6E6E6] rounded-xl p-5 shadow-xs min-h-[460px] flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                  <span className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                     <ImageIcon className="w-3.5 h-3.5 text-[#155BCB]" />
                     Visualizador de Imagem
                   </span>
                   {imageMeta && (
-                    <div className="flex items-center gap-2 text-[11px] font-mono text-slate-500">
+                    <div className="flex items-center gap-2 text-sm font-mono text-slate-500">
                       <span className="px-2 py-0.5 rounded bg-slate-100 font-bold text-slate-700">
                         {imageMeta.size}
                       </span>
@@ -552,7 +552,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-[#071D41]">Gerando com gemini-3-pro-image-preview</h4>
-                      <p className="text-xs text-slate-500 max-w-sm mt-1">
+                      <p className="text-sm text-slate-500 max-w-sm mt-1">
                         Sintetizando iluminação, composição hiper-realista e resolução de {imageSize}...
                       </p>
                     </div>
@@ -569,7 +569,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                         <a
                           href={generatedImage}
                           download={`defesai-creative-${imageSize}.png`}
-                          className="p-2 bg-slate-900/80 hover:bg-slate-900 text-white rounded-lg backdrop-blur-xs text-xs font-semibold flex items-center gap-1 shadow-lg"
+                          className="p-2 bg-slate-900/80 hover:bg-slate-900 text-white rounded-lg backdrop-blur-xs text-sm font-semibold flex items-center gap-1 shadow-lg"
                         >
                           <Download className="w-3.5 h-3.5" />
                           <span>Baixar HD</span>
@@ -577,10 +577,10 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                       </div>
                     </div>
 
-                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm">
                       <div>
                         <p className="font-bold text-slate-800">Pronta para uso editorial</p>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="text-sm text-slate-500">
                           Resolução {imageMeta?.size || imageSize} • Modelo: {imageMeta?.model || 'Gemini 3 Pro'}
                         </p>
                       </div>
@@ -592,7 +592,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                             setVideoSourcePhoto(generatedImage);
                             setActiveTab('video');
                           }}
-                          className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer text-xs"
+                          className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer text-sm"
                         >
                           <Video className="w-3.5 h-3.5" />
                           <span>Animar com Veo</span>
@@ -601,7 +601,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                         <a
                           href={generatedImage}
                           download={`defesai-creative-${imageSize}.png`}
-                          className="px-3 py-1.5 bg-[#155BCB] hover:bg-[#0C326F] text-white font-bold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer text-xs"
+                          className="px-3 py-1.5 bg-[#155BCB] hover:bg-[#0C326F] text-white font-bold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer text-sm"
                         >
                           <Download className="w-3.5 h-3.5" />
                           <span>Baixar</span>
@@ -616,7 +616,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-slate-700">Nenhuma imagem gerada ainda</h4>
-                      <p className="text-xs text-slate-500 max-w-sm mt-1">
+                      <p className="text-sm text-slate-500 max-w-sm mt-1">
                         Escolha um prompt, selecione o tamanho (1K, 2K ou 4K) e clique em "Gerar Imagem em HD".
                       </p>
                     </div>
@@ -637,11 +637,11 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
           <div className="lg:col-span-5 space-y-4">
             <div className="bg-white border border-[#E6E6E6] rounded-xl p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                <span className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                   <Video className="w-3.5 h-3.5 text-indigo-600" />
                   Parâmetros Veo 3.1
                 </span>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-semibold">
+                <span className="text-sm font-mono px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-semibold">
                   veo-3.1-fast-generate-preview
                 </span>
               </div>
@@ -649,14 +649,14 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
               {/* Upload Photo to Animate */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-bold text-slate-700">
+                  <label className="text-sm font-bold text-slate-700">
                     Foto / Imagem Fonte para Animação *
                   </label>
                   {videoSourcePhoto && (
                     <button
                       type="button"
                       onClick={() => setVideoSourcePhoto(null)}
-                      className="text-[10px] text-red-600 hover:underline cursor-pointer"
+                      className="text-sm text-red-600 hover:underline cursor-pointer"
                     >
                       Trocar foto
                     </button>
@@ -666,7 +666,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                 {videoSourcePhoto ? (
                   <div className="relative rounded-lg overflow-hidden border border-indigo-200 h-32 bg-slate-900 flex items-center justify-center">
                     <img src={videoSourcePhoto} alt="Fonte do Vídeo" className="h-full w-full object-cover" />
-                    <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono">
+                    <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-white text-sm font-mono">
                       Foto Carregada
                     </div>
                   </div>
@@ -674,11 +674,11 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                   <button
                     type="button"
                     onClick={() => videoPhotoInputRef.current?.click()}
-                    className="w-full py-6 border-2 border-dashed border-indigo-200 hover:border-indigo-500 rounded-lg text-xs font-medium text-slate-600 hover:text-indigo-700 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors bg-indigo-50/40"
+                    className="w-full py-6 border-2 border-dashed border-indigo-200 hover:border-indigo-500 rounded-lg text-sm font-medium text-slate-600 hover:text-indigo-700 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors bg-indigo-50/40"
                   >
                     <Upload className="w-5 h-5 text-indigo-600" />
                     <span className="font-bold">Faça upload de uma foto para animar</span>
-                    <span className="text-[10px] text-slate-400">Suporta PNG, JPG, WebP</span>
+                    <span className="text-sm text-slate-400">Suporta PNG, JPG, WebP</span>
                   </button>
                 )}
                 <input
@@ -692,7 +692,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
 
               {/* Motion / Animation Prompt */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   Instruções de Movimento / Prompt de Câmera
                 </label>
                 <textarea
@@ -700,20 +700,20 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                   value={videoPrompt}
                   onChange={(e) => setVideoPrompt(e.target.value)}
                   placeholder="Ex: Câmera com travelling suave para frente, luzes de trânsito em movimento, estilo cinematográfico..."
-                  className="w-full text-xs p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent resize-none"
+                  className="w-full text-sm p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent resize-none"
                 />
               </div>
 
               {/* Aspect Ratio Selector (16:9 Landscape vs 9:16 Portrait) */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   Proporção do Vídeo *
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
                     onClick={() => setVideoAspectRatio('16:9')}
-                    className={`py-3 px-3 rounded-lg text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                    className={`py-3 px-3 rounded-lg text-sm font-bold border transition-all cursor-pointer flex items-center justify-center gap-2 ${
                       videoAspectRatio === '16:9'
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
                         : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
@@ -726,7 +726,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                   <button
                     type="button"
                     onClick={() => setVideoAspectRatio('9:16')}
-                    className={`py-3 px-3 rounded-lg text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                    className={`py-3 px-3 rounded-lg text-sm font-bold border transition-all cursor-pointer flex items-center justify-center gap-2 ${
                       videoAspectRatio === '9:16'
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
                         : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
@@ -740,7 +740,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
 
               {/* Resolution Selector */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   Resolução
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -749,7 +749,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                       key={res}
                       type="button"
                       onClick={() => setVideoResolution(res)}
-                      className={`py-2 px-3 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                      className={`py-2 px-3 rounded-lg text-sm font-bold border transition-all cursor-pointer ${
                         videoResolution === res
                           ? 'bg-indigo-50 text-indigo-700 border-indigo-500 font-bold'
                           : 'bg-white text-slate-600 border-slate-200'
@@ -766,7 +766,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                 type="button"
                 onClick={handleGenerateVideo}
                 disabled={isGeneratingVideo || (!videoSourcePhoto && !generatedImage)}
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white rounded-lg text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white rounded-lg text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
               >
                 {isGeneratingVideo ? (
                   <>
@@ -782,7 +782,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
               </button>
 
               {videoError && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs flex items-start gap-2">
+                <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                   <span>{videoError}</span>
                 </div>
@@ -795,11 +795,11 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
             <div className="bg-white border border-[#E6E6E6] rounded-xl p-5 shadow-xs min-h-[460px] flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                  <span className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                     <Video className="w-3.5 h-3.5 text-indigo-600" />
                     Player de Vídeo Veo
                   </span>
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-bold">
+                  <span className="text-sm font-mono px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-bold">
                     {videoAspectRatio} • {videoResolution}
                   </span>
                 </div>
@@ -813,7 +813,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                       <h4 className="text-sm font-bold text-indigo-950">
                         Veo 3.1 sintetizando vídeo cinemático
                       </h4>
-                      <p className="text-xs text-indigo-700">{videoProgressMsg}</p>
+                      <p className="text-sm text-indigo-700">{videoProgressMsg}</p>
 
                       {/* Progress Bar */}
                       <div className="w-full bg-indigo-200 h-2 rounded-full overflow-hidden mt-3">
@@ -822,7 +822,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                           style={{ width: `${videoProgressPercent}%` }}
                         />
                       </div>
-                      <span className="text-[11px] font-mono text-indigo-800 font-semibold block">
+                      <span className="text-sm font-mono text-indigo-800 font-semibold block">
                         {videoProgressPercent}% concluído
                       </span>
                     </div>
@@ -839,10 +839,10 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                       />
                     </div>
 
-                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between text-xs">
+                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between text-sm">
                       <div>
                         <p className="font-bold text-slate-800">Vídeo Gerado com Sucesso</p>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="text-sm text-slate-500">
                           Modelo: veo-3.1-fast-generate-preview • Formato: {videoAspectRatio}
                         </p>
                       </div>
@@ -864,7 +864,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-slate-700">Nenhum vídeo gerado no momento</h4>
-                      <p className="text-xs text-slate-500 max-w-sm mt-1">
+                      <p className="text-sm text-slate-500 max-w-sm mt-1">
                         Carregue uma foto na barra lateral, escolha a proporção (16:9 ou 9:16) e clique em "Gerar Vídeo Animado".
                       </p>
                     </div>
@@ -887,7 +887,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
                 <Calendar className="w-5 h-5 text-[#155BCB]" />
                 Gerador de Campanha Semanal Automatizada (7 Dias)
               </h3>
-              <p className="text-xs text-slate-600 max-w-2xl">
+              <p className="text-sm text-slate-600 max-w-2xl">
                 Cria 7 publicações completas (Segunda a Domingo) ancoradas no Código de Trânsito Brasileiro (CTB),
                 com cópias persuasionais, hashtags, agendamento de data e geração integrada de imagens 2K HD.
               </p>
@@ -897,7 +897,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
               type="button"
               onClick={handleGenerateWeek}
               disabled={isGeneratingWeek}
-              className="px-6 py-3.5 bg-[#155BCB] hover:bg-[#0C326F] disabled:bg-slate-300 text-white rounded-lg text-xs font-bold shadow-md transition-all flex items-center gap-2 cursor-pointer shrink-0"
+              className="px-6 py-3.5 bg-[#155BCB] hover:bg-[#0C326F] disabled:bg-slate-300 text-white rounded-lg text-sm font-bold shadow-md transition-all flex items-center gap-2 cursor-pointer shrink-0"
             >
               {isGeneratingWeek ? (
                 <>
@@ -914,7 +914,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
           </div>
 
           {weekSuccessMsg && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center gap-2 shadow-xs">
+            <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm flex items-center gap-2 shadow-xs">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
               <span className="font-semibold">{weekSuccessMsg}</span>
             </div>
@@ -993,26 +993,26 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ onContentCreat
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-[#155BCB] px-2 py-0.5 rounded bg-blue-50">
+                    <span className="text-sm font-bold text-[#155BCB] px-2 py-0.5 rounded bg-blue-50">
                       {post.day}
                     </span>
-                    <span className="text-[10px] font-semibold text-slate-500">{post.channel}</span>
+                    <span className="text-sm font-semibold text-slate-500">{post.channel}</span>
                   </div>
 
-                  <h4 className="text-xs font-bold text-[#071D41] line-clamp-2 leading-snug">
+                  <h4 className="text-sm font-bold text-[#071D41] line-clamp-2 leading-snug">
                     {post.previewText}
                   </h4>
 
-                  <div className="space-y-1 text-[11px] text-slate-500">
+                  <div className="space-y-1 text-sm text-slate-500">
                     <p className="flex items-center gap-1 font-medium text-slate-700">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                       {post.theme}
                     </p>
-                    <p className="font-mono text-[10px] text-slate-400">{post.art}</p>
+                    <p className="font-mono text-sm text-slate-400">{post.art}</p>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-sm">
                   <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
                     {post.media}
                   </span>

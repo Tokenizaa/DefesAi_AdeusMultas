@@ -35,10 +35,10 @@ export const PrivateCookieBanner: React.FC = () => {
             <Lock className="w-4 h-4 text-orange-400" />
           </div>
           <div className="space-y-1">
-            <h4 className="text-xs font-bold text-white flex items-center gap-2">
+            <h4 className="text-sm font-bold text-white flex items-center gap-2">
               <span>Privacidade e Proteção de Dados (LGPD — Lei nº 13.709/2018)</span>
             </h4>
-            <p className="text-[11px] text-orange-300 leading-relaxed">
+            <p className="text-sm text-orange-300 leading-relaxed">
               Utilizamos cookies e tecnologias similares estritamente essenciais para garantir a segurança da sessão, acessibilidade e a correta geração das defesas de trânsito.
             </p>
           </div>
@@ -47,13 +47,13 @@ export const PrivateCookieBanner: React.FC = () => {
         <div className="flex items-center gap-2 w-full md:w-auto shrink-0">
           <button
             onClick={handleEssentialOnly}
-            className="px-3.5 py-2 rounded-lg bg-[#0C326F] hover:bg-orange-800 text-orange-300 text-xs font-medium cursor-pointer border border-orange-800 transition-colors"
+            className="px-3.5 py-2 rounded-lg bg-[#0C326F] hover:bg-orange-800 text-orange-300 text-sm font-medium cursor-pointer border border-orange-800 transition-colors"
           >
             Apenas Necessários
           </button>
           <button
             onClick={handleAccept}
-            className="px-4 py-2 rounded-lg bg-orange-500 hover:bg-[#0C326F] text-white text-xs font-bold cursor-pointer transition-colors shadow-xs flex items-center gap-1.5"
+            className="px-4 py-2 rounded-lg bg-orange-500 hover:bg-[#0C326F] text-white text-sm font-bold cursor-pointer transition-colors shadow-xs flex items-center gap-1.5"
           >
             <Check className="w-3.5 h-3.5 text-orange-400" />
             <span>Aceitar e Continuar</span>

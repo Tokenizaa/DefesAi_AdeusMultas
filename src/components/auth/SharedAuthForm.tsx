@@ -110,9 +110,9 @@ const THEME = {
 } as const;
 
 const INPUT_STYLE = {
-  orange: 'w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-3.5 py-3 text-base text-slate-900 outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white focus:border-transparent transition-all',
-  blue: 'w-full bg-slate-50 border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-base font-medium bg-slate-50 border border-slate-300 focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none',
-} as const;
+   orange: 'w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-3.5 py-3 text-base text-slate-900 outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white focus:border-transparent transition-all',
+   blue: 'w-full bg-slate-50 border border-slate-300 rounded-lg pl-9 pr-3 py-4 text-base font-medium bg-slate-50 border border-slate-300 focus:ring-2 focus:ring-[#155BCB] focus:bg-white outline-none min-h-[48px] flex items-center'
+ } as const;
 
 const LABEL_STYLE = {
   orange: 'block font-semibold text-slate-700 mb-1.5 text-sm',
@@ -334,30 +334,30 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
   const renderTabSwitcher = () => (
     <div className={isModal ? 'grid grid-cols-2 p-1 bg-slate-100 rounded-xl' : 'pt-2'}>
       <div className={isModal ? '' : 'inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200 w-full max-w-xs'} role="tablist">
-        <button
-          type="button"
-          role="tab"
-          onClick={() => onModeChange('register')}
-          className={isModal
-            ? `py-2 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'register' ? t.activeTab : t.inactiveTab}`
-            : `flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'register' ? t.activeTab : t.inactiveTab}`
-          }
-        >
-          <UserPlus className="w-3.5 h-3.5" />
-          <span>{isModal ? 'Criar Nova Conta (1º Acesso)' : 'Criar Conta'}</span>
-        </button>
-        <button
-          type="button"
-          role="tab"
-          onClick={() => onModeChange('login')}
-          className={isModal
-            ? `py-2 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'login' ? t.activeTab : t.inactiveTab}`
-            : `flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'login' ? t.activeTab : t.inactiveTab}`
-          }
-        >
-          <LogIn className="w-3.5 h-3.5" />
-          <span>{isModal ? 'Já Tenho Conta (Entrar)' : 'Entrar'}</span>
-        </button>
+<button
+           type="button"
+           role="tab"
+           onClick={() => onModeChange('register')}
+           className={isModal
+             ? `py-3 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'register' ? t.activeTab : t.inactiveTab} min-h-[48px] flex items-center justify-center`
+             : `flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'register' ? t.activeTab : t.inactiveTab} min-h-[48px] flex items-center justify-center`
+           }
+         >
+           <UserPlus className="w-3.5 h-3.5" />
+           <span>{isModal ? 'Criar Nova Conta (1º Acesso)' : 'Criar Conta'}</span>
+         </button>
+<button
+           type="button"
+           role="tab"
+           onClick={() => onModeChange('login')}
+           className={isModal
+             ? `py-3 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'login' ? t.activeTab : t.inactiveTab} min-h-[48px] flex items-center justify-center`
+             : `flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${mode === 'login' ? t.activeTab : t.inactiveTab} min-h-[48px] flex items-center justify-center`
+           }
+         >
+           <LogIn className="w-3.5 h-3.5" />
+           <span>{isModal ? 'Já Tenho Conta (Entrar)' : 'Entrar'}</span>
+         </button>
       </div>
     </div>
   );
@@ -392,19 +392,19 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
           <label className={LABEL_STYLE[theme]}>
             {isModal ? 'Sua Senha *' : 'Senha de Acesso'}
           </label>
-          {showForgotPassword && (
-            <button
-              type="button"
-              onClick={() => {
-                setResetEmail(email);
-                setResetStatus({ type: 'idle' });
-                setResetModalOpen(true);
-              }}
-              className="text-sm font-semibold text-orange-600 hover:text-orange-700 hover:underline cursor-pointer"
-            >
-              Esqueceu a senha?
-            </button>
-          )}
+{showForgotPassword && (
+             <button
+               type="button"
+               onClick={() => {
+                 setResetEmail(email);
+                 setResetStatus({ type: 'idle' });
+                 setResetModalOpen(true);
+               }}
+               className="text-sm font-semibold text-orange-600 hover:text-orange-700 hover:underline cursor-pointer min-h-[48px] flex items-center"
+             >
+               Esqueceu a senha?
+             </button>
+           )}
         </div>
         <div className="relative">
           <Lock className={`${isModal ? 'w-4 h-4' : 'w-4 h-4'} text-slate-400 absolute ${isModal ? 'left-3' : 'left-3.5'} top-1/2 -translate-y-1/2`} />
@@ -441,23 +441,23 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className={`w-full py-3 ${t.primary} text-white rounded-xl text-sm font-bold transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-2 mt-2 disabled:opacity-50`}
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span>Autenticando...</span>
-          </>
-        ) : (
-          <>
-            <span>{isModal ? 'Entrar & Vincular Defesa à Minha Conta' : 'Entrar no DefesAi'}</span>
-            <ArrowRight className="w-4 h-4" />
-          </>
-        )}
-      </button>
+<button
+         type="submit"
+         disabled={isLoading}
+         className={`w-full py-4 ${t.primary} text-white rounded-xl text-base font-bold transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-2 mt-2 disabled:opacity-50 min-h-[48px]`}
+       >
+         {isLoading ? (
+           <>
+             <Loader2 className="w-4 h-4 animate-spin" />
+             <span>Autenticando...</span>
+           </>
+         ) : (
+           <>
+             <span>{isModal ? 'Entrar & Vincular Defesa à Minha Conta' : 'Entrar no DefesAi'}</span>
+             <ArrowRight className="w-4 h-4" />
+           </>
+         )}
+       </button>
 
       {/* Bottom switcher (page variant) */}
       {!isModal && (
@@ -650,23 +650,23 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className={`w-full py-3 ${t.primary} text-white rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50`}
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span>{isModal ? 'Criando Conta e Vinculando Defesa...' : 'Criando sua conta...'}</span>
-          </>
-        ) : (
-          <>
-            <span>{isModal ? 'Criar Conta & Prosseguir para Geração' : 'Criar Minha Conta no DefesAi'}</span>
-            <ArrowRight className="w-4 h-4" />
-          </>
-        )}
-      </button>
+<button
+         type="submit"
+         disabled={isLoading}
+         className={`w-full py-4 ${t.primary} text-white rounded-xl text-base font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 min-h-[48px]`}
+       >
+         {isLoading ? (
+           <>
+             <Loader2 className="w-4 h-4 animate-spin" />
+             <span>{isModal ? 'Criando Conta e Vinculando Defesa...' : 'Criando sua conta...'}</span>
+           </>
+         ) : (
+           <>
+             <span>{isModal ? 'Criar Conta & Prosseguir para Geração' : 'Criar Minha Conta no DefesAi'}</span>
+             <ArrowRight className="w-4 h-4" />
+           </>
+         )}
+       </button>
 
       {/* Trust Guarantees (page variant) */}
       {!isModal && (
@@ -786,29 +786,29 @@ export const SharedAuthForm: React.FC<SharedAuthFormProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setResetModalOpen(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold cursor-pointer"
-                >
-                  Fechar
-                </button>
-                <button
-                  type="submit"
-                  disabled={resetStatus.type === 'loading'}
-                  className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-bold cursor-pointer flex items-center gap-1.5"
-                >
-                  {resetStatus.type === 'loading' ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Enviando...</span>
-                    </>
-                  ) : (
-                    <span>Enviar Instruções</span>
-                  )}
-                </button>
-              </div>
+<div className="flex items-center justify-end gap-2 pt-2">
+                 <button
+                   type="button"
+                   onClick={() => setResetModalOpen(false)}
+                   className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold cursor-pointer min-h-[48px] flex items-center justify-center"
+                 >
+                   Fechar
+                 </button>
+                 <button
+                   type="submit"
+                   disabled={resetStatus.type === 'loading'}
+                   className="px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-bold cursor-pointer flex items-center gap-1.5 min-h-[48px]"
+                 >
+                   {resetStatus.type === 'loading' ? (
+                     <>
+                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                       <span>Enviando...</span>
+                     </>
+                   ) : (
+                     <span>Enviar Instruções</span>
+                   )}
+                 </button>
+               </div>
             </form>
           </div>
         </div>

@@ -36,10 +36,10 @@ import { logger } from '../../observability/logger';
  * 1. PAYMENT_ACTIVE_GATEWAY (env explicitamente definido)
  * 2. Fallback para 'pagbank' (comportamento atual preservado)
  *
- * O Admin UI pode alterar este valor via /api/admin/settings/payments,
- * mas a configuração efetiva vive no environment ou no ConfigService.
+ * O Admin UI pode alterar este valor via /gateway/switch (override em runtime),
+ * mas a configuração padrão vive no environment.
  */
-function resolveActiveGatewayId(): GatewayId {
+function resolveActiveGatewayIdFromEnv(): GatewayId {
   const envValue = (process.env.PAYMENT_ACTIVE_GATEWAY || '').toLowerCase().trim();
   if (envValue === 'ggpixapi' || envValue === 'ggpix') return 'ggpixapi';
   if (envValue === 'pagbank') return 'pagbank';
@@ -64,20 +64,31 @@ export interface GatewayInfo {
 
 export class GatewayManager {
   private gateways: Map<GatewayId, PaymentGateway> = new Map();
-  private activeGatewayId: GatewayId;
+  /**
+   * Override explícito feito em runtime (Admin UI). Quando null, o gateway
+   * ativo é resolvido do ambiente a cada leitura.
+   *
+   * IMPORTANTE: a resolução é LAZY de propósito. O singleton é construído na
+   * avaliação do módulo, que ocorre ANTES de dotenv.config() rodar no
+   * server.ts (ordem de imports ES). Resolver eager no construtor lia envs
+   * vazias e caía silenciosamente no fallback PagBank, desativando o GGPix.
+   */
+  private activeOverride: GatewayId | null = null;
 
   constructor() {
     // Registrar todos os gateways conhecidos
     this.gateways.set('pagbank', pagbankAdapter);
     this.gateways.set('ggpixapi', ggpixAdapter);
 
-    // Resolver gateway ativo
-    this.activeGatewayId = resolveActiveGatewayId();
-
     logger.info('payments', 'gateway_manager', 'init', `Gateway manager initialized`, {
-      activeGateway: this.activeGatewayId,
       availableGateways: Array.from(this.gateways.keys()),
     });
+  }
+
+  /** Gateway ativo efetivo: override runtime > variável de ambiente. */
+  private resolveActiveGatewayId(): GatewayId {
+    if (this.activeOverride) return this.activeOverride;
+    return resolveActiveGatewayIdFromEnv();
   }
 
   /**
@@ -86,7 +97,8 @@ export class GatewayManager {
    * faz fallback para PagBank (preserva comportamento existente).
    */
   getActiveGateway(): PaymentGateway {
-    const active = this.gateways.get(this.activeGatewayId);
+    const currentId = this.resolveActiveGatewayId();
+    const active = this.gateways.get(currentId);
     if (active && active.isConfigured()) {
       return active;
     }
@@ -95,7 +107,7 @@ export class GatewayManager {
     const pagbank = this.gateways.get('pagbank');
     if (pagbank && pagbank.isConfigured()) {
       logger.warn('payments', 'gateway_manager', 'get_active',
-        `Configured gateway '${this.activeGatewayId}' not available, falling back to PagBank`
+        `Configured gateway '${currentId}' not available, falling back to PagBank`
       );
       return pagbank;
     }
@@ -144,7 +156,7 @@ export class GatewayManager {
         id: gw.id,
         displayName: gw.displayName,
         status: isConfigured ? 'configured' : 'not_configured',
-        isActive: gw.id === this.activeGatewayId,
+        isActive: gw.id === this.resolveActiveGatewayId(),
         supportsCreditCard: gw.id === 'pagbank', // Apenas PagBank suporta cartão
         notConfiguredReason,
       };
@@ -152,10 +164,10 @@ export class GatewayManager {
   }
 
   /**
-   * Retorna o ID do gateway ativo.
+   * Retorna o ID do gateway ativo (override runtime tem prioridade sobre env).
    */
   getActiveGatewayId(): GatewayId {
-    return this.activeGatewayId;
+    return this.resolveActiveGatewayId();
   }
 
   /**
@@ -179,8 +191,8 @@ export class GatewayManager {
       };
     }
 
-    const previousId = this.activeGatewayId;
-    this.activeGatewayId = id;
+    const previousId = this.resolveActiveGatewayId();
+    this.activeOverride = id;
 
     logger.info('payments', 'gateway_manager', 'set_active',
       `Gateway changed: ${previousId} → ${id}`,
@@ -198,7 +210,7 @@ export class GatewayManager {
    * Usado pelo Checkout para decidir se exibe a aba Cartão.
    */
   supportsCreditCard(gatewayId?: GatewayId): boolean {
-    const id = gatewayId || this.activeGatewayId;
+    const id = gatewayId || this.resolveActiveGatewayId();
     const gateway = this.gateways.get(id);
     return gateway?.createCreditCard !== undefined;
   }
