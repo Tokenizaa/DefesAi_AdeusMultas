@@ -78,6 +78,7 @@ function clearWizardState() {
 
 import { ServiceStep } from './steps/ServiceStep';
 import { DefenseStageStep } from './steps/DefenseStageStep';
+import { InfractionCategoryStep } from './steps/InfractionCategoryStep';
 import { InfractionIdentificationStep } from './steps/InfractionIdentificationStep';
 import { SpecificInfractionDataStep } from './steps/SpecificInfractionDataStep';
 import { AnalysisProcessingStep } from './steps/AnalysisProcessingStep';
@@ -181,10 +182,10 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-advance: if user was at step 6 (auth gate) and is now authenticated,
-  // advance to step 7 automatically (e.g., after email confirmation)
+  // Auto-advance: if user was at step 7 (auth gate) and is now authenticated,
+  // advance to step 8 automatically (e.g., after email confirmation)
   useEffect(() => {
-    if (savedState && savedState.step === 6 && isAuthenticated && user) {
+    if (savedState && (savedState.step === 6 || savedState.step === 7) && isAuthenticated && user) {
       setDocumentData((prev) => ({
         ...prev,
         applicantName: user.name || prev.applicantName,
@@ -192,7 +193,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
         applicantPhone: user.phone || leadPhone || prev.applicantPhone,
         applicantCpf: user.cpf || prev.applicantCpf,
       }));
-      setStep(7);
+      setStep(8);
     }
   }, [isAuthenticated, user]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -212,8 +213,31 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       ? 'recurso_cetran'
       : 'defesa_previa';
 
-  const isPhase1 = step <= 6;
-  const isPhase2 = step >= 7;
+  const isPhase1 = step <= 7;
+  const isPhase2 = step >= 8;
+
+  // Active step progression calculation based on conditional service rules
+  const currentSitDef = USER_SITUATIONS.find((s) => s.id === situation);
+  const skipsStageStep = Boolean(currentSitDef?.inferredStage);
+  const skipsCategoryStep = Boolean(currentSitDef?.defaultInfractionCategory);
+  
+  // Real active steps list in order
+  const activeSteps = [
+    1,
+    ...(skipsStageStep ? [] : [2]),
+    ...(skipsCategoryStep ? [] : [3]),
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+  ];
+
+  const currentStepIndex = activeSteps.indexOf(step);
+  const displayStepNumber = currentStepIndex >= 0 ? currentStepIndex + 1 : step;
+  const totalDisplaySteps = activeSteps.length;
 
   // Handlers
   const handleSituationSelect = (selected: UserSituation) => {
@@ -224,10 +248,13 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       setInfractionCategory(sitDef.defaultInfractionCategory);
     }
 
-    // Se o serviço já define a fase de forma unívoca, pula para a identificação direta
     if (sitDef?.inferredStage) {
       setProcessStage(sitDef.inferredStage);
-      setStep(3); // Direto para identificação da autuação
+      if (sitDef.defaultInfractionCategory) {
+        setStep(4); // Direto para identificação da autuação
+      } else {
+        setStep(3); // Seleciona o tipo de infração
+      }
     } else {
       setStep(2); // Pergunta a fase
     }
@@ -235,7 +262,64 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
   const handleStageSelect = (selected: UserProcessStage) => {
     setProcessStage(selected);
-    setStep(3); // Passo de identificação técnica
+    setStep(3); // Passo exclusivo de tipo/categoria da infração
+  };
+
+  const handleCategorySelect = (selected: InfractionCategory) => {
+    setInfractionCategory(selected);
+
+    // Pre-populate default values according to category if not already set
+    if (selected === 'excesso_velocidade') {
+      setInfractionData((prev) => ({
+        ...prev,
+        ctbArticle: prev.ctbArticle || 'Art. 218, I do CTB',
+        infractionCode: prev.infractionCode || '745-50',
+        description: prev.description || 'Transitar em velocidade superior à máxima permitida em até 20%',
+        severity: 'media',
+        fineAmount: 130.16,
+        points: 4,
+      }));
+    } else if (selected === 'lei_seca') {
+      setInfractionData((prev) => ({
+        ...prev,
+        ctbArticle: prev.ctbArticle || 'Art. 165-A do CTB',
+        infractionCode: prev.infractionCode || '516-91',
+        description: prev.description || 'Recusa ao teste do etilômetro / alcoolemia',
+        severity: 'gravissima',
+        fineAmount: 2934.70,
+        points: 7,
+      }));
+    } else if (selected === 'celular') {
+      setInfractionData((prev) => ({
+        ...prev,
+        ctbArticle: prev.ctbArticle || 'Art. 252, Parágrafo Único do CTB',
+        infractionCode: prev.infractionCode || '736-62',
+        description: prev.description || 'Segurar ou manusear telefone celular ao volante',
+        severity: 'gravissima',
+        fineAmount: 293.47,
+        points: 7,
+      }));
+    } else if (selected === 'vermelho') {
+      setInfractionData((prev) => ({
+        ...prev,
+        ctbArticle: prev.ctbArticle || 'Art. 208 do CTB',
+        infractionCode: prev.infractionCode || '605-01',
+        description: prev.description || 'Avançar o sinal vermelho do semáforo',
+        severity: 'gravissima',
+        fineAmount: 293.47,
+        points: 7,
+      }));
+    } else if (selected === 'estacionamento') {
+      setInfractionData((prev) => ({
+        ...prev,
+        ctbArticle: prev.ctbArticle || 'Art. 181 do CTB',
+        infractionCode: prev.infractionCode || '545-21',
+        description: prev.description || 'Estacionar em desacordo com a sinalização / local proibido',
+        severity: 'media',
+        fineAmount: 130.16,
+        points: 4,
+      }));
+    }
   };
 
   const handleLeadUpdate = (name: string, phone: string) => {
@@ -249,7 +333,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   };
 
   const handleRunAnalysis = async () => {
-    setStep(5); // Processando análise
+    setStep(6); // Processando análise
   };
 
   const handleAnalysisComplete = (analysis: CaseAnalysis) => {
@@ -285,7 +369,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     } catch (err) {
       console.error('Error saving case:', err);
     }
-    setStep(6); // Exibir resultado do diagnóstico gratuito
+    setStep(7); // Exibir resultado do diagnóstico gratuito
   };
 
   const handleProceedToDocumentGeneration = () => {
@@ -298,12 +382,11 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
         applicantPhone: user.phone || leadPhone || prev.applicantPhone,
         applicantCpf: user.cpf || prev.applicantCpf,
       }));
-      setStep(7); // Início da Fase 2 (Qualificação)
+      setStep(8); // Início da Fase 2 (Qualificação)
     } else {
       // Persist wizard state before opening auth gate
-      // (user might leave page for email confirmation)
       saveWizardState({
-        step: 6,
+        step: 7,
         leadName,
         leadPhone,
         situation,
@@ -326,7 +409,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     } else {
       // Persist wizard state before opening auth gate
       saveWizardState({
-        step: 6,
+        step: 7,
         leadName,
         leadPhone,
         situation,
@@ -378,7 +461,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     if (authGateRedirectAction === 'dashboard') {
       navigate('/dashboard');
     } else {
-      setStep(7); // Advance directly to Qualification and Document Generation
+      setStep(8); // Advance directly to Qualification and Document Generation
     }
   };
 
@@ -390,26 +473,53 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     navigate(`/cases/${finalCase.id}`);
   };
 
+  const getStepHeaderLabel = () => {
+    switch (step) {
+      case 1:
+        return '1. Situação que deseja resolver';
+      case 2:
+        return '2. Fase do Processo';
+      case 3:
+        return `${displayStepNumber}. Tipo da Infração`;
+      case 4:
+        return `${displayStepNumber}. Identificação da Autuação & Veículo`;
+      case 5:
+        return `${displayStepNumber}. Perguntas Específicas do Seu Caso`;
+      case 6:
+        return `${displayStepNumber}. Processando Análise Jurídica`;
+      case 7:
+        return `${displayStepNumber}. Diagnóstico Preliminar Concluído`;
+      case 8:
+        return `${displayStepNumber}. Qualificação do Requerente para a Peça`;
+      case 9:
+        return `${displayStepNumber}. Revisão da Petição Formal`;
+      case 10:
+        return `${displayStepNumber}. Emissão & Pagamento Seguro`;
+      default:
+        return `Etapa ${displayStepNumber} de ${totalDisplaySteps}`;
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Top Breadcrumb & Phase Indicator */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs">
         <div className="flex items-center gap-3">
           <div
-            className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${
+            className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs tracking-wider shadow-2xs ${
               isPhase1 ? 'bg-[#155BCB] text-white' : 'bg-emerald-600 text-white'
             }`}
           >
             {isPhase1 ? 'F1' : 'F2'}
           </div>
           <div>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-sm font-bold uppercase font-mono tracking-wider text-slate-600">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-bold uppercase font-mono tracking-wider text-slate-600">
                 {isPhase1 ? 'Fase 1 • Diagnóstico Preliminar' : 'Fase 2 • Petição Formal'}
               </span>
               <span className="text-slate-300">•</span>
               <span
-                className={`text-sm font-bold font-mono px-2 py-0.5 rounded ${
+                className={`text-xs font-bold font-mono px-2 py-0.5 rounded-md ${
                   isPhase1
                     ? 'bg-blue-50 text-[#155BCB] border border-blue-200'
                     : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
@@ -419,32 +529,24 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
               </span>
             </div>
             <h2 className="text-sm font-bold text-slate-900 mt-1 leading-snug">
-              {step === 1 && '1. Situação que deseja resolver'}
-              {step === 2 && '2. Fase do Processo'}
-              {step === 3 && '3. Identificação da Autuação & Veículo'}
-              {step === 4 && '4. Perguntas Específicas do Seu Caso'}
-              {step === 5 && '5. Processando Análise Jurídica'}
-              {step === 6 && '6. Diagnóstico Preliminar Concluído'}
-              {step === 7 && '7. Qualificação do Requerente para a Peça'}
-              {step === 8 && '8. Revisão da Petição Formal'}
-              {step === 9 && '9. Emissão & Pagamento Seguro'}
+              {getStepHeaderLabel()}
             </h2>
           </div>
         </div>
 
-        {/* Mini progress tracker */}
-        <div className="flex items-center gap-1">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((s) => (
+        {/* Dynamic mini progress tracker reflecting real active steps */}
+        <div className="flex items-center gap-1.5 self-end sm:self-center">
+          {activeSteps.map((s, idx) => (
             <div
               key={s}
-              className={`h-1.5 rounded-full transition-all ${
+              className={`h-2 rounded-full transition-all duration-300 ${
                 s === step
-                  ? 'w-6 bg-[#155BCB]'
-                  : s < step
+                  ? 'w-7 bg-[#155BCB]'
+                  : idx < currentStepIndex
                   ? 'w-2.5 bg-emerald-600'
                   : 'w-2.5 bg-slate-200'
               }`}
-              title={`Etapa ${s}`}
+              title={`Etapa ${idx + 1} de ${totalDisplaySteps}`}
             />
           ))}
         </div>
@@ -467,18 +569,12 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       )}
 
       {step === 3 && (
-        <InfractionIdentificationStep
-          infractionData={infractionData}
-          vehicleData={vehicleData}
-          leadName={leadName}
-          leadPhone={leadPhone}
-          onUpdateInfraction={setInfractionData}
-          onUpdateVehicle={setVehicleData}
-          onUpdateLead={handleLeadUpdate}
+        <InfractionCategoryStep
+          selectedCategory={infractionCategory}
+          onSelectCategory={handleCategorySelect}
           onNext={() => setStep(4)}
           onBack={() => {
-            const sitDef = USER_SITUATIONS.find((s) => s.id === situation);
-            if (sitDef?.inferredStage) {
+            if (skipsStageStep) {
               setStep(1);
             } else {
               setStep(2);
@@ -489,18 +585,43 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       )}
 
       {step === 4 && (
-        <SpecificInfractionDataStep
-          category={infractionCategory}
+        <InfractionIdentificationStep
           infractionData={infractionData}
-          onSelectCategory={setInfractionCategory}
+          vehicleData={vehicleData}
+          leadName={leadName}
+          leadPhone={leadPhone}
           onUpdateInfraction={setInfractionData}
-          onNext={handleRunAnalysis}
-          onBack={() => setStep(3)}
+          onUpdateVehicle={setVehicleData}
+          onUpdateLead={handleLeadUpdate}
+          onNext={() => setStep(5)}
+          onBack={() => {
+            if (skipsCategoryStep) {
+              if (skipsStageStep) {
+                setStep(1);
+              } else {
+                setStep(2);
+              }
+            } else {
+              setStep(3);
+            }
+          }}
           isAdmin={isAdmin}
         />
       )}
 
       {step === 5 && (
+        <SpecificInfractionDataStep
+          category={infractionCategory}
+          infractionData={infractionData}
+          onUpdateInfraction={setInfractionData}
+          onNext={handleRunAnalysis}
+          onBack={() => setStep(4)}
+          onChangeCategory={() => setStep(3)}
+          isAdmin={isAdmin}
+        />
+      )}
+
+      {step === 6 && (
         <AnalysisProcessingStep 
           infractionData={infractionData}
           onComplete={handleAnalysisCompleted} 
@@ -508,7 +629,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
         />
       )}
 
-      {step === 6 && (
+      {step === 7 && (
         <FreeAnalysisResultStep
           analysis={caseAnalysis}
           infractionData={infractionData}
@@ -521,32 +642,32 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
         />
       )}
 
-      {step === 7 && (
+      {step === 8 && (
         <RequiredDataStep
           documentData={documentData}
           infractionData={infractionData}
           vehicleData={vehicleData}
           onUpdateDocumentData={setDocumentData}
-          onNext={() => setStep(8)}
-          onBack={() => setStep(6)}
+          onNext={() => setStep(9)}
+          onBack={() => setStep(7)}
           isAdmin={isAdmin}
         />
       )}
 
-      {step === 8 && (
+      {step === 9 && (
         <DocumentReviewStep
           documentData={documentData}
           infractionData={infractionData}
           vehicleData={vehicleData}
           analysis={caseAnalysis}
           serviceType={mappedProcedure}
-          onEditQualification={() => setStep(7)}
-          onProceedToPayment={() => setStep(9)}
-          onBack={() => setStep(7)}
+          onEditQualification={() => setStep(8)}
+          onProceedToPayment={() => setStep(10)}
+          onBack={() => setStep(8)}
         />
       )}
 
-      {step === 9 && (
+      {step === 10 && (
         <DocumentCheckoutStep
           currentCaseId={savedCaseId}
           documentData={documentData}
@@ -556,7 +677,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           serviceType={mappedProcedure}
           isAdmin={isAdmin}
           onPaymentSuccess={handlePaymentSuccess}
-          onBack={() => setStep(8)}
+          onBack={() => setStep(9)}
         />
       )}
 
@@ -575,4 +696,3 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     </div>
   );
 };
-

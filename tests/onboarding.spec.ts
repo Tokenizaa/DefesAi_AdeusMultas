@@ -50,11 +50,11 @@ function getStepTitle(step: number): string {
     const titles: Record<number, string> = {
       1: 'Qual situação você quer resolver?',
       2: 'Em que situação está sua multa?',
-      3: 'Qual é o auto de infração e o condutor?',
-      4: 'Sobre o tipo da infração',
-      5: 'Processando Análise Jurídica',
-      6: 'Diagnóstico Jurídico Gratuito Concluído', // badge div in FreeAnalysisResultStep
-      7: 'Acesso à Sua Defesa Jurídica',
+      3: 'Sobre o tipo da infração',
+      4: 'Qual é o auto de infração e o condutor?',
+      5: 'Detalhes técnicos da sua autuação',
+      6: 'Processando Análise Jurídica',
+      7: 'Diagnóstico Jurídico Gratuito Concluído', // badge div in FreeAnalysisResultStep
       8: 'Qualificação do Requerente para a Peça',
       9: 'Revisão dos Dados da Petição',
       10: 'Liberação da Petição & Checklist de Protocolo',
@@ -94,7 +94,7 @@ async function selectNativeOption(page: Page, id: string, value: string) {
   await page.waitForTimeout(100);
 }
 
-// Steps 1-4: service + stage + infraction identification + specific infraction data
+// Steps 1-5: service + stage + category + identification + specific infraction data
 async function completeSteps1to4(page: Page) {
     // Step 1: select situation (Multa de Trânsito)
     await page.click('#service-option-multa_transito');
@@ -102,9 +102,14 @@ async function completeSteps1to4(page: Page) {
 
     // Step 2: select stage (primeira notificacao)
     await page.click('#stage-option-primeira_notificacao');
-    await waitForStep(page, 3); // Now goes to step 3 (infraction identification)
+    await waitForStep(page, 3); // Now goes to step 3 (category selection)
 
-    // Step 3: fill infraction identification
+    // Step 3: select category (Velocidade)
+    await page.click('#category-card-excesso_velocidade');
+    await page.click('#btn-next-to-identification');
+    await waitForStep(page, 4); // Now goes to step 4 (infraction identification)
+
+    // Step 4: fill infraction identification
     await fillInput(page, 'input-lead-name', testUser.name);
     await fillInput(page, 'input-lead-phone', testUser.phone);
     await fillInput(page, 'input-ait-number', testInfraction.aitNumber);
@@ -114,23 +119,15 @@ async function completeSteps1to4(page: Page) {
     await fillInput(page, 'input-datetime', testInfraction.dateTime);
 
     await page.click('#btn-next-to-specifics');
-    await waitForStep(page, 4); // Now goes to step 4 (specific infraction data)
+    await waitForStep(page, 5); // Now goes to step 5 (specific infraction data)
 }
 
-// Step 4: speed category + run analysis -> step 5 -> auto-advance to step 6.
-// Step 5 (AnalysisProcessingStep) has 6 sequential setTimeout = 4200ms total
-// (lines 50-56: 700+800+800+700+700+500). Fake clock installed in beforeEach
-// accelerates these without masking the artificial delay.
-//
-// Single fastForward(5000) does NOT work: it fires timers synchronously, but React
-// re-renders on a real MessageChannel macrotask, so the next stage timer is only
-// scheduled after fastForward returns. Instead: small 1s jumps interleaved with a
-// real pause, letting React flush and reschedule between stages.
+// Step 5: speed category + run analysis -> step 6 -> auto-advance to step 7.
 async function runAnalysisAndWaitResult(page: Page) {
   await page.click('#btn-run-analysis');
-  await waitForStep(page, 5);
-  // Step 6 badge is raw text inside a div (FreeAnalysisResultStep), not a heading
-  const badge = page.getByText(getStepTitle(6)).first();
+  await waitForStep(page, 6);
+  // Step 7 badge is raw text inside a div (FreeAnalysisResultStep), not a heading
+  const badge = page.getByText(getStepTitle(7)).first();
   for (let i = 0; i < 8 && !(await badge.isVisible().catch(() => false)); i++) {
     await page.clock.fastForward(1000);
     await page.waitForTimeout(50);
@@ -141,12 +138,15 @@ async function runAnalysisAndWaitResult(page: Page) {
 test.describe('Onboarding Flow - E2E', () => {
   test.beforeEach(async ({ page }) => {
     await page.context().clearCookies();
-    // Fake timers must be installed before navigation so the step-5 setTimeout
-    // chain (4200ms) runs under clock control from the start.
+    await page.addInitScript(() => {
+      localStorage.removeItem('defesai_wizard_state');
+    });
+    // Fake timers must be installed before navigation so the step-6 setTimeout
+    // chain runs under clock control from the start.
     await page.clock.install();
   });
 
-test('happy-path: user completes free analysis (steps 1-6)', async ({ page }) => {
+test('happy-path: user completes free analysis (steps 1-7)', async ({ page }) => {
     await navigateToOnboarding(page);
 
     // Step 1: service selection
@@ -157,9 +157,15 @@ test('happy-path: user completes free analysis (steps 1-6)', async ({ page }) =>
     // Step 2: stage selection
     await expect(page.locator('#stage-option-primeira_notificacao')).toBeVisible();
     await page.click('#stage-option-primeira_notificacao');
-    await waitForStep(page, 3); // Now at step 3: infraction identification
+    await waitForStep(page, 3); // Now at step 3: infraction category selection
 
-    // Step 3: fill form
+    // Step 3: category selection (Velocidade)
+    await expect(page.locator('#category-card-excesso_velocidade')).toBeVisible();
+    await page.click('#category-card-excesso_velocidade');
+    await page.click('#btn-next-to-identification');
+    await waitForStep(page, 4); // Now at step 4: infraction identification
+
+    // Step 4: fill identification form
     await fillInput(page, 'input-lead-name', testUser.name);
     await fillInput(page, 'input-lead-phone', testUser.phone);
     await fillInput(page, 'input-ait-number', testInfraction.aitNumber);
@@ -170,20 +176,20 @@ test('happy-path: user completes free analysis (steps 1-6)', async ({ page }) =>
     const nextBtn = page.locator('#btn-next-to-specifics');
     await expect(nextBtn).toBeEnabled();
     await nextBtn.click();
-    await waitForStep(page, 4); // Now at step 4: specific infraction data
+    await waitForStep(page, 5); // Now at step 5: specific infraction data
 
-    // Step 4: speed fields + run analysis (clock fast-forwards step 5)
+    // Step 5: speed fields + run analysis (clock fast-forwards step 6)
     await fillInput(page, 'input-speed-limit', '60');
     await fillInput(page, 'input-measured-speed', '73');
     await page.waitForTimeout(300);
     await runAnalysisAndWaitResult(page);
 
-    // Step 5: free result visible with probability + CTA
+    // Step 7: free result visible with probability + CTA
     await expect(page.locator('text=Probabilidade de Êxito')).toBeVisible();
     await expect(page.locator('#btn-proceed-to-document-generation')).toBeVisible();
 });
 
-test('admin-buttons: admin sees test-fill buttons on steps 3, 4 and 8', async ({ page }) => {
+test('admin-buttons: admin sees test-fill buttons on steps 4, 5 and 8', async ({ page }) => {
     await forceLocalAuth(page, ADMIN_USER);
     await navigateToOnboarding(page);
 
@@ -195,19 +201,24 @@ test('admin-buttons: admin sees test-fill buttons on steps 3, 4 and 8', async ({
     await page.click('#stage-option-primeira_notificacao');
     await waitForStep(page, 3);
 
-    // Step 3: admin button visible, auto-fills
-    const step3Btn = page.locator(TEST_FILL_BTN);
-    await expect(step3Btn).toBeVisible();
-    await step3Btn.click();
-    await expect(page.locator('#btn-next-to-specifics')).toBeEnabled();
-    await page.click('#btn-next-to-specifics');
+    // Step 3 -> 4
+    await page.click('#category-card-excesso_velocidade');
+    await page.click('#btn-next-to-identification');
     await waitForStep(page, 4);
 
-    // Step 4: admin button visible
+    // Step 4: admin button visible, auto-fills
+    const step4Btn = page.locator(TEST_FILL_BTN);
+    await expect(step4Btn).toBeVisible();
+    await step4Btn.click();
+    await expect(page.locator('#btn-next-to-specifics')).toBeEnabled();
+    await page.click('#btn-next-to-specifics');
+    await waitForStep(page, 5);
+
+    // Step 5: admin button visible
     await expect(page.locator(TEST_FILL_BTN)).toBeVisible();
     await runAnalysisAndWaitResult(page);
 
-    // Step 6 -> 8: admin authenticated, skips auth gate
+    // Step 7 -> 8: admin authenticated, skips auth gate
     await page.click('#btn-proceed-to-document-generation');
     await waitForStep(page, 8);
 
@@ -221,11 +232,14 @@ test('admin-buttons: admin sees test-fill buttons on steps 3, 4 and 8', async ({
     await waitForStep(page, 2);
     await page.click('#stage-option-primeira_notificacao');
     await waitForStep(page, 3);
+    await page.click('#category-card-excesso_velocidade');
+    await page.click('#btn-next-to-identification');
+    await waitForStep(page, 4);
 
-    // Step 3 hides it
+    // Step 4 hides it
     await expect(page.locator(TEST_FILL_BTN)).not.toBeVisible();
 
-    // Step 4 hides it too
+    // Step 5 hides it too
     await fillInput(page, 'input-lead-name', testUser.name);
     await fillInput(page, 'input-lead-phone', testUser.phone);
     await fillInput(page, 'input-ait-number', testInfraction.aitNumber);
@@ -233,16 +247,19 @@ test('admin-buttons: admin sees test-fill buttons on steps 3, 4 and 8', async ({
     await selectNativeOption(page, 'input-infraction-code', testInfraction.infractionCode);
     await selectNativeOption(page, 'input-autuador-body', testInfraction.autuadorBody);
     await page.click('#btn-next-to-specifics');
-    await waitForStep(page, 4);
+    await waitForStep(page, 5);
     await expect(page.locator(TEST_FILL_BTN)).not.toBeVisible();
   });
 
-  test('validation: required fields block advancing past step 3', async ({ page }) => {
+  test('validation: required fields block advancing past step 4', async ({ page }) => {
     await navigateToOnboarding(page);
     await page.click('#service-option-multa_transito');
     await waitForStep(page, 2);
     await page.click('#stage-option-primeira_notificacao');
     await waitForStep(page, 3);
+    await page.click('#category-card-excesso_velocidade');
+    await page.click('#btn-next-to-identification');
+    await waitForStep(page, 4);
 
     const nextBtn = page.locator('#btn-next-to-specifics');
     await expect(nextBtn).toBeDisabled();
@@ -269,11 +286,11 @@ test('admin-buttons: admin sees test-fill buttons on steps 3, 4 and 8', async ({
     await expect(nextBtn).toBeEnabled();
   });
 
-  test('LocalStorage persists wizard state at auth gate (step 6)', async ({ page }) => {
+  test('LocalStorage persists wizard state at auth gate (step 7)', async ({ page }) => {
     await navigateToOnboarding(page);
     await completeSteps1to4(page);
 
-    // Step 4 + analysis -> step 6
+    // Step 5 + analysis -> step 7
     await fillInput(page, 'input-speed-limit', '60');
     await fillInput(page, 'input-measured-speed', '73');
     await page.waitForTimeout(300);
@@ -292,14 +309,14 @@ test('admin-buttons: admin sees test-fill buttons on steps 3, 4 and 8', async ({
       return raw ? JSON.parse(raw) : null;
     });
     expect(saved).not.toBeNull();
-    expect(saved.step).toBe(6);
+    expect(saved.step).toBe(7);
     expect(saved.leadName).toBe(testUser.name);
     expect(saved.vehicleData.plate).toBe(testVehicle.plate);
     expect(saved.infractionData.aitNumber).toBe(testInfraction.aitNumber);
     expect(saved.infractionData.infractionCode).toBe(testInfraction.infractionCode);
   });
 
-  test('Admin test-fill button auto-fills step 3', async ({ page }) => {
+  test('Admin test-fill button auto-fills step 4', async ({ page }) => {
     await forceLocalAuth(page, ADMIN_USER);
     
     await navigateToOnboarding(page);
@@ -307,6 +324,9 @@ test('admin-buttons: admin sees test-fill buttons on steps 3, 4 and 8', async ({
     await waitForStep(page, 2);
     await page.click('#stage-option-primeira_notificacao');
     await waitForStep(page, 3);
+    await page.click('#category-card-excesso_velocidade');
+    await page.click('#btn-next-to-identification');
+    await waitForStep(page, 4);
 
     const testFillBtn = page.locator(TEST_FILL_BTN);
     await expect(testFillBtn).toBeVisible();
@@ -337,29 +357,34 @@ test('admin-buttons: admin sees test-fill buttons on steps 3, 4 and 8', async ({
     await waitForStep(page, 1);
   });
 
-  test('Navigation: situation with inferredStage skips step 2', async ({ page }) => {
+  test('Navigation: situation with inferredStage skips step 2 and 3', async ({ page }) => {
     await navigateToOnboarding(page);
-    // conversao_advertencia has inferredStage -> goes directly to step 3
+    // conversao_advertencia has inferredStage and defaultCategory -> goes directly to step 4
     await page.click('#service-option-conversao_advertencia');
-    await waitForStep(page, 3);
+    await waitForStep(page, 4);
   });
 
-  test('Speed infraction requires speedLimit and measuredSpeed in step 4', async ({ page }) => {
+  test('Speed infraction requires speedLimit and measuredSpeed in step 5', async ({ page }) => {
     await navigateToOnboarding(page);
     await completeSteps1to4(page);
 
-    // Speed category fields present in step 4
+    // Speed category fields present in step 5
     await expect(page.locator('#input-speed-limit')).toBeVisible();
     await expect(page.locator('#input-measured-speed')).toBeVisible();
     await expect(page.locator('#input-considered-speed')).toBeVisible();
   });
 
-  test('DUI category shows specific fields in step 4', async ({ page }) => {
+  test('DUI category shows specific fields in step 5', async ({ page }) => {
     await navigateToOnboarding(page);
     await page.click('#service-option-multa_transito');
     await waitForStep(page, 2);
     await page.click('#stage-option-primeira_notificacao');
     await waitForStep(page, 3);
+
+    // Select DUI (Lei Seca) in step 3
+    await page.click('#category-card-lei_seca');
+    await page.click('#btn-next-to-identification');
+    await waitForStep(page, 4);
 
     await fillInput(page, 'input-lead-name', testUser.name);
     await fillInput(page, 'input-lead-phone', testUser.phone);
@@ -368,10 +393,9 @@ test('admin-buttons: admin sees test-fill buttons on steps 3, 4 and 8', async ({
     await selectNativeOption(page, 'input-infraction-code', '516-91'); // Lei Seca
     await selectNativeOption(page, 'input-autuador-body', testInfraction.autuadorBody);
     await page.click('#btn-next-to-specifics');
-    await waitForStep(page, 4);
+    await waitForStep(page, 5);
 
-    // Switch to Lei Seca tab
-    await page.click('button:has-text("Lei Seca / Bafômetro")');
+    // Specific Lei Seca fields visible
     await expect(page.locator('#select-termo-sinais')).toBeVisible();
     await expect(page.locator('#select-reteste')).toBeVisible();
   });
@@ -382,8 +406,11 @@ test('admin-buttons: admin sees test-fill buttons on steps 3, 4 and 8', async ({
     await waitForStep(page, 2);
     await page.click('#stage-option-primeira_notificacao');
     await waitForStep(page, 3);
+    await page.click('#category-card-excesso_velocidade');
+    await page.click('#btn-next-to-identification');
+    await waitForStep(page, 4);
 
-    // Verify labeled inputs exist on step 3
+    // Verify labeled inputs exist on step 4
     for (const id of ['input-lead-name', 'input-lead-phone', 'input-ait-number', 'input-vehicle-plate', 'input-infraction-code', 'input-autuador-body']) {
       await expect(page.locator(`#${id}`)).toBeVisible();
     }
